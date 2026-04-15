@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能旅游服务中心测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+        .test-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .test-button {
+            background: linear-gradient(135deg, #4ecdc4, #44a08d);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .test-button:hover {
+            background: linear-gradient(135deg, #44a08d, #4ecdc4);
+        }
+        .result {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+            color: white;
+            font-family: monospace;
+            white-space: pre-wrap;
+        }
+        .success {
+            color: #4ecdc4;
+        }
+        .error {
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="color: white; text-align: center;">🧪 智能旅游服务中心测试</h1>
+        
+        <div class="test-section">
+            <h3 style="color: #4ecdc4;">API测试</h3>
+            <button class="test-button" onclick="testAPI()">测试API连接</button>
+            <button class="test-button" onclick="testSmartCenter()">测试智能旅游服务中心</button>
+            <div id="apiResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3 style="color: #4ecdc4;">功能测试</h3>
+            <button class="test-button" onclick="testUserPreferences()">测试用户偏好</button>
+            <button class="test-button" onclick="testMockData()">测试模拟数据</button>
+            <div id="functionResult" class="result" style="display: none;"></div>
+        </div>
+
+        <div class="test-section">
+            <h3 style="color: #4ecdc4;">显示测试</h3>
+            <button class="test-button" onclick="showSmartCenter()">显示智能旅游服务中心</button>
+            <div id="smartCenterDisplay" style="margin-top: 15px;"></div>
+        </div>
+    </div>
+
+    <script>
+        // 测试API连接
+        async function testAPI() {
+            const resultDiv = document.getElementById('apiResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '正在测试API连接...';
+            
+            try {
+                const response = await fetch('/api/tourism/smart-center');
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultDiv.innerHTML = `<div class="success">✅ API连接成功！</div>
+数据内容：
+${JSON.stringify(data, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ API返回错误：${data.error || '未知错误'}</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ API连接失败：${error.message}</div>`;
+            }
+        }
+
+        // 测试智能旅游服务中心
+        async function testSmartCenter() {
+            const resultDiv = document.getElementById('functionResult');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = '正在测试智能旅游服务中心...';
+            
+            try {
+                // 模拟loadSmartTourismCenter函数
+                const response = await fetch('/api/tourism/smart-center');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const transportData = data.data?.transportation || generateMockTransportData();
+                    const userPreferences = getUserPreferences();
+                    
+                    resultDiv.innerHTML = `<div class="success">✅ 智能旅游服务中心测试成功！</div>
+交通数据：${JSON.stringify(transportData, null, 2)}
+用户偏好：${JSON.stringify(userPreferences, null, 2)}`;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">❌ 智能旅游服务中心测试失败</div>`;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">❌ 测试失败：${error.message}</div>`;
+            }
+        }
+
+        // 测试用户偏好
+        function testUserPreferences() {
+            const resultDiv = document.getElementById('functionResult');
+            resultDiv.style.display = 'block';
+            
+            const preferences = getUserPreferences();
+            resultDiv.innerHTML = `<div class="success">✅ 用户偏好获取成功！</div>
+${JSON.stringify(preferences, null, 2)}`;
+        }
+
+        // 测试模拟数据
+        function testMockData() {
+            const resultDiv = document.getElementById('functionResult');
+            resultDiv.style.display = 'block';
+            
+            const mockData = generateMockTransportData();
+            resultDiv.innerHTML = `<div class="success">✅ 模拟数据生成成功！</div>
+${JSON.stringify(mockData, null, 2)}`;
+        }
+
+        // 显示智能旅游服务中心
+        async function showSmartCenter() {
+            const displayDiv = document.getElementById('smartCenterDisplay');
+            displayDiv.innerHTML = '正在加载智能旅游服务中心...';
+            
+            try {
+                const response = await fetch('/api/tourism/smart-center');
+                const data = await response.json();
+                
+                if (data.success) {
+                    const transportData = data.data?.transportation || generateMockTransportData();
+                    const userPreferences = getUserPreferences();
+                    
+                    displayDiv.innerHTML = `
+                        <div style="background: rgba(255, 255, 255, 0.1); border-radius: 10px; padding: 20px; color: white;">
+                            <h3 style="color: #00d4ff; margin-top: 0;">🎯 智能旅游服务中心</h3>
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #4ecdc4;">用户偏好：</h4>
+                                <p>兴趣：${userPreferences.interests.join('、')}</p>
+                                <p>旅游风格：${userPreferences.travelStyle}</p>
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #ff6b6b;">交通提醒：</h4>
+                                ${transportData.alerts && transportData.alerts.length > 0 ? 
+                                    transportData.alerts.map(alert => `<p>• ${alert}</p>`).join('') : 
+                                    '<p>• 暂无交通提醒</p>'}
+                            </div>
+                            <div style="margin-bottom: 15px;">
+                                <h4 style="color: #ffd700;">公共交通：</h4>
+                                <p>可用线路：${transportData.publicTransport ? transportData.publicTransport.length : 0}条</p>
+                            </div>
+                            <div style="text-align: center; margin-top: 20px;">
+                                <button class="test-button" onclick="showSmartCenter()">🔄 刷新</button>
+                            </div>
+                        </div>
+                    `;
+                } else {
+                    displayDiv.innerHTML = `<div class="error">❌ 加载失败：${data.error || '未知错误'}</div>`;
+                }
+            } catch (error) {
+                displayDiv.innerHTML = `<div class="error">❌ 加载失败：${error.message}</div>`;
+            }
+        }
+
+        // 获取用户偏好设置
+        function getUserPreferences() {
+            const defaultPreferences = {
+                interests: ['历史文化', '美食', '自然风光'],
+                travelStyle: '休闲度假'
+            };
+            
+            try {
+                const stored = localStorage.getItem('userPreferences');
+                return stored ? JSON.parse(stored) : defaultPreferences;
+            } catch (error) {
+                console.error('获取用户偏好失败:', error);
+                return defaultPreferences;
+            }
+        }
+
+        // 生成模拟交通数据
+        function generateMockTransportData() {
+            return {
+                alerts: [
+                    '地铁1号线天安门东站临时关闭，请选择其他站点',
+                    '二环路东段拥堵，建议绕行三环路'
+                ],
+                publicTransport: [
+                    {
+                        name: '地铁1号线',
+                        icon: '🚇',
+                        status: 'delay',
+                        statusText: '延误5分钟',
+                        operatingHours: '05:30-23:30',
+                        fare: '¥3-9',
+                        estimatedTime: '25分钟',
+                        crowdLevel: '拥挤'
+                    },
+                    {
+                        name: '地铁2号线',
+                        icon: '🚇',
+                        status: 'normal',
+                        statusText: '正常运行',
+                        operatingHours: '05:30-23:30',
+                        fare: '¥3-9',
+                        estimatedTime: '20分钟',
+                        crowdLevel: '适中'
+                    }
+                ]
+            };
+        }
+    </script>
+</body>
+</html>
+

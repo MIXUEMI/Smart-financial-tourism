@@ -1,0 +1,33 @@
+{
+  "name": "tourism-ai-assistant",
+  "version": "1.0.0",
+  "description": "金融旅游AI助手应用 - 结合金融服务与旅游推荐",
+  "main": "server/app.js",
+  "scripts": {
+    "start": "node server/app.js",
+    "dev": "nodemon server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "financial",
+    "tourism",
+    "ai",
+    "deepseek",
+    "express",
+    "html"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "chart.js": "^4.4.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2",
+    "leaflet": "^1.9.4",
+    "node-cron": "^4.2.1",
+    "openai": "^4.104.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

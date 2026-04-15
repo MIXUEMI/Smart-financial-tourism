@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户画像功能测试 - 智游金旅</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .header p {
+            color: #666;
+            font-size: 16px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .test-section h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .status {
+            padding: 10px;
+            border-radius: 4px;
+            margin: 10px 0;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        #user-segmentation-container {
+            margin-top: 20px;
+            min-height: 200px;
+        }
+        .debug-info {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 用户画像功能测试</h1>
+            <p>智游金旅 - 用户画像系统功能验证页面</p>
+        </div>
+
+        <div class="test-section">
+            <h3>1. 基础功能测试</h3>
+            <button class="btn" onclick="testBasicFunctions()">测试基础功能</button>
+            <button class="btn" onclick="testUserData()">检查用户数据</button>
+            <button class="btn" onclick="testFeatureEnabled()">检查功能启用状态</button>
+            <div id="basic-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>2. 用户画像加载测试</h3>
+            <button class="btn" onclick="loadSegmentationCard()">加载画像卡片</button>
+            <button class="btn" onclick="initSegmentation()">初始化画像功能</button>
+            <button class="btn" onclick="showMockData()">显示模拟数据</button>
+            <div id="segmentation-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>3. API接口测试</h3>
+            <button class="btn" onclick="testAPI()">测试API接口</button>
+            <button class="btn" onclick="testDatabase()">测试数据库连接</button>
+            <div id="api-status"></div>
+        </div>
+
+        <div class="test-section">
+            <h3>4. 用户画像显示区域</h3>
+            <div id="user-segmentation-container"></div>
+        </div>
+
+        <div class="debug-info" id="debug-info">
+            <strong>调试信息:</strong><br>
+            等待测试...
+        </div>
+    </div>
+
+    <!-- 引入必要的脚本 -->
+    <script src="/js/userData.js"></script>
+    <script src="/js/userSegmentation.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // 测试基础功能
+        function testBasicFunctions() {
+            const status = document.getElementById('basic-status');
+            let html = '<div class="status info">开始测试基础功能...</div>';
+            
+            try {
+                // 检查脚本是否加载
+                if (typeof UserSegmentationManager === 'undefined') {
+                    html += '<div class="status error">❌ UserSegmentationManager 未定义</div>';
+                } else {
+                    html += '<div class="status success">✅ UserSegmentationManager 已加载</div>';
+                }
+                
+                // 检查用户数据管理器
+                if (typeof userDataManager === 'undefined') {
+                    html += '<div class="status error">❌ userDataManager 未定义</div>';
+                } else {
+                    html += '<div class="status success">✅ userDataManager 已加载</div>';
+                }
+                
+                // 检查Chart.js
+                if (typeof Chart === 'undefined') {
+                    html += '<div class="status error">❌ Chart.js 未加载</div>';
+                } else {
+                    html += '<div class="status success">✅ Chart.js 已加载</div>';
+                }
+                
+            } catch (error) {
+                html += '<div class="status error">❌ 测试过程中出现错误: ' + error.message + '</div>';
+            }
+            
+            status.innerHTML = html;
+            updateDebugInfo('基础功能测试完成');
+        }
+
+        // 测试用户数据
+        function testUserData() {
+            const status = document.getElementById('basic-status');
+            let html = '<div class="status info">检查用户数据...</div>';
+            
+            try {
+                // 设置测试用户数据
+                if (!localStorage.getItem('username')) {
+                    localStorage.setItem('username', 'testuser');
+                    localStorage.setItem('rememberLogin', 'true');
+                    html += '<div class="status success">✅ 已创建测试用户数据</div>';
+                } else {
+                    html += '<div class="status success">✅ 用户数据已存在: ' + localStorage.getItem('username') + '</div>';
+                }
+                
+                // 检查登录状态
+                const rememberLogin = localStorage.getItem('rememberLogin');
+                const savedUsername = localStorage.getItem('username');
+                
+                if (rememberLogin === 'true' && savedUsername) {
+                    html += '<div class="status success">✅ 用户登录状态正常</div>';
+                } else {
+                    html += '<div class="status error">❌ 用户登录状态异常</div>';
+                }
+                
+            } catch (error) {
+                html += '<div class="status error">❌ 检查用户数据时出现错误: ' + error.message + '</div>';
+            }
+            
+            status.innerHTML = html;
+            updateDebugInfo('用户数据检查完成');
+        }
+
+        // 测试功能启用状态
+        function testFeatureEnabled() {
+            const status = document.getElementById('basic-status');
+            let html = '<div class="status info">检查功能启用状态...</div>';
+            
+            try {
+                // 创建用户画像管理器实例
+                if (!window.userSegmentationManager) {
+                    window.userSegmentationManager = new UserSegmentationManager();
+                }
+                
+                // 检查功能是否启用
+                const isEnabled = window.userSegmentationManager.isFeatureEnabled();
+                if (isEnabled) {
+                    html += '<div class="status success">✅ 用户画像功能已启用</div>';
+                } else {
+                    html += '<div class="status error">❌ 用户画像功能未启用</div>';
+                }
+                
+                // 检查用户登录状态
+                const isLoggedIn = window.userSegmentationManager.isUserLoggedIn();
+                if (isLoggedIn) {
+                    html += '<div class="status success">✅ 用户登录状态检查通过</div>';
+                } else {
+                    html += '<div class="status error">❌ 用户登录状态检查失败</div>';
+                }
+                
+            } catch (error) {
+                html += '<div class="status error">❌ 检查功能启用状态时出现错误: ' + error.message + '</div>';
+            }
+            
+            status.innerHTML = html;
+            updateDebugInfo('功能启用状态检查完成');
+        }
+
+        // 加载画像卡片
+        async function loadSegmentationCard() {
+            const status = document.getElementById('segmentation-status');
+            status.innerHTML = '<div class="status info">正在加载用户画像卡片...</div>';
+            
+            try {
+                const container = document.getElementById('user-segmentation-container');
+                if (!container) {
+                    status.innerHTML = '<div class="status error">❌ 未找到用户画像容器</div>';
+                    return;
+                }
+                
+                // 动态加载用户画像卡片HTML
+                const response = await fetch('/components/userSegmentationCard.html');
+                if (response.ok) {
+                    const html = await response.text();
+                    container.innerHTML = html;
+                    status.innerHTML = '<div class="status success">✅ 用户画像卡片HTML加载成功</div>';
+                    updateDebugInfo('用户画像卡片加载成功');
+                } else {
+                    status.innerHTML = '<div class="status error">❌ 加载用户画像卡片HTML失败: ' + response.status + '</div>';
+                }
+                
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ 加载用户画像卡片失败: ' + error.message + '</div>';
+                updateDebugInfo('用户画像卡片加载失败: ' + error.message);
+            }
+        }
+
+        // 初始化画像功能
+        async function initSegmentation() {
+            const status = document.getElementById('segmentation-status');
+            status.innerHTML = '<div class="status info">正在初始化用户画像功能...</div>';
+            
+            try {
+                // 确保用户画像管理器存在
+                if (!window.userSegmentationManager) {
+                    window.userSegmentationManager = new UserSegmentationManager();
+                }
+                
+                // 初始化用户画像功能
+                await window.userSegmentationManager.init();
+                
+                status.innerHTML = '<div class="status success">✅ 用户画像功能初始化成功</div>';
+                updateDebugInfo('用户画像功能初始化成功');
+                
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ 初始化用户画像功能失败: ' + error.message + '</div>';
+                updateDebugInfo('用户画像功能初始化失败: ' + error.message);
+            }
+        }
+
+        // 显示模拟数据
+        function showMockData() {
+            const status = document.getElementById('segmentation-status');
+            status.innerHTML = '<div class="status info">正在显示模拟数据...</div>';
+            
+            try {
+                // 确保用户画像管理器存在
+                if (!window.userSegmentationManager) {
+                    window.userSegmentationManager = new UserSegmentationManager();
+                }
+                
+                // 显示模拟数据
+                window.userSegmentationManager.showMockData();
+                
+                status.innerHTML = '<div class="status success">✅ 模拟数据显示成功</div>';
+                updateDebugInfo('模拟数据显示成功');
+                
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ 显示模拟数据失败: ' + error.message + '</div>';
+                updateDebugInfo('显示模拟数据失败: ' + error.message);
+            }
+        }
+
+        // 测试API接口
+        async function testAPI() {
+            const status = document.getElementById('api-status');
+            status.innerHTML = '<div class="status info">正在测试API接口...</div>';
+            
+            try {
+                // 测试用户画像API
+                const response = await fetch('/api/analytics/user-segmentation/me', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    status.innerHTML = '<div class="status success">✅ API接口测试成功</div>';
+                    updateDebugInfo('API接口测试成功: ' + JSON.stringify(data));
+                } else {
+                    status.innerHTML = '<div class="status error">❌ API接口测试失败: ' + response.status + '</div>';
+                    updateDebugInfo('API接口测试失败: ' + response.status);
+                }
+                
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ API接口测试异常: ' + error.message + '</div>';
+                updateDebugInfo('API接口测试异常: ' + error.message);
+            }
+        }
+
+        // 测试数据库连接
+        async function testDatabase() {
+            const status = document.getElementById('api-status');
+            status.innerHTML = '<div class="status info">正在测试数据库连接...</div>';
+            
+            try {
+                // 测试健康检查API
+                const response = await fetch('/api/health', {
+                    method: 'GET'
+                });
+                
+                if (response.ok) {
+                    status.innerHTML = '<div class="status success">✅ 数据库连接测试成功</div>';
+                    updateDebugInfo('数据库连接测试成功');
+                } else {
+                    status.innerHTML = '<div class="status error">❌ 数据库连接测试失败: ' + response.status + '</div>';
+                    updateDebugInfo('数据库连接测试失败: ' + response.status);
+                }
+                
+            } catch (error) {
+                status.innerHTML = '<div class="status error">❌ 数据库连接测试异常: ' + error.message + '</div>';
+                updateDebugInfo('数据库连接测试异常: ' + error.message);
+            }
+        }
+
+        // 更新调试信息
+        function updateDebugInfo(message) {
+            const debugInfo = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            debugInfo.innerHTML += '<br>[' + timestamp + '] ' + message;
+        }
+
+        // 页面加载完成后自动运行基础测试
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 用户画像功能测试页面已加载');
+            updateDebugInfo('页面加载完成，可以开始测试');
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+

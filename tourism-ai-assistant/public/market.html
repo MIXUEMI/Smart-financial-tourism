@@ -1,0 +1,2649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>市场分析 - 智游金旅</title>
+    <script src="/js/userData.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+<!-- 市场分析页面 -->
+<style>
+    .top-buttons {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 1000;
+    }
+
+    .back-button, .logout-button {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .logout-button {
+        color: #ff6b6b;
+        border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .logout-button:hover {
+        background: rgba(255, 107, 107, 0.2);
+        color: #ff4757;
+        transform: translateY(-2px);
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 市场分析金融旅游结合话术横幅 */
+    .market-slogan-banner {
+        background: linear-gradient(135deg, 
+            rgba(0, 100, 200, 0.2) 0%, 
+            rgba(100, 200, 255, 0.2) 50%, 
+            rgba(200, 100, 255, 0.2) 100%);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin: 20px 0 30px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .market-slogan-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        animation: sloganShine 3s ease-in-out infinite;
+    }
+
+    @keyframes sloganShine {
+        0% { left: -100%; }
+        50% { left: 100%; }
+        100% { left: 100%; }
+    }
+
+    .market-slogan-title {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #4ecdc4, #44a08d, #093637, #0f4c75);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        text-shadow: 0 0 30px rgba(78, 205, 196, 0.3);
+        animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    .market-slogan-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .market-slogan-tags {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .market-tag {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        animation: tagFloat 3s ease-in-out infinite;
+    }
+
+    .market-tag:nth-child(1) { animation-delay: 0s; }
+    .market-tag:nth-child(2) { animation-delay: 0.5s; }
+    .market-tag:nth-child(3) { animation-delay: 1s; }
+    .market-tag:nth-child(4) { animation-delay: 1.5s; }
+    .market-tag:nth-child(5) { animation-delay: 2s; }
+
+    .market-tag:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes titlePulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.02); }
+    }
+
+    @keyframes tagFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .market-slogan-banner {
+            padding: 20px 15px;
+            margin: 15px 0 20px;
+        }
+
+        .market-slogan-title {
+            font-size: 24px;
+        }
+
+        .market-slogan-subtitle {
+            font-size: 16px;
+        }
+
+        .market-slogan-tags {
+            gap: 10px;
+        }
+
+        .market-tag {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .top-buttons {
+            top: 15px;
+            right: 15px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .back-button, .logout-button {
+            padding: 10px 15px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .market-slogan-title {
+            font-size: 20px;
+        }
+
+        .market-slogan-subtitle {
+            font-size: 14px;
+        }
+
+        .market-tag {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+    }
+
+    .back-button-icon {
+        font-size: 16px;
+    }
+
+    /* 关怀模式按钮 */
+    .care-mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .care-mode-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .care-mode-toggle .care-icon {
+        font-size: 16px;
+    }
+
+    .care-mode-toggle .care-text {
+        font-size: 13px;
+    }
+
+    /* 关怀模式面板样式 */
+    .care-mode-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(255, 255, 255, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        overflow-y: auto;
+        border: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .care-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 2px solid rgba(255, 107, 107, 0.2);
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-radius: 18px 18px 0 0;
+    }
+
+    .care-panel-header h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .care-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .care-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .care-panel-content {
+        padding: 30px;
+    }
+
+    .care-section {
+        margin-bottom: 30px;
+    }
+
+    .care-section h4 {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ff6b6b;
+    }
+
+    .care-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .care-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.1) 0%, 
+            rgba(255, 215, 0, 0.1) 100%);
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        border-radius: 12px;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .care-btn:hover {
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.2) 0%, 
+            rgba(255, 215, 0, 0.2) 100%);
+        border-color: #ff6b6b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+    }
+
+    .care-btn.active {
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-color: transparent;
+    }
+
+    .care-icon {
+        font-size: 20px;
+        width: 24px;
+        text-align: center;
+    }
+
+    /* 放大镜样式 */
+    .magnifier {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        border: 3px solid #ff6b6b;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        pointer-events: none;
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .magnifier-content {
+        text-align: center;
+        color: #333;
+    }
+
+    .magnifier-tag {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .magnifier-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    /* 语音扫描按钮样式 */
+    .voice-scan-button {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        animation: voiceScanPulse 2s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes voiceScanPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    /* 语音朗读提示样式 */
+    .voice-reading-tip {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        z-index: 10001;
+        animation: slideInRight 0.3s ease;
+    }
+
+    .voice-reading-tip .tip-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .voice-reading-tip .tip-icon {
+        font-size: 18px;
+    }
+
+    .voice-reading-tip .tip-text {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* 高对比度模式 */
+    .high-contrast {
+        filter: contrast(1.5) brightness(1.2);
+    }
+
+    .high-contrast * {
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+
+    .high-contrast .sidebar,
+    .high-contrast .hero-banner {
+        background: #000 !important;
+        color: #fff !important;
+    }
+
+    /* 大字体模式 */
+    .large-text {
+        font-size: 1.2em;
+    }
+
+    .large-text h1 { font-size: 2.5em; }
+    .large-text h2 { font-size: 2em; }
+    .large-text h3 { font-size: 1.8em; }
+    .large-text p { font-size: 1.3em; }
+    .large-text .menu-link { font-size: 1.2em; }
+
+    /* 色彩辅助模式 */
+    .color-assist {
+        filter: grayscale(0.3) saturate(1.5);
+    }
+
+    /* 大按钮模式 */
+    .large-buttons button,
+    .large-buttons .menu-link,
+    .large-buttons .care-btn {
+        padding: 20px 30px !important;
+        font-size: 18px !important;
+        min-height: 60px !important;
+    }
+
+    /* 键盘导航模式 */
+    .keyboard-nav *:focus {
+        outline: 3px solid #ff6b6b !important;
+        outline-offset: 2px !important;
+    }
+
+    /* 焦点高亮模式 */
+    .focus-highlight *:focus {
+        background: rgba(255, 107, 107, 0.2) !important;
+        box-shadow: 0 0 10px rgba(255, 107, 107, 0.5) !important;
+    }
+
+    /* 简化界面模式 */
+    .simplified-ui .hero-banner {
+        padding: 20px !important;
+    }
+
+    .simplified-ui .feature-cards {
+        display: none;
+    }
+
+    .simplified-ui .ai-chat-window {
+        display: none;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .care-mode-panel {
+            width: 95%;
+            max-height: 90vh;
+        }
+        
+        .care-options {
+            grid-template-columns: 1fr;
+        }
+        
+        .care-btn {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<!-- 关怀模式、返回按钮和注销按钮 -->
+<div class="top-buttons">
+    <button class="care-mode-toggle" onclick="toggleCareMode()" title="关怀模式">
+        <span class="care-icon">❤️</span>
+        <span class="care-text">关怀模式</span>
+    </button>
+    <a href="/main" class="back-button">
+        <span class="back-button-icon">←</span>
+        <span>返回主页</span>
+    </a>
+    <a href="#" class="logout-button" onclick="handleLogout()">
+        <span class="logout-icon">🚪</span>
+        <span>注销登录</span>
+    </a>
+</div>
+
+<style>
+    .market-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .market-header h2 {
+        color: white;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .market-dashboard {
+        margin-bottom: 30px;
+    }
+
+    .market-widgets {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        grid-template-rows: auto auto;
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .chart-section {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    .data-section {
+        grid-column: 2;
+        grid-row: 1;
+    }
+
+    .sentiment-section {
+        grid-column: 1 / -1;
+        grid-row: 2;
+    }
+
+    /* 标签页样式 */
+    .chart-tabs, .data-tabs {
+        display: flex;
+        gap: 5px;
+        margin-left: auto;
+    }
+
+    .chart-tab, .data-tab {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 6px 12px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .chart-tab:hover, .data-tab:hover {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+    }
+
+    .chart-tab.active, .data-tab.active {
+        background: linear-gradient(135deg, #00d4ff, #4ecdc4);
+        border-color: #00d4ff;
+        color: white;
+    }
+
+    /* 数据面板样式 */
+    .data-panel {
+        display: none;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .data-panel.active {
+        display: block;
+    }
+
+    /* 紧凑表格样式 */
+    .compact-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+    }
+
+    .compact-table th,
+    .compact-table td {
+        padding: 8px 6px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .compact-table th {
+        background: rgba(255, 255, 255, 0.05);
+        font-weight: 600;
+        color: #00d4ff;
+    }
+
+    .compact-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+        .market-widgets {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto auto auto;
+        }
+
+        .chart-section {
+            grid-column: 1;
+            grid-row: 1;
+        }
+
+        .data-section {
+            grid-column: 1;
+            grid-row: 2;
+        }
+
+        .sentiment-section {
+            grid-column: 1;
+            grid-row: 3;
+        }
+    }
+
+    .widget-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .widget-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .widget-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .widget-icon {
+        font-size: 24px;
+        margin-right: 15px;
+    }
+
+    .widget-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .widget-content {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+    }
+
+    .chart-container {
+        position: relative;
+        height: 200px;
+        margin-bottom: 15px;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .chart-container canvas {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 100%;
+    }
+
+    .market-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .summary-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 15px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .summary-label {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 5px;
+    }
+
+    .summary-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #00d4ff;
+        margin-bottom: 5px;
+    }
+
+    .summary-change {
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    .summary-change.positive {
+        color: #4ecdc4;
+    }
+
+    .summary-change.negative {
+        color: #ff6b6b;
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px;
+        text-align: left;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .data-table th {
+        background: rgba(255, 255, 255, 0.05);
+        color: #00d4ff;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .data-table td {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+    }
+
+    .data-table tr:hover {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    .trend-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .trend-up {
+        color: #4ecdc4;
+    }
+
+    .trend-down {
+        color: #ff6b6b;
+    }
+
+    .trend-neutral {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        width: 30px;
+        height: 30px;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .filter-controls {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-select {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 8px;
+        padding: 8px 12px;
+        color: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .filter-select option {
+        background: #333;
+        color: white;
+    }
+</style>
+
+<!-- 市场分析金融旅游结合话术横幅 -->
+<div class="market-slogan-banner">
+    <div class="market-slogan-title">📊 智慧分析 · 金融旅游洞察</div>
+    <div class="market-slogan-subtitle">让每一次投资都成为旅程的起点，让每一份数据都通向财富增长<br>金融科技与旅游文化的完美融合，开启智能分析新体验</div>
+    <div class="market-slogan-tags">
+        <span class="market-tag">📈 实时数据</span>
+        <span class="market-tag">🎯 精准分析</span>
+        <span class="market-tag">✈️ 旅游投资</span>
+        <span class="market-tag">🏦 金融科技</span>
+        <span class="market-tag">🤖 AI预测</span>
+    </div>
+</div>
+
+<!-- 筛选控件 -->
+<div class="filter-controls">
+    <select class="filter-select" id="timeRange" onchange="updateMarketData()">
+        <option value="1d">1天</option>
+        <option value="1w" selected>1周</option>
+        <option value="1m">1个月</option>
+        <option value="3m">3个月</option>
+        <option value="1y">1年</option>
+    </select>
+    <select class="filter-select" id="marketType" onchange="updateMarketData()">
+        <option value="all" selected>全部市场</option>
+        <option value="tourism">旅游市场</option>
+        <option value="finance">金融市场</option>
+        <option value="hotel">酒店市场</option>
+        <option value="aviation">航空市场</option>
+        <option value="catering">餐饮市场</option>
+        <option value="entertainment">娱乐市场</option>
+    </select>
+    <button class="btn-primary" onclick="refreshMarketData()">
+        <span>🔄</span> 刷新数据
+    </button>
+    <button class="btn-secondary" onclick="exportMarketData()">
+        <span>📤</span> 导出数据
+    </button>
+</div>
+
+<div class="market-dashboard">
+    <!-- 市场概览 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">📈</span>
+            <h3>市场概览</h3>
+        </div>
+        <div class="widget-content">
+            <div class="market-summary" id="marketOverview">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="market-widgets">
+        <!-- 图表分析区域 -->
+        <div class="widget-card chart-section">
+            <div class="widget-header">
+                <span class="widget-icon">📊</span>
+                <h3>图表分析</h3>
+                <div class="chart-tabs">
+                    <button class="chart-tab active" onclick="switchChart('stock')">股票指数</button>
+                    <button class="chart-tab" onclick="switchChart('currency')">汇率走势</button>
+                    <button class="chart-tab" onclick="switchChart('tourism')">旅游指数</button>
+                </div>
+            </div>
+            <div class="widget-content">
+                <div class="chart-container">
+                    <canvas id="mainChart" width="800" height="200"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据概览区域 -->
+        <div class="widget-card data-section">
+            <div class="widget-header">
+                <span class="widget-icon">📋</span>
+                <h3>数据概览</h3>
+                <div class="data-tabs">
+                    <button class="data-tab active" onclick="switchData('stocks')">热门股票</button>
+                    <button class="data-tab" onclick="switchData('sectors')">行业分析</button>
+                    <button class="data-tab" onclick="switchData('indicators')">经济指标</button>
+                </div>
+            </div>
+            <div class="widget-content">
+                <div id="dataContent">
+                    <div id="hotStocks" class="data-panel active">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div id="sectorAnalysis" class="data-panel">
+                        <div class="loading-spinner"></div>
+                    </div>
+                    <div id="economicIndicators" class="data-panel">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 市场情绪 -->
+        <div class="widget-card sentiment-section">
+            <div class="widget-header">
+                <span class="widget-icon">😊</span>
+                <h3>市场情绪</h3>
+            </div>
+            <div class="widget-content" id="marketSentiment">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 市场分析页面特定的JavaScript功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 检查登录状态
+    if (!checkLoginStatus()) return;
+    
+    loadMarketData();
+    initCharts();
+    
+    // 初始化默认图表
+    setTimeout(() => {
+        const canvas = document.getElementById('mainChart');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            drawStockChart(ctx, canvas);
+        }
+    }, 500);
+});
+
+// 加载市场数据
+async function loadMarketData() {
+    try {
+        await Promise.all([
+            loadMarketOverview(),
+            loadHotStocks(),
+            loadSectorAnalysis(),
+            loadEconomicIndicators(),
+            loadMarketSentiment()
+        ]);
+    } catch (error) {
+        console.error('加载市场数据失败:', error);
+    }
+}
+
+// 加载市场概览
+async function loadMarketOverview() {
+    try {
+        const response = await fetch('/api/market/overview');
+        const data = await response.json();
+        
+        const overviewContainer = document.getElementById('marketOverview');
+        if (overviewContainer) {
+            const overview = data.overview || {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '1,789.12', change: '+34.56', changePercent: '+1.97%' }
+            };
+            
+            overviewContainer.innerHTML = `
+                <div class="summary-item">
+                    <div class="summary-label">📈 上证指数</div>
+                    <div class="summary-value">${overview.shanghaiIndex.value}</div>
+                    <div class="summary-change ${overview.shanghaiIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.shanghaiIndex.change} (${overview.shanghaiIndex.changePercent})
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">🏢 深证成指</div>
+                    <div class="summary-value">${overview.shenzhenIndex.value}</div>
+                    <div class="summary-change ${overview.shenzhenIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.shenzhenIndex.change} (${overview.shenzhenIndex.changePercent})
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">🚀 创业板指</div>
+                    <div class="summary-value">${overview.chinextIndex.value}</div>
+                    <div class="summary-change ${overview.chinextIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.chinextIndex.change} (${overview.chinextIndex.changePercent})
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">✈️ 旅游指数</div>
+                    <div class="summary-value">${overview.tourismIndex.value}</div>
+                    <div class="summary-change ${overview.tourismIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.tourismIndex.change} (${overview.tourismIndex.changePercent})
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">🏦 金融指数</div>
+                    <div class="summary-value">${overview.financeIndex.value}</div>
+                    <div class="summary-change ${overview.financeIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.financeIndex.change} (${overview.financeIndex.changePercent})
+                    </div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">🏨 酒店指数</div>
+                    <div class="summary-value">${overview.hotelIndex.value}</div>
+                    <div class="summary-change ${overview.hotelIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                        ${overview.hotelIndex.change} (${overview.hotelIndex.changePercent})
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载市场概览失败:', error);
+        const overviewContainer = document.getElementById('marketOverview');
+        if (overviewContainer) {
+            overviewContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">市场数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载热门股票
+async function loadHotStocks() {
+    try {
+        const response = await fetch('/api/market/hot-stocks');
+        const data = await response.json();
+        
+        const stocksContainer = document.getElementById('hotStocks');
+        if (stocksContainer) {
+            const stocks = data.stocks || [
+                { name: '中国国旅', code: '601888', price: '45.67', change: '+1.23', changePercent: '+2.77%', category: 'tourism' },
+                { name: '中青旅', code: '600138', price: '12.34', change: '+0.45', changePercent: '+3.78%', category: 'tourism' },
+                { name: '首旅酒店', code: '600258', price: '18.56', change: '+0.67', changePercent: '+3.74%', category: 'hotel' },
+                { name: '锦江酒店', code: '600754', price: '23.45', change: '+0.78', changePercent: '+3.44%', category: 'hotel' },
+                { name: '中国国航', code: '601111', price: '8.90', change: '+0.23', changePercent: '+2.65%', category: 'aviation' },
+                { name: '南方航空', code: '600029', price: '6.78', change: '+0.15', changePercent: '+2.26%', category: 'aviation' },
+                { name: '全聚德', code: '002186', price: '15.67', change: '+0.34', changePercent: '+2.22%', category: 'catering' },
+                { name: '宋城演艺', code: '300144', price: '12.34', change: '+0.28', changePercent: '+2.32%', category: 'entertainment' },
+                { name: '中国平安', code: '601318', price: '45.60', change: '-0.30', changePercent: '-0.65%', category: 'finance' },
+                { name: '招财银行', code: '600036', price: '38.90', change: '+0.50', changePercent: '+1.30%', category: 'finance' }
+            ];
+            
+            stocksContainer.innerHTML = `
+                <table class="compact-table">
+                    <thead>
+                        <tr>
+                            <th>股票</th>
+                            <th>价格</th>
+                            <th>涨跌</th>
+                            <th>涨跌幅</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${stocks.map(stock => `
+                            <tr>
+                                <td>
+                                    <div style="font-weight: 600;">${stock.name}</div>
+                                    <div style="font-size: 10px; color: rgba(255,255,255,0.6);">${stock.code}</div>
+                                </td>
+                                <td style="font-weight: 600;">¥${stock.price}</td>
+                                <td class="${stock.change.startsWith('+') ? 'positive' : 'negative'}" style="font-weight: 600;">${stock.change}</td>
+                                <td class="${stock.changePercent.startsWith('+') ? 'positive' : 'negative'}" style="font-weight: 600;">${stock.changePercent}</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+        }
+    } catch (error) {
+        console.error('加载热门股票失败:', error);
+        const stocksContainer = document.getElementById('hotStocks');
+        if (stocksContainer) {
+            stocksContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">股票数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载行业分析
+async function loadSectorAnalysis() {
+    try {
+        const response = await fetch('/api/market/sector-analysis');
+        const data = await response.json();
+        
+        const sectorContainer = document.getElementById('sectorAnalysis');
+        if (sectorContainer) {
+            const sectors = data.sectors || [
+                { name: '旅游服务', performance: '+3.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+2.8%', trend: 'up' },
+                { name: '航空运输', performance: '+2.1%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+1.9%', trend: 'up' },
+                { name: '金融服务', performance: '+1.6%', trend: 'up' },
+                { name: '文化传媒', performance: '+1.4%', trend: 'up' },
+                { name: '交通运输', performance: '+1.1%', trend: 'up' },
+                { name: '房地产', performance: '-0.3%', trend: 'down' }
+            ];
+            
+            sectorContainer.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    ${sectors.map(sector => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                            <span style="font-weight: 600;">${sector.name}</span>
+                            <span class="trend-indicator ${sector.trend === 'up' ? 'trend-up' : 'trend-down'}">
+                                ${sector.trend === 'up' ? '↗' : '↘'} ${sector.performance}
+                            </span>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载行业分析失败:', error);
+        const sectorContainer = document.getElementById('sectorAnalysis');
+        if (sectorContainer) {
+            sectorContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">行业数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载经济指标
+async function loadEconomicIndicators() {
+    try {
+        const response = await fetch('/api/market/economic-indicators');
+        const data = await response.json();
+        
+        const indicatorsContainer = document.getElementById('economicIndicators');
+        if (indicatorsContainer) {
+            const indicators = data.indicators || [
+                { name: '旅游收入增长率', value: '15.8%', change: '+3.2%' },
+                { name: '酒店入住率', value: '78.5%', change: '+5.6%' },
+                { name: '航空客运量', value: '4.2亿人次', change: '+12.3%' },
+                { name: '消费信贷余额', value: '18.6万亿', change: '+8.9%' },
+                { name: '旅游消费指数', value: '112.4', change: '+4.7' },
+                { name: '金融科技投资', value: '156.8亿', change: '+23.5%' }
+            ];
+            
+            indicatorsContainer.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    ${indicators.map(indicator => `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                            <span style="font-weight: 600;">${indicator.name}</span>
+                            <div style="text-align: right;">
+                                <div style="font-size: 16px; font-weight: 700; color: #00d4ff;">${indicator.value}</div>
+                                <div style="font-size: 12px; color: rgba(255,255,255,0.6);">${indicator.change}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载经济指标失败:', error);
+        const indicatorsContainer = document.getElementById('economicIndicators');
+        if (indicatorsContainer) {
+            indicatorsContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">经济数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载市场情绪
+async function loadMarketSentiment() {
+    try {
+        const response = await fetch('/api/market/sentiment');
+        const data = await response.json();
+        
+        const sentimentContainer = document.getElementById('marketSentiment');
+        if (sentimentContainer) {
+            const sentiment = data.sentiment || {
+                overall: '乐观',
+                score: 78,
+                fearGreed: '贪婪',
+                volatility: '中等',
+                tourismSentiment: '非常乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '积极',
+                aviationSentiment: '复苏中'
+            };
+            
+            sentimentContainer.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 24px; font-weight: 700; color: #00d4ff; margin-bottom: 10px;">
+                        ${sentiment.overall}
+                    </div>
+                    <div style="font-size: 18px; margin-bottom: 15px;">
+                        情绪指数: ${sentiment.score}/100
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 10px; padding: 10px; margin-bottom: 15px;">
+                        <div style="font-size: 12px; color: rgba(255,255,255,0.7); margin-bottom: 5px;">市场情绪</div>
+                        <div style="background: rgba(255,255,255,0.2); border-radius: 5px; height: 8px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #ff6b6b, #ffa500, #4ecdc4); height: 100%; width: ${sentiment.score}%;"></div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                            <div style="color: rgba(255,255,255,0.7);">恐慌贪婪指数</div>
+                            <div style="color: #4ecdc4; font-weight: 600;">${sentiment.fearGreed}</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 8px; border-radius: 6px;">
+                            <div style="color: rgba(255,255,255,0.7);">波动性</div>
+                            <div style="color: #ffa500; font-weight: 600;">${sentiment.volatility}</div>
+                        </div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-top: 10px;">
+                        <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                            <div style="color: #00d4ff; font-weight: 600;">✈️ 旅游情绪</div>
+                            <div style="color: rgba(255,255,255,0.8);">${sentiment.tourismSentiment}</div>
+                        </div>
+                        <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                            <div style="color: #00d4ff; font-weight: 600;">🏦 金融情绪</div>
+                            <div style="color: rgba(255,255,255,0.8);">${sentiment.financeSentiment}</div>
+                        </div>
+                        <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                            <div style="color: #00d4ff; font-weight: 600;">🏨 酒店情绪</div>
+                            <div style="color: rgba(255,255,255,0.8);">${sentiment.hotelSentiment}</div>
+                        </div>
+                        <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                            <div style="color: #00d4ff; font-weight: 600;">✈️ 航空情绪</div>
+                            <div style="color: rgba(255,255,255,0.8);">${sentiment.aviationSentiment}</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载市场情绪失败:', error);
+        const sentimentContainer = document.getElementById('marketSentiment');
+        if (sentimentContainer) {
+            sentimentContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">情绪数据暂时不可用</div>';
+        }
+    }
+}
+
+// 初始化图表
+function initCharts() {
+    initStockChart();
+    initCurrencyChart();
+}
+
+// 初始化股票图表
+function initStockChart() {
+    const ctx = document.getElementById('stockChart');
+    if (!ctx) return;
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['09:30', '10:00', '10:30', '11:00', '11:30', '14:00', '14:30', '15:00'],
+            datasets: [{
+                label: '上证指数',
+                data: [3240, 3245, 3238, 3250, 3248, 3252, 3247, 3245],
+                borderColor: '#00d4ff',
+                backgroundColor: 'rgba(0, 212, 255, 0.1)',
+                tension: 0.4
+            }, {
+                label: '深证成指',
+                data: [10560, 10570, 10550, 10580, 10575, 10585, 10580, 10567],
+                borderColor: '#ff6b6b',
+                backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 初始化汇率图表
+function initCurrencyChart() {
+    const ctx = document.getElementById('currencyChart');
+    if (!ctx) return;
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['周一', '周二', '周三', '周四', '周五'],
+            datasets: [{
+                label: 'USD/CNY',
+                data: [7.22, 7.23, 7.21, 7.24, 7.23],
+                borderColor: '#4ecdc4',
+                backgroundColor: 'rgba(78, 205, 196, 0.1)',
+                tension: 0.4
+            }, {
+                label: 'EUR/CNY',
+                data: [7.85, 7.86, 7.84, 7.87, 7.86],
+                borderColor: '#ffa500',
+                backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                tension: 0.4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: 'white'
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: 'rgba(255, 255, 255, 0.7)'
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    }
+                }
+            }
+        }
+    });
+}
+
+// 更新市场数据
+function updateMarketData() {
+    const timeRange = document.getElementById('timeRange').value;
+    const marketType = document.getElementById('marketType').value;
+    
+    console.log('更新市场数据:', { timeRange, marketType });
+    
+    // 根据市场类型更新数据
+    updateMarketOverview(marketType);
+    updateHotStocks(marketType);
+    updateSectorAnalysis(marketType);
+    updateEconomicIndicators(marketType);
+    updateMarketSentiment(marketType);
+    updateChart(marketType);
+}
+
+// 刷新市场数据
+function refreshMarketData() {
+    loadMarketData();
+}
+
+// 根据市场类型更新市场概览
+function updateMarketOverview(marketType) {
+    const overviewContainer = document.getElementById('marketOverview');
+    if (!overviewContainer) return;
+
+    let overviewData = {};
+    
+    switch(marketType) {
+        case 'tourism':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,856.78', change: '+156.78', changePercent: '+5.81%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '2,189.12', change: '+134.56', changePercent: '+6.55%' }
+            };
+            break;
+        case 'finance':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,534.56', change: '+123.45', changePercent: '+8.75%' },
+                hotelIndex: { value: '1,789.12', change: '+34.56', changePercent: '+1.97%' }
+            };
+            break;
+        case 'hotel':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '2,389.12', change: '+234.56', changePercent: '+10.89%' }
+            };
+            break;
+        case 'aviation':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,656.78', change: '+256.78', changePercent: '+10.71%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '1,789.12', change: '+34.56', changePercent: '+1.97%' }
+            };
+            break;
+        case 'catering':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '1,889.12', change: '+134.56', changePercent: '+7.66%' }
+            };
+            break;
+        case 'entertainment':
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '1,789.12', change: '+34.56', changePercent: '+1.97%' }
+            };
+            break;
+        default: // all
+            overviewData = {
+                shanghaiIndex: { value: '3,245.67', change: '+12.34', changePercent: '+0.38%' },
+                shenzhenIndex: { value: '10,567.89', change: '+45.67', changePercent: '+0.43%' },
+                chinextIndex: { value: '2,156.78', change: '+23.45', changePercent: '+1.10%' },
+                tourismIndex: { value: '2,456.78', change: '+56.78', changePercent: '+2.36%' },
+                financeIndex: { value: '1,234.56', change: '+23.45', changePercent: '+1.94%' },
+                hotelIndex: { value: '1,789.12', change: '+34.56', changePercent: '+1.97%' }
+            };
+    }
+
+    overviewContainer.innerHTML = `
+        <div class="summary-item">
+            <div class="summary-label">📈 上证指数</div>
+            <div class="summary-value">${overviewData.shanghaiIndex.value}</div>
+            <div class="summary-change ${overviewData.shanghaiIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.shanghaiIndex.change} (${overviewData.shanghaiIndex.changePercent})
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">🏢 深证成指</div>
+            <div class="summary-value">${overviewData.shenzhenIndex.value}</div>
+            <div class="summary-change ${overviewData.shenzhenIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.shenzhenIndex.change} (${overviewData.shenzhenIndex.changePercent})
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">🚀 创业板指</div>
+            <div class="summary-value">${overviewData.chinextIndex.value}</div>
+            <div class="summary-change ${overviewData.chinextIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.chinextIndex.change} (${overviewData.chinextIndex.changePercent})
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">✈️ 旅游指数</div>
+            <div class="summary-value">${overviewData.tourismIndex.value}</div>
+            <div class="summary-change ${overviewData.tourismIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.tourismIndex.change} (${overviewData.tourismIndex.changePercent})
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">🏦 金融指数</div>
+            <div class="summary-value">${overviewData.financeIndex.value}</div>
+            <div class="summary-change ${overviewData.financeIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.financeIndex.change} (${overviewData.financeIndex.changePercent})
+            </div>
+        </div>
+        <div class="summary-item">
+            <div class="summary-label">🏨 酒店指数</div>
+            <div class="summary-value">${overviewData.hotelIndex.value}</div>
+            <div class="summary-change ${overviewData.hotelIndex.change.startsWith('+') ? 'positive' : 'negative'}">
+                ${overviewData.hotelIndex.change} (${overviewData.hotelIndex.changePercent})
+            </div>
+        </div>
+    `;
+}
+
+// 根据市场类型更新热门股票
+function updateHotStocks(marketType) {
+    const stocksContainer = document.getElementById('hotStocks');
+    if (!stocksContainer) return;
+
+    let stocks = [];
+    
+    switch(marketType) {
+        case 'tourism':
+            stocks = [
+                { name: '中国国旅', code: '601888', price: '45.67', change: '+2.23', changePercent: '+5.13%', category: 'tourism' },
+                { name: '中青旅', code: '600138', price: '12.34', change: '+0.89', changePercent: '+7.78%', category: 'tourism' },
+                { name: '首旅酒店', code: '600258', price: '18.56', change: '+1.67', changePercent: '+9.89%', category: 'hotel' },
+                { name: '锦江酒店', code: '600754', price: '23.45', change: '+1.78', changePercent: '+8.21%', category: 'hotel' },
+                { name: '中国国航', code: '601111', price: '8.90', change: '+0.45', changePercent: '+5.33%', category: 'aviation' },
+                { name: '南方航空', code: '600029', price: '6.78', change: '+0.35', changePercent: '+5.45%', category: 'aviation' }
+            ];
+            break;
+        case 'finance':
+            stocks = [
+                { name: '中国平安', code: '601318', price: '45.60', change: '+2.30', changePercent: '+5.31%', category: 'finance' },
+                { name: '招财银行', code: '600036', price: '38.90', change: '+1.50', changePercent: '+4.01%', category: 'finance' },
+                { name: '智金银行', code: '601398', price: '5.67', change: '+0.12', changePercent: '+2.16%', category: 'finance' },
+                { name: '建业银行', code: '601939', price: '6.23', change: '+0.15', changePercent: '+2.47%', category: 'finance' },
+                { name: '中华银行', code: '601988', price: '3.45', change: '+0.08', changePercent: '+2.37%', category: 'finance' },
+                { name: '农信银行', code: '601288', price: '3.12', change: '+0.07', changePercent: '+2.29%', category: 'finance' }
+            ];
+            break;
+        case 'hotel':
+            stocks = [
+                { name: '首旅酒店', code: '600258', price: '18.56', change: '+2.67', changePercent: '+16.81%', category: 'hotel' },
+                { name: '锦江酒店', code: '600754', price: '23.45', change: '+2.78', changePercent: '+13.45%', category: 'hotel' },
+                { name: '华住酒店', code: 'HTHT', price: '45.67', change: '+3.45', changePercent: '+8.18%', category: 'hotel' },
+                { name: '如家酒店', code: 'HMIN', price: '12.34', change: '+1.23', changePercent: '+11.08%', category: 'hotel' },
+                { name: '中国国旅', code: '601888', price: '45.67', change: '+1.23', changePercent: '+2.77%', category: 'tourism' },
+                { name: '中青旅', code: '600138', price: '12.34', change: '+0.45', changePercent: '+3.78%', category: 'tourism' }
+            ];
+            break;
+        case 'aviation':
+            stocks = [
+                { name: '中国国航', code: '601111', price: '8.90', change: '+0.78', changePercent: '+9.60%', category: 'aviation' },
+                { name: '南方航空', code: '600029', price: '6.78', change: '+0.58', changePercent: '+9.35%', category: 'aviation' },
+                { name: '东方航空', code: '600115', price: '5.45', change: '+0.45', changePercent: '+9.00%', category: 'aviation' },
+                { name: '海南航空', code: '600221', price: '2.34', change: '+0.23', changePercent: '+10.90%', category: 'aviation' },
+                { name: '春秋航空', code: '601021', price: '45.67', change: '+2.34', changePercent: '+5.40%', category: 'aviation' },
+                { name: '吉祥航空', code: '603885', price: '12.34', change: '+0.78', changePercent: '+6.75%', category: 'aviation' }
+            ];
+            break;
+        case 'catering':
+            stocks = [
+                { name: '全聚德', code: '002186', price: '15.67', change: '+0.89', changePercent: '+6.02%', category: 'catering' },
+                { name: '西安饮食', code: '000721', price: '8.90', change: '+0.45', changePercent: '+5.33%', category: 'catering' },
+                { name: '同庆楼', code: '605108', price: '23.45', change: '+1.23', changePercent: '+5.54%', category: 'catering' },
+                { name: '广州酒家', code: '603043', price: '18.56', change: '+0.78', changePercent: '+4.39%', category: 'catering' },
+                { name: '首旅酒店', code: '600258', price: '18.56', change: '+0.67', changePercent: '+3.74%', category: 'hotel' },
+                { name: '锦江酒店', code: '600754', price: '23.45', change: '+0.78', changePercent: '+3.44%', category: 'hotel' }
+            ];
+            break;
+        case 'entertainment':
+            stocks = [
+                { name: '宋城演艺', code: '300144', price: '12.34', change: '+0.89', changePercent: '+7.78%', category: 'entertainment' },
+                { name: '华谊兄弟', code: '300027', price: '3.45', change: '+0.23', changePercent: '+7.14%', category: 'entertainment' },
+                { name: '光线传媒', code: '300251', price: '8.90', change: '+0.45', changePercent: '+5.33%', category: 'entertainment' },
+                { name: '万达电影', code: '002739', price: '15.67', change: '+0.78', changePercent: '+5.24%', category: 'entertainment' },
+                { name: '中国国旅', code: '601888', price: '45.67', change: '+1.23', changePercent: '+2.77%', category: 'tourism' },
+                { name: '中青旅', code: '600138', price: '12.34', change: '+0.45', changePercent: '+3.78%', category: 'tourism' }
+            ];
+            break;
+        default: // all
+            stocks = [
+                { name: '中国国旅', code: '601888', price: '45.67', change: '+1.23', changePercent: '+2.77%', category: 'tourism' },
+                { name: '中青旅', code: '600138', price: '12.34', change: '+0.45', changePercent: '+3.78%', category: 'tourism' },
+                { name: '首旅酒店', code: '600258', price: '18.56', change: '+0.67', changePercent: '+3.74%', category: 'hotel' },
+                { name: '锦江酒店', code: '600754', price: '23.45', change: '+0.78', changePercent: '+3.44%', category: 'hotel' },
+                { name: '中国国航', code: '601111', price: '8.90', change: '+0.23', changePercent: '+2.65%', category: 'aviation' },
+                { name: '南方航空', code: '600029', price: '6.78', change: '+0.15', changePercent: '+2.26%', category: 'aviation' },
+                { name: '全聚德', code: '002186', price: '15.67', change: '+0.34', changePercent: '+2.22%', category: 'catering' },
+                { name: '宋城演艺', code: '300144', price: '12.34', change: '+0.28', changePercent: '+2.32%', category: 'entertainment' },
+                { name: '中国平安', code: '601318', price: '45.60', change: '-0.30', changePercent: '-0.65%', category: 'finance' },
+                { name: '招财银行', code: '600036', price: '38.90', change: '+0.50', changePercent: '+1.30%', category: 'finance' }
+            ];
+    }
+
+    stocksContainer.innerHTML = `
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th>股票</th>
+                    <th>价格</th>
+                    <th>涨跌</th>
+                    <th>涨跌幅</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${stocks.map(stock => `
+                    <tr>
+                        <td>
+                            <div style="font-weight: 600;">${stock.name}</div>
+                            <div style="font-size: 10px; color: rgba(255,255,255,0.6);">${stock.code}</div>
+                        </td>
+                        <td style="font-weight: 600;">¥${stock.price}</td>
+                        <td class="${stock.change.startsWith('+') ? 'positive' : 'negative'}" style="font-weight: 600;">${stock.change}</td>
+                        <td class="${stock.changePercent.startsWith('+') ? 'positive' : 'negative'}" style="font-weight: 600;">${stock.changePercent}</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    `;
+}
+
+// 根据市场类型更新行业分析
+function updateSectorAnalysis(marketType) {
+    const sectorContainer = document.getElementById('sectorAnalysis');
+    if (!sectorContainer) return;
+
+    let sectors = [];
+    
+    switch(marketType) {
+        case 'tourism':
+            sectors = [
+                { name: '旅游服务', performance: '+8.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+6.8%', trend: 'up' },
+                { name: '航空运输', performance: '+5.1%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+4.9%', trend: 'up' },
+                { name: '文化传媒', performance: '+3.4%', trend: 'up' },
+                { name: '交通运输', performance: '+2.1%', trend: 'up' }
+            ];
+            break;
+        case 'finance':
+            sectors = [
+                { name: '银行', performance: '+12.6%', trend: 'up' },
+                { name: '保险', performance: '+8.9%', trend: 'up' },
+                { name: '证券', performance: '+6.7%', trend: 'up' },
+                { name: '基金', performance: '+4.3%', trend: 'up' },
+                { name: '信托', performance: '+2.8%', trend: 'up' },
+                { name: '租赁', performance: '+1.9%', trend: 'up' }
+            ];
+            break;
+        case 'hotel':
+            sectors = [
+                { name: '酒店住宿', performance: '+15.8%', trend: 'up' },
+                { name: '旅游服务', performance: '+8.2%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+6.9%', trend: 'up' },
+                { name: '航空运输', performance: '+5.1%', trend: 'up' },
+                { name: '文化传媒', performance: '+3.4%', trend: 'up' },
+                { name: '交通运输', performance: '+2.1%', trend: 'up' }
+            ];
+            break;
+        case 'aviation':
+            sectors = [
+                { name: '航空运输', performance: '+18.5%', trend: 'up' },
+                { name: '旅游服务', performance: '+8.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+6.8%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+4.9%', trend: 'up' },
+                { name: '文化传媒', performance: '+3.4%', trend: 'up' },
+                { name: '交通运输', performance: '+2.1%', trend: 'up' }
+            ];
+            break;
+        case 'catering':
+            sectors = [
+                { name: '餐饮娱乐', performance: '+12.3%', trend: 'up' },
+                { name: '旅游服务', performance: '+8.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+6.8%', trend: 'up' },
+                { name: '航空运输', performance: '+5.1%', trend: 'up' },
+                { name: '文化传媒', performance: '+3.4%', trend: 'up' },
+                { name: '交通运输', performance: '+2.1%', trend: 'up' }
+            ];
+            break;
+        case 'entertainment':
+            sectors = [
+                { name: '文化传媒', performance: '+14.7%', trend: 'up' },
+                { name: '旅游服务', performance: '+8.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+6.8%', trend: 'up' },
+                { name: '航空运输', performance: '+5.1%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+4.9%', trend: 'up' },
+                { name: '交通运输', performance: '+2.1%', trend: 'up' }
+            ];
+            break;
+        default: // all
+            sectors = [
+                { name: '旅游服务', performance: '+3.2%', trend: 'up' },
+                { name: '酒店住宿', performance: '+2.8%', trend: 'up' },
+                { name: '航空运输', performance: '+2.1%', trend: 'up' },
+                { name: '餐饮娱乐', performance: '+1.9%', trend: 'up' },
+                { name: '金融服务', performance: '+1.6%', trend: 'up' },
+                { name: '文化传媒', performance: '+1.4%', trend: 'up' },
+                { name: '交通运输', performance: '+1.1%', trend: 'up' },
+                { name: '房地产', performance: '-0.3%', trend: 'down' }
+            ];
+    }
+
+    sectorContainer.innerHTML = `
+        <div class="sector-list">
+            ${sectors.map(sector => `
+                <div class="sector-item">
+                    <div class="sector-name">${sector.name}</div>
+                    <div class="sector-performance ${sector.trend}">
+                        <span class="trend-icon">${sector.trend === 'up' ? '↗' : '↘'}</span>
+                        ${sector.performance}
+                    </div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// 根据市场类型更新经济指标
+function updateEconomicIndicators(marketType) {
+    const indicatorsContainer = document.getElementById('economicIndicators');
+    if (!indicatorsContainer) return;
+
+    let indicators = [];
+    
+    switch(marketType) {
+        case 'tourism':
+            indicators = [
+                { name: '旅游收入增长率', value: '18.5%', change: '+5.2%' },
+                { name: '酒店入住率', value: '85.2%', change: '+8.6%' },
+                { name: '航空客运量', value: '5.8亿人次', change: '+18.3%' },
+                { name: '旅游消费指数', value: '125.4', change: '+8.7' },
+                { name: '景区接待量', value: '12.6亿人次', change: '+15.2%' },
+                { name: '旅游投资额', value: '2,456.8亿', change: '+12.5%' }
+            ];
+            break;
+        case 'finance':
+            indicators = [
+                { name: '消费信贷余额', value: '22.6万亿', change: '+12.9%' },
+                { name: '金融科技投资', value: '256.8亿', change: '+35.5%' },
+                { name: '银行净利润', value: '2.1万亿', change: '+8.9%' },
+                { name: '保险保费收入', value: '4.5万亿', change: '+6.7%' },
+                { name: '基金规模', value: '28.9万亿', change: '+15.3%' },
+                { name: '金融科技指数', value: '1,456.7', change: '+23.5%' }
+            ];
+            break;
+        case 'hotel':
+            indicators = [
+                { name: '酒店入住率', value: '88.5%', change: '+12.6%' },
+                { name: '平均房价', value: '¥456', change: '+15.8%' },
+                { name: '酒店投资额', value: '1,234.5亿', change: '+18.9%' },
+                { name: '新开业酒店', value: '2,456家', change: '+25.7%' },
+                { name: '酒店收入', value: '3,456.7亿', change: '+22.3%' },
+                { name: '酒店指数', value: '1,789.2', change: '+19.7%' }
+            ];
+            break;
+        case 'aviation':
+            indicators = [
+                { name: '航空客运量', value: '6.8亿人次', change: '+25.3%' },
+                { name: '航班准点率', value: '89.2%', change: '+5.6%' },
+                { name: '航空收入', value: '4,567.8亿', change: '+28.9%' },
+                { name: '新开航线', value: '456条', change: '+35.7%' },
+                { name: '航空投资', value: '1,567.9亿', change: '+22.4%' },
+                { name: '航空指数', value: '2,156.8', change: '+26.5%' }
+            ];
+            break;
+        case 'catering':
+            indicators = [
+                { name: '餐饮收入', value: '4,567.8亿', change: '+18.9%' },
+                { name: '餐饮门店数', value: '456.7万家', change: '+12.3%' },
+                { name: '人均餐饮消费', value: '¥1,234', change: '+15.6%' },
+                { name: '餐饮投资', value: '567.8亿', change: '+22.7%' },
+                { name: '外卖订单量', value: '12.6亿单', change: '+28.4%' },
+                { name: '餐饮指数', value: '1,456.7', change: '+19.8%' }
+            ];
+            break;
+        case 'entertainment':
+            indicators = [
+                { name: '娱乐收入', value: '2,345.6亿', change: '+22.8%' },
+                { name: '电影票房', value: '456.7亿', change: '+35.9%' },
+                { name: '游戏收入', value: '1,234.5亿', change: '+18.7%' },
+                { name: '演出场次', value: '12.6万场', change: '+28.3%' },
+                { name: '娱乐投资', value: '345.6亿', change: '+25.4%' },
+                { name: '娱乐指数', value: '1,234.5', change: '+24.6%' }
+            ];
+            break;
+        default: // all
+            indicators = [
+                { name: '旅游收入增长率', value: '15.8%', change: '+3.2%' },
+                { name: '酒店入住率', value: '78.5%', change: '+5.6%' },
+                { name: '航空客运量', value: '4.2亿人次', change: '+12.3%' },
+                { name: '消费信贷余额', value: '18.6万亿', change: '+8.9%' },
+                { name: '旅游消费指数', value: '112.4', change: '+4.7' },
+                { name: '金融科技投资', value: '156.8亿', change: '+23.5%' }
+            ];
+    }
+
+    indicatorsContainer.innerHTML = `
+        <div class="indicators-grid">
+            ${indicators.map(indicator => `
+                <div class="indicator-item">
+                    <div class="indicator-name">${indicator.name}</div>
+                    <div class="indicator-value">${indicator.value}</div>
+                    <div class="indicator-change positive">${indicator.change}</div>
+                </div>
+            `).join('')}
+        </div>
+    `;
+}
+
+// 根据市场类型更新市场情绪
+function updateMarketSentiment(marketType) {
+    const sentimentContainer = document.getElementById('marketSentiment');
+    if (!sentimentContainer) return;
+
+    let sentiment = {};
+    
+    switch(marketType) {
+        case 'tourism':
+            sentiment = {
+                overall: '非常乐观',
+                score: 88,
+                fearGreed: '极度贪婪',
+                volatility: '中等',
+                tourismSentiment: '极度乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '非常积极',
+                aviationSentiment: '复苏强劲'
+            };
+            break;
+        case 'finance':
+            sentiment = {
+                overall: '乐观',
+                score: 82,
+                fearGreed: '贪婪',
+                volatility: '低',
+                tourismSentiment: '谨慎乐观',
+                financeSentiment: '非常乐观',
+                hotelSentiment: '积极',
+                aviationSentiment: '复苏中'
+            };
+            break;
+        case 'hotel':
+            sentiment = {
+                overall: '非常乐观',
+                score: 91,
+                fearGreed: '极度贪婪',
+                volatility: '中等',
+                tourismSentiment: '非常乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '极度积极',
+                aviationSentiment: '复苏强劲'
+            };
+            break;
+        case 'aviation':
+            sentiment = {
+                overall: '极度乐观',
+                score: 95,
+                fearGreed: '极度贪婪',
+                volatility: '高',
+                tourismSentiment: '极度乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '非常积极',
+                aviationSentiment: '极度复苏'
+            };
+            break;
+        case 'catering':
+            sentiment = {
+                overall: '乐观',
+                score: 85,
+                fearGreed: '贪婪',
+                volatility: '中等',
+                tourismSentiment: '非常乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '积极',
+                aviationSentiment: '复苏中'
+            };
+            break;
+        case 'entertainment':
+            sentiment = {
+                overall: '乐观',
+                score: 87,
+                fearGreed: '贪婪',
+                volatility: '中等',
+                tourismSentiment: '非常乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '积极',
+                aviationSentiment: '复苏中'
+            };
+            break;
+        default: // all
+            sentiment = {
+                overall: '乐观',
+                score: 78,
+                fearGreed: '贪婪',
+                volatility: '中等',
+                tourismSentiment: '非常乐观',
+                financeSentiment: '谨慎乐观',
+                hotelSentiment: '积极',
+                aviationSentiment: '复苏中'
+            };
+    }
+
+    sentimentContainer.innerHTML = `
+        <div class="sentiment-overview">
+            <div class="sentiment-score">
+                <div class="score-circle">
+                    <div class="score-value">${sentiment.score}</div>
+                    <div class="score-label">情绪指数</div>
+                </div>
+                <div class="sentiment-details">
+                    <div class="sentiment-item">
+                        <span class="sentiment-label">整体情绪:</span>
+                        <span class="sentiment-value ${sentiment.overall === '非常乐观' || sentiment.overall === '极度乐观' ? 'very-positive' : 'positive'}">${sentiment.overall}</span>
+                    </div>
+                    <div class="sentiment-item">
+                        <span class="sentiment-label">恐慌贪婪指数:</span>
+                        <span class="sentiment-value ${sentiment.fearGreed === '极度贪婪' ? 'very-greedy' : 'greedy'}">${sentiment.fearGreed}</span>
+                    </div>
+                    <div class="sentiment-item">
+                        <span class="sentiment-label">波动性:</span>
+                        <span class="sentiment-value">${sentiment.volatility}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-top: 10px;">
+            <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                <div style="color: #00d4ff; font-weight: 600;">✈️ 旅游情绪</div>
+                <div style="color: rgba(255,255,255,0.8);">${sentiment.tourismSentiment}</div>
+            </div>
+            <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                <div style="color: #00d4ff; font-weight: 600;">🏦 金融情绪</div>
+                <div style="color: rgba(255,255,255,0.8);">${sentiment.financeSentiment}</div>
+            </div>
+            <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                <div style="color: #00d4ff; font-weight: 600;">🏨 酒店情绪</div>
+                <div style="color: rgba(255,255,255,0.8);">${sentiment.hotelSentiment}</div>
+            </div>
+            <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 6px;">
+                <div style="color: #00d4ff; font-weight: 600;">✈️ 航空情绪</div>
+                <div style="color: rgba(255,255,255,0.8);">${sentiment.aviationSentiment}</div>
+            </div>
+        </div>
+    `;
+}
+
+// 根据市场类型更新图表
+function updateChart(marketType) {
+    const canvas = document.getElementById('mainChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // 清除画布
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 根据市场类型绘制不同图表
+    switch(marketType) {
+        case 'tourism':
+            drawTourismChart(ctx, canvas);
+            break;
+        case 'finance':
+            drawStockChart(ctx, canvas);
+            break;
+        case 'hotel':
+            drawHotelChart(ctx, canvas);
+            break;
+        case 'aviation':
+            drawAviationChart(ctx, canvas);
+            break;
+        case 'catering':
+            drawCateringChart(ctx, canvas);
+            break;
+        case 'entertainment':
+            drawEntertainmentChart(ctx, canvas);
+            break;
+        default:
+            drawStockChart(ctx, canvas);
+    }
+}
+
+// 绘制酒店图表
+function drawHotelChart(ctx, canvas) {
+    const data = [1800, 1850, 1820, 1900, 1950, 2000, 2100];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#ff6b6b', '酒店指数走势');
+}
+
+// 绘制航空图表
+function drawAviationChart(ctx, canvas) {
+    const data = [1200, 1250, 1180, 1300, 1350, 1400, 1450];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#4ecdc4', '航空指数走势');
+}
+
+// 绘制餐饮图表
+function drawCateringChart(ctx, canvas) {
+    const data = [1000, 1050, 1020, 1100, 1150, 1200, 1250];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#ffa726', '餐饮指数走势');
+}
+
+// 绘制娱乐图表
+function drawEntertainmentChart(ctx, canvas) {
+    const data = [800, 850, 820, 900, 950, 1000, 1050];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#ab47bc', '娱乐指数走势');
+}
+
+// 导出市场数据
+function exportMarketData() {
+    alert('导出市场数据...');
+    // 这里可以实现数据导出功能
+}
+
+// 注销登录
+function handleLogout() {
+    if (confirm('确定要注销登录吗？')) {
+        localStorage.removeItem('rememberLogin');
+        localStorage.removeItem('username');
+        const logoutButton = document.querySelector('.logout-button');
+        const originalContent = logoutButton.innerHTML;
+        logoutButton.innerHTML = '<span class="logout-icon">⏳</span><span>注销中...</span>';
+        logoutButton.style.pointerEvents = 'none';
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    }
+}
+
+// 切换图表
+function switchChart(type) {
+    // 更新标签页状态
+    document.querySelectorAll('.chart-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // 根据类型更新图表
+    const canvas = document.getElementById('mainChart');
+    const ctx = canvas.getContext('2d');
+    
+    // 清除画布
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 根据类型绘制不同图表
+    switch(type) {
+        case 'stock':
+            drawStockChart(ctx, canvas);
+            break;
+        case 'currency':
+            drawCurrencyChart(ctx, canvas);
+            break;
+        case 'tourism':
+            drawTourismChart(ctx, canvas);
+            break;
+    }
+}
+
+// 切换数据面板
+function switchData(type) {
+    // 更新标签页状态
+    document.querySelectorAll('.data-tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // 隐藏所有面板
+    document.querySelectorAll('.data-panel').forEach(panel => {
+        panel.classList.remove('active');
+    });
+    
+    // 显示对应面板
+    switch(type) {
+        case 'stocks':
+            document.getElementById('hotStocks').classList.add('active');
+            loadHotStocks();
+            break;
+        case 'sectors':
+            document.getElementById('sectorAnalysis').classList.add('active');
+            loadSectorAnalysis();
+            break;
+        case 'indicators':
+            document.getElementById('economicIndicators').classList.add('active');
+            loadEconomicIndicators();
+            break;
+    }
+}
+
+// 绘制股票图表
+function drawStockChart(ctx, canvas) {
+    const data = [3200, 3250, 3180, 3300, 3280, 3350, 3400];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#00d4ff', '股票指数走势');
+}
+
+// 绘制汇率图表
+function drawCurrencyChart(ctx, canvas) {
+    const data = [7.2, 7.15, 7.18, 7.12, 7.08, 7.05, 7.02];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#4ecdc4', '美元/人民币汇率');
+}
+
+// 绘制旅游指数图表
+function drawTourismChart(ctx, canvas) {
+    const data = [2400, 2450, 2380, 2500, 2480, 2550, 2600];
+    const labels = ['周一', '周二', '周三', '周四', '周五', '周六', '周日'];
+    
+    drawLineChart(ctx, canvas, data, labels, '#ff6b6b', '旅游指数走势');
+}
+
+// 绘制线图通用函数
+function drawLineChart(ctx, canvas, data, labels, color, title) {
+    const padding = 40;
+    const chartWidth = canvas.width - padding * 2;
+    const chartHeight = canvas.height - padding * 2;
+    
+    const minValue = Math.min(...data);
+    const maxValue = Math.max(...data);
+    const valueRange = maxValue - minValue;
+    
+    // 绘制背景
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillRect(padding, padding, chartWidth, chartHeight);
+    
+    // 绘制网格线
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+    ctx.lineWidth = 1;
+    for (let i = 0; i <= 5; i++) {
+        const y = padding + (chartHeight / 5) * i;
+        ctx.beginPath();
+        ctx.moveTo(padding, y);
+        ctx.lineTo(padding + chartWidth, y);
+        ctx.stroke();
+    }
+    
+    // 绘制数据线
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    
+    data.forEach((value, index) => {
+        const x = padding + (chartWidth / (data.length - 1)) * index;
+        const y = padding + chartHeight - ((value - minValue) / valueRange) * chartHeight;
+        
+        if (index === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    });
+    ctx.stroke();
+    
+    // 绘制数据点
+    ctx.fillStyle = color;
+    data.forEach((value, index) => {
+        const x = padding + (chartWidth / (data.length - 1)) * index;
+        const y = padding + chartHeight - ((value - minValue) / valueRange) * chartHeight;
+        
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, 2 * Math.PI);
+        ctx.fill();
+    });
+    
+    // 绘制标题
+    ctx.fillStyle = 'white';
+    ctx.font = '16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(title, canvas.width / 2, 30);
+}
+
+// 关怀模式功能
+let careModeEnabled = false;
+let magnifierEnabled = false;
+let voiceEnabled = false;
+let highContrastEnabled = false;
+let largeTextEnabled = false;
+
+// 切换关怀模式
+function toggleCareMode() {
+    careModeEnabled = !careModeEnabled;
+    
+    if (careModeEnabled) {
+        showCareModePanel();
+    } else {
+        hideCareModePanel();
+        disableAllCareFeatures();
+    }
+}
+
+// 显示关怀模式面板
+function showCareModePanel() {
+    const carePanel = document.createElement('div');
+    carePanel.id = 'careModePanel';
+    carePanel.className = 'care-mode-panel';
+    carePanel.innerHTML = `
+        <div class="care-panel-header">
+            <h3>❤️ 关怀模式</h3>
+            <button class="care-close-btn" onclick="toggleCareMode()">×</button>
+        </div>
+        <div class="care-panel-content">
+            <div class="care-section">
+                <h4>🔍 视觉辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleMagnifier()">
+                        <span class="care-icon">🔍</span>
+                        <span>放大镜</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleHighContrast()">
+                        <span class="care-icon">🌙</span>
+                        <span>高对比度</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleLargeText()">
+                        <span class="care-icon">📏</span>
+                        <span>大字体</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleColorAssist()">
+                        <span class="care-icon">🎨</span>
+                        <span>色彩辅助</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🔊 语音辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleVoiceRecognition()">
+                        <span class="care-icon">🎤</span>
+                        <span>语音识别</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleVoiceReading()">
+                        <span class="care-icon">🔊</span>
+                        <span>语音播报</span>
+                    </button>
+                    <button class="care-btn" onclick="adjustVolume()">
+                        <span class="care-icon">🔊</span>
+                        <span>音量调节</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🖱️ 操作辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleLargeButtons()">
+                        <span class="care-icon">🖱️</span>
+                        <span>大按钮模式</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleKeyboardNav()">
+                        <span class="care-icon">⌨️</span>
+                        <span>键盘导航</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleFocusHighlight()">
+                        <span class="care-icon">🎯</span>
+                        <span>焦点高亮</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>💡 认知辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleSimplifiedUI()">
+                        <span class="care-icon">📝</span>
+                        <span>简化界面</span>
+                    </button>
+                    <button class="care-btn" onclick="showOperationGuide()">
+                        <span class="care-icon">💡</span>
+                        <span>操作引导</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(carePanel);
+}
+
+// 隐藏关怀模式面板
+function hideCareModePanel() {
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.remove();
+    }
+}
+
+// 放大镜功能
+function toggleMagnifier() {
+    magnifierEnabled = !magnifierEnabled;
+    
+    if (magnifierEnabled) {
+        enableMagnifier();
+        updateButtonState('magnifier', true);
+    } else {
+        disableMagnifier();
+        updateButtonState('magnifier', false);
+    }
+}
+
+function enableMagnifier() {
+    const magnifier = document.createElement('div');
+    magnifier.id = 'magnifier';
+    magnifier.className = 'magnifier';
+    document.body.appendChild(magnifier);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    document.addEventListener('mousemove', handleMagnifierMove);
+}
+
+function disableMagnifier() {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        magnifier.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleMagnifierMove);
+}
+
+function handleMagnifierMove(e) {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        const rect = magnifier.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        magnifier.style.left = (e.clientX - centerX) + 'px';
+        magnifier.style.top = (e.clientY - centerY) + 'px';
+        
+        // 获取鼠标位置下的元素
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        if (elementBelow) {
+            // 放大显示元素内容
+            const elementText = elementBelow.textContent || elementBelow.innerText || '';
+            const elementTag = elementBelow.tagName.toLowerCase();
+            
+            magnifier.innerHTML = `
+                <div class="magnifier-content">
+                    <div class="magnifier-tag">${elementTag}</div>
+                    <div class="magnifier-text">${elementText.substring(0, 100)}</div>
+                </div>
+            `;
+        }
+    }
+}
+
+// 高对比度模式
+function toggleHighContrast() {
+    highContrastEnabled = !highContrastEnabled;
+    
+    if (highContrastEnabled) {
+        document.body.classList.add('high-contrast');
+    } else {
+        document.body.classList.remove('high-contrast');
+    }
+}
+
+// 大字体模式
+function toggleLargeText() {
+    largeTextEnabled = !largeTextEnabled;
+    
+    if (largeTextEnabled) {
+        document.body.classList.add('large-text');
+    } else {
+        document.body.classList.remove('large-text');
+    }
+}
+
+// 色彩辅助
+function toggleColorAssist() {
+    document.body.classList.toggle('color-assist');
+}
+
+// 语音识别
+function toggleVoiceRecognition() {
+    voiceEnabled = !voiceEnabled;
+    
+    if (voiceEnabled) {
+        startVoiceRecognition();
+        updateButtonState('voice', true);
+    } else {
+        stopVoiceRecognition();
+        updateButtonState('voice', false);
+    }
+}
+
+function startVoiceRecognition() {
+    // 创建扫描按钮
+    const scanButton = document.createElement('div');
+    scanButton.id = 'voiceScanButton';
+    scanButton.className = 'voice-scan-button';
+    scanButton.innerHTML = '📖';
+    document.body.appendChild(scanButton);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    // 添加鼠标移动事件监听
+    document.addEventListener('mousemove', handleVoiceScan);
+    document.addEventListener('click', handleVoiceScanClick);
+}
+
+function stopVoiceRecognition() {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleVoiceScan);
+    document.removeEventListener('click', handleVoiceScanClick);
+}
+
+function handleVoiceScan(e) {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.style.left = (e.clientX - 25) + 'px';
+        scanButton.style.top = (e.clientY - 25) + 'px';
+    }
+}
+
+function handleVoiceScanClick(e) {
+    e.preventDefault();
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    if (elementBelow) {
+        const text = elementBelow.textContent || elementBelow.innerText || '';
+        if (text.trim()) {
+            // 使用语音合成朗读文字
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+                
+                // 显示朗读提示
+                showVoiceReadingTip(text);
+            }
+        }
+    }
+}
+
+function showVoiceReadingTip(text) {
+    const tip = document.createElement('div');
+    tip.className = 'voice-reading-tip';
+    tip.innerHTML = `
+        <div class="tip-content">
+            <span class="tip-icon">🔊</span>
+            <span class="tip-text">正在朗读：${text.substring(0, 20)}...</span>
+        </div>
+    `;
+    document.body.appendChild(tip);
+    
+    setTimeout(() => {
+        if (tip.parentElement) {
+            tip.remove();
+        }
+    }, 3000);
+}
+
+// 语音播报
+function toggleVoiceReading() {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('欢迎使用智游金旅关怀模式，我们将为您提供贴心的无障碍服务');
+        utterance.lang = 'zh-CN';
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// 音量调节
+function adjustVolume() {
+    const volume = prompt('请输入音量大小 (0-100):', '50');
+    if (volume !== null) {
+        localStorage.setItem('careModeVolume', volume);
+    }
+}
+
+// 大按钮模式
+function toggleLargeButtons() {
+    document.body.classList.toggle('large-buttons');
+}
+
+// 键盘导航
+function toggleKeyboardNav() {
+    document.body.classList.toggle('keyboard-nav');
+}
+
+// 焦点高亮
+function toggleFocusHighlight() {
+    document.body.classList.toggle('focus-highlight');
+}
+
+// 简化界面
+function toggleSimplifiedUI() {
+    document.body.classList.toggle('simplified-ui');
+}
+
+// 操作引导
+function showOperationGuide() {
+    alert('操作引导功能：\n1. 点击任意按钮会有操作提示\n2. 重要操作会显示确认对话框\n3. 支持键盘快捷键操作\n4. 语音播报会指导您完成操作');
+}
+
+// 更新按钮状态
+function updateButtonState(buttonType, isActive) {
+    const buttons = document.querySelectorAll('.care-btn');
+    buttons.forEach(button => {
+        const icon = button.querySelector('.care-icon');
+        if (icon) {
+            if (buttonType === 'magnifier' && icon.textContent === '🔍') {
+                button.classList.toggle('active', isActive);
+            } else if (buttonType === 'voice' && icon.textContent === '🎤') {
+                button.classList.toggle('active', isActive);
+            }
+        }
+    });
+}
+
+// 禁用所有关怀功能
+function disableAllCareFeatures() {
+    magnifierEnabled = false;
+    voiceEnabled = false;
+    highContrastEnabled = false;
+    largeTextEnabled = false;
+    
+    document.body.classList.remove('high-contrast', 'large-text', 'color-assist', 'large-buttons', 'keyboard-nav', 'focus-highlight', 'simplified-ui');
+    disableMagnifier();
+    stopVoiceRecognition();
+}
+</script>
+</body>
+</html>
+
+
+
+

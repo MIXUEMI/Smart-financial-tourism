@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录调试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .debug-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .debug-button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        .debug-button:hover {
+            background: #0056b3;
+        }
+        .info {
+            background: #e7f3ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        .error {
+            background: #ffe6e6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #d00;
+        }
+        .success {
+            background: #e6ffe6;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            color: #060;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-container">
+        <h1>🔧 管理员登录调试工具</h1>
+        
+        <div class="info">
+            <h3>当前状态：</h3>
+            <div id="currentStatus">正在检查...</div>
+        </div>
+        
+        <div class="info">
+            <h3>操作：</h3>
+            <button class="debug-button" onclick="testAdminLogin()">🔑 测试管理员登录</button>
+            <button class="debug-button" onclick="checkCurrentUser()">👤 检查当前用户</button>
+            <button class="debug-button" onclick="clearAllData()">🗑️ 清除所有数据</button>
+            <button class="debug-button" onclick="goToAdmin()">🎯 直接跳转管理员</button>
+            <button class="debug-button" onclick="goToMain()">🏠 跳转主页</button>
+        </div>
+        
+        <div id="result" style="margin-top: 20px; padding: 10px; background: #f8f9fa; border-radius: 5px;"></div>
+    </div>
+
+    <script>
+        // 页面加载时检查状态
+        document.addEventListener('DOMContentLoaded', function() {
+            checkCurrentUser();
+        });
+        
+        function checkCurrentUser() {
+            const rememberLogin = localStorage.getItem('rememberLogin');
+            const username = localStorage.getItem('username');
+            const userType = localStorage.getItem('userType');
+            
+            let status = `
+                <p><strong>记住登录:</strong> ${rememberLogin}</p>
+                <p><strong>用户名:</strong> ${username || '未设置'}</p>
+                <p><strong>用户类型:</strong> ${userType || '未设置'}</p>
+                <p><strong>当前URL:</strong> ${window.location.href}</p>
+            `;
+            
+            if (userType === 'admin') {
+                status += '<p style="color: green;"><strong>✅ 当前是管理员用户</strong></p>';
+            } else if (userType === 'user') {
+                status += '<p style="color: orange;"><strong>⚠️ 当前是普通用户</strong></p>';
+            } else {
+                status += '<p style="color: red;"><strong>❌ 未登录或用户类型未知</strong></p>';
+            }
+            
+            document.getElementById('currentStatus').innerHTML = status;
+        }
+        
+        function testAdminLogin() {
+            // 清除现有数据
+            localStorage.clear();
+            
+            // 设置管理员登录状态
+            localStorage.setItem('rememberLogin', 'true');
+            localStorage.setItem('username', 'admin');
+            localStorage.setItem('userType', 'admin');
+            
+            document.getElementById('result').innerHTML = 
+                '<div class="success">✅ 管理员登录状态已设置<br>用户名: admin<br>用户类型: admin<br>正在跳转到管理员控制台...</div>';
+            
+            setTimeout(() => {
+                window.location.href = '/admin';
+            }, 2000);
+        }
+        
+        function clearAllData() {
+            localStorage.clear();
+            document.getElementById('result').innerHTML = 
+                '<div class="info">🗑️ 所有数据已清除</div>';
+            checkCurrentUser();
+        }
+        
+        function goToAdmin() {
+            document.getElementById('result').innerHTML = 
+                '<div class="info">🎯 正在跳转到管理员控制台...</div>';
+            window.location.href = '/admin';
+        }
+        
+        function goToMain() {
+            document.getElementById('result').innerHTML = 
+                '<div class="info">🏠 正在跳转到主页...</div>';
+            window.location.href = '/main';
+        }
+    </script>
+</body>
+</html>
+

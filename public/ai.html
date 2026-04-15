@@ -1,0 +1,3802 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI金融旅游助手 - 智游金旅 | AI智能金融 × 云端旅游 × 数据未来</title>
+    
+    <!-- 通用样式 -->
+    <link rel="stylesheet" href="/css/base.css">
+    
+    <script src="/js/userData.js"></script>
+    
+    <!-- 关怀模式脚本 -->
+    <script src="/js/careMode.js" defer></script>
+    
+    <!-- 用户画像脚本 -->
+    <script src="/js/userSegmentation.js" defer></script>
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 100, 200, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(200, 0, 100, 0.4) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 150, 255, 0.3) 0%, transparent 50%),
+                linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+            margin: 0;
+            padding: 0;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* 确保内容区域填满整个屏幕 */
+        .main-container {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<!-- 科技动态背景 -->
+<div class="tech-particles" id="techParticles"></div>
+<div class="tech-lines" id="techLines"></div>
+
+<!-- 中国风元素 -->
+<div class="chinese-elements" id="chineseElements"></div>
+
+<!-- AI咨询页面 -->
+<style>
+    .top-buttons {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+    }
+
+    .back-button, .logout-button {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .logout-button {
+        color: #ff6b6b;
+        border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .logout-button:hover {
+        background: rgba(255, 107, 107, 0.2);
+        color: #ff4757;
+        transform: translateY(-2px);
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-button-icon, .logout-icon {
+        font-size: 16px;
+    }
+
+    /* 关怀模式按钮 */
+    .care-mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .care-mode-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .care-mode-toggle .care-icon {
+        font-size: 16px;
+    }
+
+    .care-mode-toggle .care-text {
+        font-size: 13px;
+    }
+
+    /* 关怀模式面板样式 */
+    .care-mode-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(255, 255, 255, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        overflow-y: auto;
+        border: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .care-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 2px solid rgba(255, 107, 107, 0.2);
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-radius: 18px 18px 0 0;
+    }
+
+    .care-panel-header h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .care-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .care-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .care-panel-content {
+        padding: 30px;
+    }
+
+    .care-section {
+        margin-bottom: 30px;
+    }
+
+    .care-section h4 {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ff6b6b;
+    }
+
+    .care-help {
+        background: rgba(255, 107, 107, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 15px;
+        border-left: 4px solid #ff6b6b;
+    }
+
+    .care-help p {
+        margin: 0 0 10px 0;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .care-help ul {
+        margin: 0;
+        padding-left: 20px;
+        color: #666;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+        .care-help li {
+            margin-bottom: 5px;
+        }
+
+        /* 科技粒子效果 */
+        .tech-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(2n) {
+            background: #ff00ff;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3n) {
+            background: #00ff00;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 科技线条效果 */
+        .tech-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tech-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: lineMove 10s linear infinite;
+        }
+
+        .tech-line:nth-child(2n) {
+            background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+            animation-delay: -3s;
+        }
+
+        .tech-line:nth-child(3n) {
+            background: linear-gradient(90deg, transparent, #00ff00, transparent);
+            animation-delay: -6s;
+        }
+
+        @keyframes lineMove {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风元素 */
+        .chinese-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .chinese-pattern {
+            position: absolute;
+            font-size: 20px;
+            color: rgba(255, 215, 0, 0.08);
+            animation: floatChinese 18s ease-in-out infinite;
+        }
+
+        .chinese-pattern:nth-child(1) { top: 15%; left: 3%; animation-delay: 0s; }
+        .chinese-pattern:nth-child(2) { top: 25%; right: 8%; animation-delay: -4s; }
+        .chinese-pattern:nth-child(3) { top: 65%; left: 5%; animation-delay: -8s; }
+        .chinese-pattern:nth-child(4) { top: 85%; right: 3%; animation-delay: -12s; }
+        .chinese-pattern:nth-child(5) { top: 45%; left: 45%; animation-delay: -16s; }
+
+        @keyframes floatChinese {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.08;
+            }
+            25% {
+                transform: translateY(-15px) rotate(3deg);
+                opacity: 0.2;
+            }
+            50% {
+                transform: translateY(-8px) rotate(-2deg);
+                opacity: 0.15;
+            }
+            75% {
+                transform: translateY(-25px) rotate(1deg);
+                opacity: 0.25;
+            }
+        }
+
+        /* 中国风装饰线条 */
+        .chinese-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.2), transparent);
+            animation: chineseLineMove 15s linear infinite;
+        }
+
+        .chinese-line:nth-child(1) { top: 20%; width: 180px; animation-delay: 0s; }
+        .chinese-line:nth-child(2) { top: 40%; width: 140px; animation-delay: -5s; }
+        .chinese-line:nth-child(3) { top: 60%; width: 160px; animation-delay: -10s; }
+        .chinese-line:nth-child(4) { top: 80%; width: 120px; animation-delay: -3s; }
+
+        @keyframes chineseLineMove {
+            0% {
+                left: -180px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.3;
+            }
+            90% {
+                opacity: 0.3;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风光晕效果 */
+        .chinese-glow {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 70%);
+            animation: chineseGlow 10s ease-in-out infinite;
+        }
+
+        .chinese-glow:nth-child(1) { top: 25%; left: 15%; animation-delay: 0s; }
+        .chinese-glow:nth-child(2) { top: 65%; right: 15%; animation-delay: -3s; }
+        .chinese-glow:nth-child(3) { top: 45%; left: 65%; animation-delay: -6s; }
+
+    .care-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .care-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.1) 0%, 
+            rgba(255, 215, 0, 0.1) 100%);
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        border-radius: 12px;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .care-btn:hover {
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.2) 0%, 
+            rgba(255, 215, 0, 0.2) 100%);
+        border-color: #ff6b6b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+    }
+
+    .care-btn.active {
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-color: transparent;
+    }
+
+    .care-icon {
+        font-size: 20px;
+        width: 24px;
+        text-align: center;
+    }
+
+    /* 放大镜样式 */
+    .magnifier {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        border: 3px solid #ff6b6b;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        pointer-events: none;
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .magnifier-content {
+        text-align: center;
+        color: #333;
+    }
+
+    .magnifier-tag {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .magnifier-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    /* 语音扫描按钮样式 */
+    .voice-scan-button {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        animation: voiceScanPulse 2s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes voiceScanPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    /* 语音朗读提示样式 */
+    .voice-reading-tip {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        z-index: 10001;
+        animation: slideInRight 0.3s ease;
+    }
+
+    .voice-reading-tip .tip-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .voice-reading-tip .tip-icon {
+        font-size: 18px;
+    }
+
+    .voice-reading-tip .tip-text {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* 高对比度模式 */
+    .high-contrast {
+        filter: contrast(1.5) brightness(1.2);
+    }
+
+    .high-contrast * {
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+
+    .high-contrast .sidebar,
+    .high-contrast .hero-banner {
+        background: #000 !important;
+        color: #fff !important;
+    }
+
+    /* 大字体模式 */
+    .large-text {
+        font-size: 1.2em;
+    }
+
+    .large-text h1 { font-size: 2.5em; }
+    .large-text h2 { font-size: 2em; }
+    .large-text h3 { font-size: 1.8em; }
+    .large-text p { font-size: 1.3em; }
+    .large-text .menu-link { font-size: 1.2em; }
+
+    /* 色彩辅助模式 */
+    .color-assist {
+        filter: grayscale(0.3) saturate(1.5);
+    }
+
+    /* 大按钮模式 */
+    .large-buttons button,
+    .large-buttons .menu-link,
+    .large-buttons .care-btn {
+        padding: 20px 30px !important;
+        font-size: 18px !important;
+        min-height: 60px !important;
+    }
+
+    /* 键盘导航模式 */
+    .keyboard-nav *:focus {
+        outline: 3px solid #ff6b6b !important;
+        outline-offset: 2px !important;
+    }
+
+    /* 焦点高亮模式 */
+    .focus-highlight *:focus {
+        background: rgba(255, 107, 107, 0.2) !important;
+        box-shadow: 0 0 10px rgba(255, 107, 107, 0.5) !important;
+    }
+
+    /* 简化界面模式 */
+    .simplified-ui .hero-banner {
+        padding: 20px !important;
+    }
+
+    .simplified-ui .feature-cards {
+        display: none;
+    }
+
+    .simplified-ui .ai-chat-window {
+        display: none;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .care-mode-panel {
+            width: 95%;
+            max-height: 90vh;
+        }
+        
+        .care-options {
+            grid-template-columns: 1fr;
+        }
+        
+        .care-btn {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<!-- 关怀模式、返回按钮和注销按钮 -->
+<div class="top-buttons">
+        <button class="care-mode-toggle" onclick="toggleCareMode()" title="关怀模式">
+            <span class="care-icon">❤️</span>
+            <span class="care-text">关怀模式</span>
+        </button>
+<a href="/main" class="back-button">
+    <span class="back-button-icon">←</span>
+    <span>返回主页</span>
+</a>
+    <a href="#" class="logout-button" onclick="handleLogout()">
+        <span class="logout-icon">🚪</span>
+        <span>注销登录</span>
+    </a>
+</div>
+
+<style>
+    /* 智金银行品牌横幅样式 */
+    .top-banner-section {
+        display: flex;
+        gap: 30px;
+        margin: 0;
+        padding: 20px;
+        width: 100%;
+        align-items: flex-start;
+        background: rgba(0, 0, 0, 0.1);
+        backdrop-filter: blur(10px);
+        margin-top: 20px;
+    }
+
+    /* 顶部潮玩AI标语区域 */
+    .ai-slogan-banner {
+        background: linear-gradient(135deg, 
+            rgba(0, 150, 255, 0.2) 0%, 
+            rgba(255, 100, 200, 0.2) 50%, 
+            rgba(100, 0, 255, 0.2) 100%);
+        backdrop-filter: blur(15px);
+        border-radius: 15px;
+        padding: 20px 30px;
+        margin: 0 20px 20px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-slogan-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        animation: sloganShine 3s ease-in-out infinite;
+    }
+
+    @keyframes sloganShine {
+        0% { left: -100%; }
+        50% { left: 100%; }
+        100% { left: 100%; }
+    }
+
+    .ai-slogan-title {
+        font-size: 28px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b, #4ecdc4);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 10px;
+        text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    .ai-slogan-subtitle {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+        font-weight: 500;
+    }
+
+    .ai-slogan-tags {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .slogan-tag {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 20px;
+        padding: 8px 16px;
+        font-size: 12px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        animation: tagFloat 3s ease-in-out infinite;
+    }
+
+    .slogan-tag:nth-child(1) { animation-delay: 0s; }
+    .slogan-tag:nth-child(2) { animation-delay: 0.5s; }
+    .slogan-tag:nth-child(3) { animation-delay: 1s; }
+    .slogan-tag:nth-child(4) { animation-delay: 1.5s; }
+
+    .slogan-tag:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes titlePulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.02); }
+    }
+
+    @keyframes tagFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .icbc-hero-banner {
+        position: relative;
+        background: linear-gradient(135deg, 
+            rgba(0, 100, 200, 0.95) 0%, 
+            rgba(200, 0, 100, 0.95) 50%, 
+            rgba(100, 0, 200, 0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px 40px;
+        text-align: center;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        flex: 2;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 400px;
+        margin-right: 20px;
+    }
+
+    /* 智金银行横幅内部统计区域 */
+    .icbc-banner-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 20px;
+        width: 100%;
+        flex: 1;
+    }
+
+    .icbc-banner-stats .widget-card {
+        padding: 15px;
+        margin: 0;
+        background: rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 15px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .icbc-banner-stats .widget-header {
+        margin-bottom: 8px;
+    }
+
+    .icbc-banner-stats .widget-header h3 {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.95);
+        font-weight: 600;
+    }
+
+    .icbc-banner-stats .widget-icon {
+        font-size: 18px;
+    }
+
+    /* 使用统计压缩样式 */
+    .icbc-banner-stats .total-consultations {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .icbc-banner-stats .total-consultations .number {
+        font-size: 28px;
+        font-weight: 700;
+        color: #ffd700;
+        margin-bottom: 4px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .icbc-banner-stats .total-consultations .label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+    }
+
+    .icbc-banner-stats .category-stats {
+        display: flex;
+        gap: 6px;
+    }
+
+    .icbc-banner-stats .category-item {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 6px;
+        padding: 6px 4px;
+        text-align: center;
+    }
+
+    .icbc-banner-stats .category-item .number {
+        font-size: 18px;
+        font-weight: 600;
+        color: #4ecdc4;
+        margin-bottom: 3px;
+    }
+
+    .icbc-banner-stats .category-item .label {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 500;
+    }
+
+    /* 建议历史压缩样式 */
+    .icbc-banner-stats .advice-history-list {
+        height: 100%;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .icbc-banner-stats .advice-item {
+        background: rgba(255, 255, 255, 0.12);
+        border-radius: 6px;
+        padding: 10px;
+        margin-bottom: 8px;
+        border-left: 2px solid #ffd700;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 60px;
+    }
+
+    .icbc-banner-stats .advice-date {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 4px;
+        font-weight: 500;
+    }
+
+    .icbc-banner-stats .advice-title {
+        font-size: 12px;
+        color: #ffd700;
+        margin-bottom: 4px;
+        font-weight: 600;
+    }
+
+    .icbc-banner-stats .advice-detail {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        flex: 1;
+    }
+
+    .ai-chat-banner {
+        flex: 8;
+        min-width: 600px;
+        max-width: 800px;
+        min-height: 600px;
+    }
+
+    /* 智金银行下方统计区域 */
+    .icbc-stats-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin: 20px auto 30px;
+        max-width: 1200px;
+        padding: 0 20px;
+    }
+
+    .icbc-stats-section .widget-card {
+        padding: 15px;
+        margin: 0;
+    }
+
+    .icbc-stats-section .widget-header {
+        margin-bottom: 10px;
+    }
+
+    .icbc-stats-section .widget-header h3 {
+        font-size: 14px;
+    }
+
+    .icbc-stats-section .widget-icon {
+        font-size: 20px;
+    }
+
+    /* 使用统计压缩样式 */
+    .icbc-stats-section .total-consultations {
+        text-align: center;
+        margin-bottom: 15px;
+    }
+
+    .icbc-stats-section .total-consultations .number {
+        font-size: 32px;
+        font-weight: 700;
+        color: #00d4ff;
+        margin-bottom: 3px;
+    }
+
+    .icbc-stats-section .total-consultations .label {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .icbc-stats-section .category-stats {
+        display: flex;
+        gap: 8px;
+    }
+
+    .icbc-stats-section .category-item {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.08);
+        border-radius: 8px;
+        padding: 10px 8px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .icbc-stats-section .category-item .number {
+        font-size: 20px;
+        font-weight: 600;
+        color: #ff9900;
+        margin-bottom: 3px;
+    }
+
+    .icbc-stats-section .category-item .label {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* 建议历史压缩样式 */
+    .icbc-stats-section .advice-history-list {
+        max-height: 120px;
+        overflow-y: auto;
+    }
+
+    .icbc-stats-section .advice-item {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 6px;
+        padding: 8px;
+        margin-bottom: 6px;
+    }
+
+    .icbc-stats-section .advice-date {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 3px;
+    }
+
+    .icbc-stats-section .advice-title {
+        font-size: 12px;
+        color: #00d4ff;
+        margin-bottom: 3px;
+        font-weight: 600;
+    }
+
+    .icbc-stats-section .advice-detail {
+        font-size: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.3;
+    }
+
+    /* AI智能对话内部布局调整 */
+    .ai-chat-banner .widget-content {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+    }
+
+    .ai-chat-banner .chat-container {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: auto !important;
+    }
+
+    .ai-chat-banner .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        max-height: 200px;
+    }
+
+    /* 快速问答在AI对话内的样式 */
+    .ai-chat-banner .quick-questions-section {
+        margin-top: 10px;
+        margin-bottom: 15px;
+    }
+
+    .ai-chat-banner .quick-questions-section .widget-header {
+        margin-bottom: 10px;
+        padding: 0 15px;
+    }
+
+    .ai-chat-banner .quick-questions-section .widget-header h3 {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.9);
+    }
+
+    .ai-chat-banner .quick-questions {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        padding: 0 15px;
+    }
+
+    .ai-chat-banner .quick-question {
+        padding: 12px 8px;
+        text-align: center;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+    }
+
+    .ai-chat-banner .quick-question-icon {
+        font-size: 18px;
+        margin-bottom: 0;
+    }
+
+    .ai-chat-banner .quick-question-text {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.2;
+    }
+
+    .icbc-logo-section {
+        margin-bottom: 30px;
+    }
+
+    .icbc-logo {
+        font-size: 48px;
+        font-weight: 900;
+        background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+        margin-bottom: 10px;
+        letter-spacing: 8px;
+        animation: logoGlow 3s ease-in-out infinite alternate;
+    }
+
+    .icbc-subtitle {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 600;
+        letter-spacing: 2px;
+    }
+
+    .ai-main-title {
+        font-size: 42px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffffff, #e6f3ff, #ffffff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    .ai-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 25px;
+        font-weight: 500;
+        line-height: 1.4;
+    }
+
+    .ai-features-badge {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .badge-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 8px 16px;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        animation: badgeFloat 3s ease-in-out infinite;
+    }
+
+    .badge-item:nth-child(1) { animation-delay: 0s; }
+    .badge-item:nth-child(2) { animation-delay: 0.5s; }
+    .badge-item:nth-child(3) { animation-delay: 1s; }
+    .badge-item:nth-child(4) { animation-delay: 1.5s; }
+
+    .badge-item:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .floating-elements {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .float-element {
+        position: absolute;
+        font-size: 24px;
+        opacity: 0.6;
+        animation: floatAround 8s ease-in-out infinite;
+    }
+
+    .float-element.element-1 {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .float-element.element-2 {
+        top: 30%;
+        right: 15%;
+        animation-delay: 2s;
+    }
+
+    .float-element.element-3 {
+        bottom: 25%;
+        left: 20%;
+        animation-delay: 4s;
+    }
+
+    .float-element.element-4 {
+        bottom: 35%;
+        right: 10%;
+        animation-delay: 6s;
+    }
+
+    .float-element.element-5 {
+        top: 50%;
+        left: 50%;
+        animation-delay: 1s;
+    }
+
+    @keyframes logoGlow {
+        0% { text-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
+        100% { text-shadow: 0 0 50px rgba(255, 215, 0, 0.8), 0 0 80px rgba(255, 215, 0, 0.3); }
+    }
+
+    @keyframes titlePulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.02); }
+    }
+
+    @keyframes badgeFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    @keyframes floatAround {
+        0%, 100% { transform: translateY(0px) rotate(0deg); }
+        25% { transform: translateY(-10px) rotate(5deg); }
+        50% { transform: translateY(-5px) rotate(-3deg); }
+        75% { transform: translateY(-15px) rotate(3deg); }
+    }
+
+    .ai-dashboard {
+        margin-bottom: 30px;
+    }
+
+    .ai-main-layout {
+        margin-bottom: 30px;
+    }
+
+    .ai-chat-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .quick-questions-section {
+        width: 100%;
+        margin-top: 20px;
+    }
+
+    .ai-widgets-full {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        margin: 0;
+        padding: 20px;
+        width: 100%;
+        background: rgba(0, 0, 0, 0.05);
+        backdrop-filter: blur(5px);
+    }
+
+    /* 智能服务流 - 连贯的功能展示 */
+    .ai-service-flow {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+    }
+
+    .service-card {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15) 0%, 
+            rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        transition: left 0.6s ease;
+    }
+
+    .service-card:hover::before {
+        left: 100%;
+    }
+
+    .service-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(0, 150, 255, 0.5);
+    }
+
+    .service-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        display: block;
+        text-align: center;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 20px rgba(0, 212, 255, 0.3));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    .service-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: white;
+        text-align: center;
+        margin-bottom: 10px;
+        background: linear-gradient(135deg, #ffffff, #e6f3ff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .service-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        text-align: center;
+        line-height: 1.5;
+        margin-bottom: 20px;
+    }
+
+    .service-actions {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .service-btn {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 16px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .service-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.2), 
+            transparent);
+        transition: left 0.5s ease;
+    }
+
+    .service-btn:hover::before {
+        left: 100%;
+    }
+
+    .service-btn:hover {
+        transform: translateY(-2px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .service-btn.secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .service-btn.secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* 智能推荐区域 - 整合所有推荐功能 */
+    .ai-recommendations {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15) 0%, 
+            rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .ai-recommendations::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #00d4ff, #ff6b6b, #4ecdc4, #ffd700);
+        animation: gradientShift 3s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .recommendations-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .recommendations-title {
+        font-size: 24px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+    }
+
+    .recommendations-subtitle {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .recommendations-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .tab-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: rgba(255, 255, 255, 0.8);
+        padding: 8px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        color: white;
+        border-color: transparent;
+    }
+
+    .tab-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .recommendations-content {
+        min-height: 200px;
+        position: relative;
+    }
+
+    .recommendation-tab {
+        display: none;
+        padding: 20px;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .recommendation-tab.active {
+        display: block;
+    }
+
+    .recommendation-tab .loading-spinner {
+        margin: 50px auto;
+    }
+
+    /* 压缩卡片样式 */
+    .compact-widget {
+        padding: 15px;
+    }
+
+    .compact-widget .widget-header {
+        margin-bottom: 10px;
+    }
+
+    .compact-widget .widget-header h3 {
+        font-size: 14px;
+    }
+
+    .compact-widget .widget-icon {
+        font-size: 20px;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 1200px) {
+        .top-banner-section {
+            flex-direction: column;
+            gap: 20px;
+            padding: 15px;
+        }
+        
+        .ai-chat-banner {
+            width: 100%;
+            max-width: none;
+        }
+        
+        .ai-chat-banner .quick-questions {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .ai-widgets-full {
+            padding: 15px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .ai-slogan-banner {
+            margin: 0 10px 15px;
+            padding: 15px 20px;
+        }
+        
+        .ai-slogan-title {
+            font-size: 22px;
+        }
+        
+        .ai-slogan-subtitle {
+            font-size: 14px;
+        }
+        
+        .slogan-tag {
+            font-size: 11px;
+            padding: 6px 12px;
+        }
+        
+        .top-banner-section {
+            padding: 10px;
+        }
+        
+        .icbc-banner-stats {
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .ai-chat-banner .quick-questions {
+            grid-template-columns: 1fr;
+        }
+        
+        .ai-service-flow {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        
+        .service-card {
+            padding: 20px;
+        }
+        
+        .service-icon {
+            font-size: 40px;
+        }
+        
+        .service-title {
+            font-size: 18px;
+        }
+        
+        .recommendations-tabs {
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .tab-btn {
+            padding: 6px 16px;
+            font-size: 12px;
+        }
+        
+        .ai-widgets-full {
+            padding: 10px;
+        }
+    }
+
+    .widget-card {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.15) 0%, 
+            rgba(255, 255, 255, 0.05) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .widget-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        transition: left 0.6s ease;
+    }
+
+    .widget-card:hover::before {
+        left: 100%;
+    }
+
+    .widget-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        border-color: rgba(0, 150, 255, 0.5);
+    }
+
+    .widget-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .widget-icon {
+        font-size: 28px;
+        margin-right: 15px;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+    }
+
+    .widget-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .widget-content {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        width: 30px;
+        height: 30px;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .chat-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        margin-bottom: 20px;
+        height: 500px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        margin-bottom: 15px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 10px;
+    }
+
+    .message {
+        margin-bottom: 15px;
+        padding: 10px 15px;
+        border-radius: 15px;
+        max-width: 80%;
+        word-wrap: break-word;
+    }
+
+    .message.user {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        color: white;
+        margin-left: auto;
+        text-align: right;
+    }
+
+    .message.ai {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        margin-right: auto;
+    }
+
+    .message-time {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-top: 5px;
+    }
+
+    .chat-input-container {
+        display: flex;
+        gap: 10px;
+    }
+
+    .chat-input {
+        flex: 1;
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 12px 20px;
+        color: white;
+        font-size: 14px;
+        outline: none;
+    }
+
+    .chat-input::placeholder {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    .chat-send {
+        background: linear-gradient(135deg, #1e3c72, #2a5298, #1e3c72);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 25px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .chat-send::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.2), 
+            transparent);
+        transition: left 0.5s ease;
+    }
+
+    .chat-send:hover::before {
+        left: 100%;
+    }
+
+    .chat-send:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* 场景化提示样式 */
+    .scenario-prompts {
+        margin: 20px 0;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .scenario-prompts h4 {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+        text-align: center;
+        font-size: 1.1rem;
+    }
+
+    .prompt-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .prompt-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 10px 20px;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .prompt-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .prompt-btn.active {
+        background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        border-color: #4CAF50;
+    }
+
+    .quick-questions {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 15px;
+    }
+
+    .quick-question {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.1) 0%, 
+            rgba(255, 255, 255, 0.05) 100%);
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 20px 15px;
+        cursor: pointer;
+        transition: all 0.4s ease;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .quick-question::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        transition: left 0.6s ease;
+    }
+
+    .quick-question:hover::before {
+        left: 100%;
+    }
+
+    .quick-question:hover {
+        background: linear-gradient(135deg, 
+            rgba(0, 150, 255, 0.2) 0%, 
+            rgba(255, 255, 255, 0.1) 100%);
+        transform: translateY(-5px) scale(1.05);
+        border-color: rgba(0, 150, 255, 0.5);
+        box-shadow: 0 10px 25px rgba(0, 150, 255, 0.2);
+    }
+
+    .quick-question-text {
+        font-size: 13px;
+        color: white;
+        font-weight: 600;
+        text-align: center;
+        line-height: 1.3;
+    }
+
+    .quick-question-icon {
+        font-size: 24px;
+        filter: drop-shadow(0 0 10px rgba(0, 150, 255, 0.3));
+        animation: iconPulse 2s ease-in-out infinite;
+        flex-shrink: 0;
+    }
+
+    @keyframes iconPulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+    }
+
+    .ai-features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .feature-item {
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.08) 0%, 
+            rgba(255, 255, 255, 0.03) 100%);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .feature-item::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(0, 150, 255, 0.1), 
+            transparent);
+        transition: left 0.6s ease;
+    }
+
+    .feature-item:hover::before {
+        left: 100%;
+    }
+
+    .feature-item:hover {
+        background: linear-gradient(135deg, 
+            rgba(0, 150, 255, 0.15) 0%, 
+            rgba(255, 255, 255, 0.08) 100%);
+        transform: translateY(-5px) scale(1.02);
+        border-color: rgba(0, 150, 255, 0.4);
+        box-shadow: 0 10px 25px rgba(0, 150, 255, 0.2);
+    }
+
+    .feature-icon {
+        font-size: 28px;
+        margin-bottom: 12px;
+        display: block;
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        filter: drop-shadow(0 0 10px rgba(0, 212, 255, 0.3));
+        animation: iconFloat 3s ease-in-out infinite;
+    }
+
+    @keyframes iconFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    .feature-title {
+        font-size: 18px;
+        font-weight: 700;
+        background: linear-gradient(135deg, #00d4ff, #ffffff);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 8px;
+        text-shadow: 0 0 10px rgba(0, 212, 255, 0.3);
+    }
+
+    .feature-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        line-height: 1.4;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 12px 24px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 700;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .btn-primary::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.2), 
+            transparent);
+        transition: left 0.5s ease;
+    }
+
+    .btn-primary:hover::before {
+        left: 100%;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 10px 25px rgba(30, 60, 114, 0.4);
+        border-color: rgba(255, 255, 255, 0.6);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    /* 推荐卡片样式 */
+    .recommendation-section {
+        margin-bottom: 20px;
+    }
+
+    .recommendation-section h4 {
+        color: #00d4ff;
+        margin-bottom: 15px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .recommendation-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+    }
+
+    .recommendation-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 15px;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .recommendation-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(0, 212, 255, 0.3);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .recommendation-card.cross-selling {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1));
+        border-color: rgba(0, 212, 255, 0.3);
+    }
+
+    .recommendation-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .recommendation-type {
+        background: rgba(0, 212, 255, 0.2);
+        color: #00d4ff;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .match-score {
+        color: #4ecdc4;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .recommendation-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 8px;
+    }
+
+    .recommendation-desc {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .recommendation-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #4ecdc4;
+        margin-bottom: 10px;
+    }
+
+    .recommendation-benefits, .recommendation-highlights {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-bottom: 10px;
+    }
+
+    .benefit-tag, .highlight-tag {
+        background: rgba(78, 205, 196, 0.2);
+        color: #4ecdc4;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 500;
+    }
+
+    .recommendation-components {
+        margin-bottom: 10px;
+    }
+
+    .recommendation-components h5 {
+        color: #00d4ff;
+        font-size: 12px;
+        margin-bottom: 5px;
+    }
+
+    .recommendation-components ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .recommendation-components li {
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 12px;
+        margin-bottom: 3px;
+        padding-left: 10px;
+        position: relative;
+    }
+
+    .recommendation-components li:before {
+        content: "•";
+        color: #4ecdc4;
+        position: absolute;
+        left: 0;
+    }
+
+    .recommendation-savings {
+        color: #ff6b6b;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+
+    .recommendation-reason {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        font-style: italic;
+        margin-bottom: 15px;
+    }
+
+    .recommendation-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .recommendation-actions .btn-primary,
+    .recommendation-actions .btn-secondary {
+        flex: 1;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+</style>
+
+<!-- 潮玩AI标语横幅 -->
+<div class="ai-slogan-banner">
+    <div class="ai-slogan-title">🚀 潮玩AI · 智领未来</div>
+    <div class="ai-slogan-subtitle">当金融遇见旅游，当AI遇见生活，每一次对话都是智慧的火花</div>
+    <div class="ai-slogan-tags">
+        <span class="slogan-tag">🤖 AI智能对话</span>
+        <span class="slogan-tag">💰 金融科技</span>
+        <span class="slogan-tag">✈️ 智慧旅游</span>
+        <span class="slogan-tag">🎯 个性化推荐</span>
+    </div>
+</div>
+
+<!-- 顶部横幅区域 -->
+<div class="top-banner-section">
+        <!-- 左侧：智金银行品牌横幅 -->
+    <div class="icbc-hero-banner">
+        <div class="icbc-logo-section">
+            <div class="icbc-logo">ZJ Bank</div>
+            <div class="icbc-subtitle">智金银行</div>
+        </div>
+        <div class="ai-title-section">
+            <h1 class="ai-main-title">AI金融旅游助手</h1>
+            <p class="ai-subtitle">智游金旅 | AI智能金融 × 云端旅游 × 数据未来</p>
+            <div class="ai-features-badge">
+                <span class="badge-item">🧠 智能分析</span>
+                <span class="badge-item">💰 金融顾问</span>
+                <span class="badge-item">✈️ 旅游规划</span>
+                <span class="badge-item">🔒 安全可靠</span>
+            </div>
+        </div>
+        <div class="floating-elements">
+            <div class="float-element element-1">💰</div>
+            <div class="float-element element-2">✈️</div>
+            <div class="float-element element-3">🏛️</div>
+            <div class="float-element element-4">💎</div>
+            <div class="float-element element-5">🌟</div>
+        </div>
+
+        <!-- 使用统计和建议历史 (整合到横幅内部) -->
+        <div class="icbc-banner-stats">
+            <!-- 使用统计 -->
+            <div class="widget-card">
+                <div class="widget-header">
+                    <span class="widget-icon">📊</span>
+                    <h3>使用统计</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="total-consultations">
+                        <div class="number" id="totalConsultationsCount">870</div>
+                        <div class="label">累计咨询次数</div>
+                    </div>
+                    <div class="category-stats">
+                        <div class="category-item">
+                            <div class="number" id="financialConsultationsCount">0</div>
+                            <div class="label">金融咨询</div>
+                        </div>
+                        <div class="category-item">
+                            <div class="number" id="travelConsultationsCount">0</div>
+                            <div class="label">旅游咨询</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 建议历史 -->
+            <div class="widget-card">
+                <div class="widget-header">
+                    <span class="widget-icon">📝</span>
+                    <h3>建议历史</h3>
+                </div>
+                <div class="widget-content">
+                    <div class="advice-history-list" id="adviceHistoryList">
+                        <div class="advice-item">
+                            <div class="advice-date">2025-09-29</div>
+                            <div class="advice-title">北京旅游推荐</div>
+                            <div class="advice-detail">推荐了故宫、长城等经典景点,并提供了智金银行相关优惠信息</div>
+                        </div>
+                        <div class="advice-item">
+                            <div class="advice-date">2025-09-28</div>
+                            <div class="advice-title">理财产品咨询</div>
+                            <div class="advice-detail">建议配置稳健型理财产品,年化收益4-6%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 右侧：AI智能对话 -->
+    <div class="ai-chat-banner">
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">💬</span>
+            <h3>AI智能对话</h3>
+        </div>
+        <div class="widget-content">
+            <div class="chat-container">
+                <div class="chat-messages" id="aiChatMessages">
+                    <div class="message ai">
+                        <div>您好！我是智游金旅AI助手，可以为您提供金融和旅游方面的专业建议。请问有什么可以帮助您的吗？</div>
+                        <div class="message-time">刚刚</div>
+        </div>
+    </div>
+
+                    <!-- 快速问答集成到AI对话内 -->
+                    <div class="quick-questions-section">
+        <div class="widget-header">
+            <span class="widget-icon">⚡</span>
+            <h3>快速问题</h3>
+        </div>
+            <div class="quick-questions">
+                <div class="quick-question" onclick="askQuickQuestion('北京有什么好玩的景点？')">
+                    <div class="quick-question-icon">🏛️</div>
+                    <div class="quick-question-text">北京旅游推荐</div>
+                </div>
+                <div class="quick-question" onclick="askQuickQuestion('现在适合投资什么理财产品？')">
+                    <div class="quick-question-icon">💰</div>
+                    <div class="quick-question-text">理财建议</div>
+                </div>
+                <div class="quick-question" onclick="askQuickQuestion('如何规划一次完美的旅行？')">
+                    <div class="quick-question-icon">✈️</div>
+                    <div class="quick-question-text">旅行规划</div>
+                </div>
+                <div class="quick-question" onclick="askQuickQuestion('如何降低投资风险？')">
+                    <div class="quick-question-icon">🛡️</div>
+                    <div class="quick-question-text">风险控制</div>
+            </div>
+        </div>
+    </div>
+
+                    <!-- AI场景化提示按钮 -->
+                    <div class="scenario-prompts">
+                        <h4>🎯 快速开始</h4>
+                        <div class="prompt-buttons">
+                            <button class="prompt-btn" onclick="setPrompt('budget')">💰 预算诊断</button>
+                            <button class="prompt-btn" onclick="setPrompt('rights')">🎁 权益策略</button>
+                            <button class="prompt-btn" onclick="setPrompt('emotion')">💝 情绪调理</button>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <input type="text" class="chat-input" id="aiChatInput" placeholder="输入您的问题..." onkeypress="handleChatKeyPress(event)">
+                        <button class="chat-send" onclick="sendMessage()">发送</button>
+            </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<div class="ai-dashboard">
+
+
+    <!-- 智能服务流 - 连贯的功能展示 -->
+    <div class="ai-widgets-full">
+        <!-- 三大核心服务 -->
+        <div class="ai-service-flow">
+            <!-- 智能对话服务 -->
+            <div class="service-card" onclick="focusChatInput()">
+                <div class="service-icon">💬</div>
+                <div class="service-title">智能对话</div>
+                <div class="service-desc">与AI助手实时交流，获得专业的金融和旅游建议</div>
+                <div class="service-actions">
+                    <button class="service-btn" onclick="askQuickQuestion('帮我分析一下当前的投资环境')">
+                        📊 投资分析
+                    </button>
+                    <button class="service-btn secondary" onclick="askQuickQuestion('推荐一些适合的旅游目的地')">
+                        🌍 目的地推荐
+                    </button>
+            </div>
+        </div>
+
+            <!-- 智能推荐服务 -->
+            <div class="service-card" onclick="showRecommendations()">
+                <div class="service-icon">🎯</div>
+                <div class="service-title">智能推荐</div>
+                <div class="service-desc">基于您的需求，提供个性化的金融产品和旅游方案</div>
+                <div class="service-actions">
+                    <button class="service-btn" onclick="askQuickQuestion('帮我制定理财计划')">
+                        💰 理财规划
+                    </button>
+                    <button class="service-btn secondary" onclick="askQuickQuestion('推荐一些适合的旅游目的地')">
+                        ✈️ 旅行规划
+                    </button>
+            </div>
+        </div>
+
+            <!-- 智能工具服务 -->
+            <div class="service-card" onclick="showTools()">
+                <div class="service-icon">🛠️</div>
+                <div class="service-title">智能工具</div>
+                <div class="service-desc">使用专业工具进行风险评估、计算和规划</div>
+                <div class="service-actions">
+                    <button class="service-btn" onclick="openRiskAssessment()">
+                        ⚠️ 风险评估
+                    </button>
+                    <button class="service-btn secondary" onclick="openFinancialCalculator()">
+                        🧮 金融计算器
+                    </button>
+            </div>
+            </div>
+        </div>
+
+        <!-- 智能推荐区域 - 整合所有推荐功能 -->
+        <div class="ai-recommendations">
+            <div class="recommendations-header">
+                <div class="recommendations-title">🎁 智能推荐中心</div>
+                <div class="recommendations-subtitle">基于AI分析，为您量身定制金融旅游一体化方案</div>
+            </div>
+            
+            <div class="recommendations-tabs">
+                <button class="tab-btn active" onclick="switchRecommendationTab('financial')">
+                    💰 金融推荐
+                    </button>
+                <button class="tab-btn" onclick="switchRecommendationTab('travel')">
+                    🏛️ 旅游推荐
+                    </button>
+                <button class="tab-btn" onclick="switchRecommendationTab('combo')">
+                    🎁 组合推荐
+                    </button>
+                </div>
+
+            <div class="recommendations-content">
+                <div id="financialRecommendations" class="recommendation-tab active">
+                    <div class="loading-spinner"></div>
+            </div>
+                <div id="travelRecommendations" class="recommendation-tab">
+                    <div class="loading-spinner"></div>
+                </div>
+                <div id="crossSellingRecommendations" class="recommendation-tab">
+                    <div class="loading-spinner"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// AI咨询页面特定的JavaScript功能
+document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!checkLoginStatus()) return;
+
+            // 初始化AI对话功能
+            initializeAIChat();
+            
+    loadUsageStats();
+    loadAdviceHistory();
+    initTechBackground();
+            
+            // 初始化AI页面互动功能
+            initAIInteractiveFeatures();
+        });
+
+// 初始化AI对话功能
+function initializeAIChat() {
+    console.log('💬 AI对话功能已初始化');
+}
+
+        // 初始化科技背景效果
+        function initTechBackground() {
+            createParticles();
+            createTechLines();
+            createChineseElements();
+        }
+
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('techParticles');
+            const particleCount = 45;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 创建科技线条效果
+        function createTechLines() {
+            const linesContainer = document.getElementById('techLines');
+            const lineCount = 7;
+            
+            for (let i = 0; i < lineCount; i++) {
+                const line = document.createElement('div');
+                line.className = 'tech-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = (Math.random() * 200 + 100) + 'px';
+                line.style.animationDelay = Math.random() * 10 + 's';
+                line.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                linesContainer.appendChild(line);
+            }
+        }
+
+        // 创建中国风元素
+        function createChineseElements() {
+            const chineseContainer = document.getElementById('chineseElements');
+            
+            // 中国风图案 - AI主题
+            const chinesePatterns = ['☯', '☰', '☷', '☲', '☳', '☴', '☵', '☶', '☱', '智', '慧', '云', '算', '数', '据', '网', '络', 'AI'];
+            
+            for (let i = 0; i < 5; i++) {
+                const pattern = document.createElement('div');
+                pattern.className = 'chinese-pattern';
+                pattern.textContent = chinesePatterns[Math.floor(Math.random() * chinesePatterns.length)];
+                chineseContainer.appendChild(pattern);
+            }
+            
+            // 中国风装饰线条
+            for (let i = 0; i < 4; i++) {
+                const line = document.createElement('div');
+                line.className = 'chinese-line';
+                chineseContainer.appendChild(line);
+            }
+            
+            // 中国风光晕效果
+            for (let i = 0; i < 3; i++) {
+                const glow = document.createElement('div');
+                glow.className = 'chinese-glow';
+                chineseContainer.appendChild(glow);
+            }
+        }
+
+// 场景化提示功能
+function setPrompt(type) {
+    const input = document.getElementById('aiChatInput');
+    let promptText = '';
+    
+    switch(type) {
+        case 'budget':
+            promptText = '请帮我分析一下我的旅行预算是否合理，并给出优化建议。';
+            break;
+        case 'rights':
+            promptText = '根据我的旅行计划，推荐最适合的金融权益和优惠活动。';
+            break;
+        case 'emotion':
+            promptText = '我最近在理财和旅行规划上有些焦虑，请给我一些心理疏导和建议。';
+            break;
+        default:
+            return;
+    }
+    
+    input.value = promptText;
+    input.focus();
+    
+    // 更新按钮状态
+    document.querySelectorAll('.prompt-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    // 自动发送消息
+    setTimeout(() => {
+        sendMessage();
+    }, 500);
+}
+
+// 发送消息
+async function sendMessage() {
+    const input = document.getElementById('aiChatInput');
+    const message = input.value.trim();
+    
+    if (!message) return;
+
+    // 添加用户消息
+    addMessage(message, 'user');
+    
+    // 保存用户消息到个人中心
+    if (typeof userDataManager !== 'undefined') {
+        userDataManager.addChatMessage(message, true);
+    }
+    
+    input.value = '';
+
+    // 显示AI正在思考
+    const thinkingId = addMessage('AI正在思考中...', 'ai', true);
+
+    try {
+        const response = await fetch('/api/ai/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ message: message })
+        });
+
+        const data = await response.json();
+        const aiResponse = data.response || '抱歉，我暂时无法回答您的问题。';
+        
+        // 移除思考消息，添加AI回复
+        removeMessage(thinkingId);
+        addMessage(aiResponse, 'ai');
+        
+        // 保存AI回复到个人中心
+        if (typeof userDataManager !== 'undefined') {
+            userDataManager.addChatMessage(aiResponse, false);
+        }
+    } catch (error) {
+        console.error('AI聊天错误:', error);
+        removeMessage(thinkingId);
+        const errorMessage = '抱歉，服务暂时不可用。';
+        addMessage(errorMessage, 'ai');
+        
+        // 保存错误消息到个人中心
+        if (typeof userDataManager !== 'undefined') {
+            userDataManager.addChatMessage(errorMessage, false);
+        }
+    }
+}
+
+// 处理回车键
+function handleChatKeyPress(event) {
+    if (event.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+// 添加消息到聊天界面
+function addMessage(content, sender, isTemporary = false) {
+    const messagesContainer = document.getElementById('aiChatMessages');
+    const messageDiv = document.createElement('div');
+    const messageId = isTemporary ? 'temp-' + Date.now() : null;
+    
+    messageDiv.className = `message ${sender}`;
+    if (messageId) messageDiv.id = messageId;
+    
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('zh-CN', { 
+        hour: '2-digit', 
+        minute: '2-digit' 
+    });
+    
+    messageDiv.innerHTML = `
+        <div>${content}</div>
+        <div class="message-time">${timeString}</div>
+    `;
+    
+    messagesContainer.appendChild(messageDiv);
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    return messageId;
+}
+
+// 移除消息
+function removeMessage(messageId) {
+    const message = document.getElementById(messageId);
+    if (message) {
+        message.remove();
+    }
+}
+
+// 快速问题
+function askQuickQuestion(question) {
+    document.getElementById('aiChatInput').value = question;
+    sendMessage();
+}
+
+// 加载使用统计
+async function loadUsageStats() {
+    try {
+        const response = await fetch('/api/ai/usage-stats');
+        const data = await response.json();
+        
+        const statsContainer = document.getElementById('usageStats');
+        if (statsContainer) {
+            statsContainer.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 24px; font-weight: 700; color: #00d4ff; margin-bottom: 10px;">
+                        ${data.totalQuestions || 0}
+                    </div>
+                    <div style="font-size: 14px; color: rgba(255,255,255,0.8); margin-bottom: 15px;">
+                        累计咨询次数
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="color: #4ecdc4; font-weight: 600;">${data.financialQuestions || 0}</div>
+                            <div style="color: rgba(255,255,255,0.7);">金融咨询</div>
+                        </div>
+                        <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                            <div style="color: #ff6b6b; font-weight: 600;">${data.tourismQuestions || 0}</div>
+                            <div style="color: rgba(255,255,255,0.7);">旅游咨询</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载使用统计失败:', error);
+        const statsContainer = document.getElementById('usageStats');
+        if (statsContainer) {
+            statsContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">统计数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载建议历史
+async function loadAdviceHistory() {
+    try {
+        const response = await fetch('/api/ai/advice-history');
+        const data = await response.json();
+        
+        const historyContainer = document.getElementById('adviceHistory');
+        if (historyContainer) {
+            const history = data.history || [
+                { date: '2025-09-27', topic: '北京旅游推荐', summary: '推荐了故宫、长城等景点' },
+                { date: '2025-09-26', topic: '理财产品咨询', summary: '建议配置稳健型理财产品' },
+                { date: '2025-09-25', topic: '风险评估', summary: '进行了个人风险承受能力评估' }
+            ];
+            
+            historyContainer.innerHTML = `
+                <div style="max-height: 200px; overflow-y: auto;">
+                    ${history.map(item => `
+                        <div style="background: rgba(255,255,255,0.05); border-radius: 8px; padding: 10px; margin-bottom: 8px;">
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 3px;">${item.date}</div>
+                            <div style="font-size: 14px; color: #00d4ff; margin-bottom: 3px;">${item.topic}</div>
+                            <div style="font-size: 12px; color: rgba(255,255,255,0.8);">${item.summary}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载建议历史失败:', error);
+        const historyContainer = document.getElementById('adviceHistory');
+        if (historyContainer) {
+            historyContainer.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">历史记录暂时不可用</div>';
+        }
+    }
+}
+
+// 智能工具功能
+function openFinancialCalculator() {
+    alert('打开金融计算器...');
+    // 这里可以打开金融计算器弹窗或跳转到计算器页面
+}
+
+function openTravelPlanner() {
+    alert('打开旅行规划器...');
+    // 这里可以打开旅行规划器弹窗或跳转到规划器页面
+}
+
+function openRiskAssessment() {
+    alert('开始风险评估...');
+    // 这里可以打开风险评估弹窗或跳转到评估页面
+}
+
+function exportChatHistory() {
+    alert('导出对话历史...');
+    // 这里可以实现导出对话历史的功能
+}
+
+// 智能推荐引擎
+class SmartRecommendationEngine {
+    constructor() {
+        this.userProfile = this.loadUserProfile();
+        this.recommendationHistory = this.loadRecommendationHistory();
+    }
+
+    // 加载用户画像
+    loadUserProfile() {
+        return {
+            age: 28,
+            income: 15000,
+            riskTolerance: 'moderate',
+            travelFrequency: 'monthly',
+            preferredDestinations: ['北京', '上海', '杭州'],
+            investmentGoals: ['wealth_accumulation', 'travel_fund'],
+            spendingPatterns: {
+                accommodation: 'mid_range',
+                dining: 'premium',
+                transportation: 'convenience'
+            },
+            financialProducts: {
+                creditCards: ['travel_card'],
+                investments: ['funds', 'stocks'],
+                insurance: ['travel_insurance']
+            }
+        };
+    }
+
+    // 加载推荐历史
+    loadRecommendationHistory() {
+        return [
+            { type: 'financial', product: '旅游信用卡', score: 4.5, date: '2025-09-25' },
+            { type: 'travel', product: '北京3日游', score: 4.8, date: '2025-09-24' },
+            { type: 'financial', product: '旅行基金', score: 4.2, date: '2025-09-23' }
+        ];
+    }
+
+    // 生成个性化推荐
+    generatePersonalizedRecommendations() {
+        const recommendations = {
+            financial: this.generateFinancialRecommendations(),
+            travel: this.generateTravelRecommendations(),
+            crossSelling: this.generateCrossSellingRecommendations()
+        };
+        
+        this.displayRecommendations(recommendations);
+        return recommendations;
+    }
+
+    // 生成金融产品推荐
+    generateFinancialRecommendations() {
+        const profile = this.userProfile;
+        const recommendations = [];
+
+        // 基于收入水平的推荐
+        if (profile.income > 10000) {
+            recommendations.push({
+                type: 'premium_credit_card',
+                name: '智游白金卡',
+                description: '专为高收入用户设计，享受旅游积分翻倍',
+                benefits: ['2倍积分', '机场贵宾厅', '旅行保险'],
+                matchScore: 0.95,
+                reason: '基于您的收入水平，推荐高端信用卡产品'
+            });
+        }
+
+        // 基于风险偏好的推荐
+        if (profile.riskTolerance === 'moderate') {
+            recommendations.push({
+                type: 'balanced_fund',
+                name: '智游平衡基金',
+                description: '稳健型投资，适合中等风险偏好',
+                benefits: ['年化收益6-8%', '风险可控', '流动性好'],
+                matchScore: 0.88,
+                reason: '符合您的风险偏好，平衡收益与风险'
+            });
+        }
+
+        // 基于旅行频率的推荐
+        if (profile.travelFrequency === 'monthly') {
+            recommendations.push({
+                type: 'travel_insurance',
+                name: '全年旅行保险',
+                description: '为频繁旅行者设计的全年保障',
+                benefits: ['全年覆盖', '全球理赔', '24小时服务'],
+                matchScore: 0.92,
+                reason: '根据您的旅行频率，推荐全年保险产品'
+            });
+        }
+
+        return recommendations;
+    }
+
+    // 生成旅游推荐
+    generateTravelRecommendations() {
+        const profile = this.userProfile;
+        const recommendations = [];
+
+        // 基于预算的推荐
+        const budget = this.calculateTravelBudget();
+        
+        recommendations.push({
+            type: 'destination',
+            name: '杭州西湖3日游',
+            description: '根据您的预算和偏好推荐',
+            price: budget * 0.8,
+            highlights: ['西湖十景', '雷峰塔', '灵隐寺'],
+            matchScore: 0.90,
+            reason: '符合您的预算范围和兴趣偏好'
+        });
+
+        // 基于消费模式的推荐
+        if (profile.spendingPatterns.accommodation === 'mid_range') {
+            recommendations.push({
+                type: 'hotel',
+                name: '杭州君悦酒店',
+                description: '中高端酒店，性价比高',
+                price: 800,
+                rating: 4.6,
+                matchScore: 0.85,
+                reason: '符合您的住宿偏好和预算'
+            });
+        }
+
+        return recommendations;
+    }
+
+    // 生成交叉销售推荐
+    generateCrossSellingRecommendations() {
+        const recommendations = [];
+
+        // 旅游+金融产品组合
+        recommendations.push({
+            type: 'travel_financial_package',
+            name: '智游金融套餐',
+            description: '旅游+理财一站式解决方案',
+            components: [
+                '北京5日游',
+                '智游信用卡',
+                '旅行保险',
+                '理财产品'
+            ],
+            totalSavings: 1200,
+            matchScore: 0.94,
+            reason: '为您量身定制的旅游金融组合方案'
+        });
+
+        return recommendations;
+    }
+
+    // 计算旅行预算
+    calculateTravelBudget() {
+        const profile = this.userProfile;
+        const baseBudget = profile.income * 0.15; // 收入的15%作为旅行预算
+        
+        // 根据旅行频率调整
+        const frequencyMultiplier = {
+            'weekly': 0.5,
+            'monthly': 1.0,
+            'quarterly': 2.0,
+            'yearly': 4.0
+        };
+        
+        return baseBudget * (frequencyMultiplier[profile.travelFrequency] || 1.0);
+    }
+
+    // 显示推荐结果
+    displayRecommendations(recommendations) {
+        this.displayFinancialRecommendations(recommendations.financial);
+        this.displayTravelRecommendations(recommendations.travel);
+        this.displayCrossSellingRecommendations(recommendations.crossSelling);
+    }
+
+    // 显示金融推荐
+    displayFinancialRecommendations(financialRecs) {
+        const container = document.getElementById('financialRecommendations');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="recommendation-section">
+                <h4>💰 个性化金融推荐</h4>
+                <div class="recommendation-grid">
+                    ${financialRecs.map(rec => `
+                        <div class="recommendation-card" data-score="${rec.matchScore}">
+                            <div class="recommendation-header">
+                                <span class="recommendation-type">${rec.type}</span>
+                                <span class="match-score">匹配度: ${Math.round(rec.matchScore * 100)}%</span>
+                            </div>
+                            <div class="recommendation-title">${rec.name}</div>
+                            <div class="recommendation-desc">${rec.description}</div>
+                            <div class="recommendation-benefits">
+                                ${rec.benefits.map(benefit => `<span class="benefit-tag">${benefit}</span>`).join('')}
+                            </div>
+                            <div class="recommendation-reason">${rec.reason}</div>
+                            <div class="recommendation-actions">
+                                <button class="btn-primary" onclick="applyRecommendation('${rec.type}', '${rec.name}')">立即申请</button>
+                                <button class="btn-secondary" onclick="viewRecommendationDetails('${rec.type}', '${rec.name}')">了解详情</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // 显示旅游推荐
+    displayTravelRecommendations(travelRecs) {
+        const container = document.getElementById('travelRecommendations');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="recommendation-section">
+                <h4>🏛️ 个性化旅游推荐</h4>
+                <div class="recommendation-grid">
+                    ${travelRecs.map(rec => `
+                        <div class="recommendation-card" data-score="${rec.matchScore}">
+                            <div class="recommendation-header">
+                                <span class="recommendation-type">${rec.type}</span>
+                                <span class="match-score">匹配度: ${Math.round(rec.matchScore * 100)}%</span>
+                            </div>
+                            <div class="recommendation-title">${rec.name}</div>
+                            <div class="recommendation-desc">${rec.description}</div>
+                            <div class="recommendation-price">¥${rec.price}</div>
+                            <div class="recommendation-highlights">
+                                ${rec.highlights ? rec.highlights.map(highlight => `<span class="highlight-tag">${highlight}</span>`).join('') : ''}
+                            </div>
+                            <div class="recommendation-reason">${rec.reason}</div>
+                            <div class="recommendation-actions">
+                                <button class="btn-primary" onclick="bookRecommendation('${rec.type}', '${rec.name}')">立即预订</button>
+                                <button class="btn-secondary" onclick="viewRecommendationDetails('${rec.type}', '${rec.name}')">了解详情</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // 显示交叉销售推荐
+    displayCrossSellingRecommendations(crossSellingRecs) {
+        const container = document.getElementById('crossSellingRecommendations');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="recommendation-section">
+                <h4>🎯 智能组合推荐</h4>
+                <div class="recommendation-grid">
+                    ${crossSellingRecs.map(rec => `
+                        <div class="recommendation-card cross-selling" data-score="${rec.matchScore}">
+                            <div class="recommendation-header">
+                                <span class="recommendation-type">组合套餐</span>
+                                <span class="match-score">匹配度: ${Math.round(rec.matchScore * 100)}%</span>
+                            </div>
+                            <div class="recommendation-title">${rec.name}</div>
+                            <div class="recommendation-desc">${rec.description}</div>
+                            <div class="recommendation-components">
+                                <h5>包含内容:</h5>
+                                <ul>
+                                    ${rec.components.map(component => `<li>${component}</li>`).join('')}
+                                </ul>
+                            </div>
+                            <div class="recommendation-savings">节省: ¥${rec.totalSavings}</div>
+                            <div class="recommendation-reason">${rec.reason}</div>
+                            <div class="recommendation-actions">
+                                <button class="btn-primary" onclick="applyRecommendation('${rec.type}', '${rec.name}')">立即申请</button>
+                                <button class="btn-secondary" onclick="viewRecommendationDetails('${rec.type}', '${rec.name}')">了解详情</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+}
+
+// 初始化推荐引擎
+let recommendationEngine;
+
+// 页面加载完成后初始化推荐引擎
+document.addEventListener('DOMContentLoaded', function() {
+    recommendationEngine = new SmartRecommendationEngine();
+    
+    // 生成个性化推荐
+    recommendationEngine.generatePersonalizedRecommendations();
+    
+    // 加载其他数据
+    loadUsageStats();
+    loadAdviceHistory();
+});
+
+// 应用推荐
+function applyRecommendation(type, name) {
+    alert(`正在申请 ${name}...`);
+    // 这里可以实现具体的申请逻辑
+    console.log(`申请推荐: ${type} - ${name}`);
+}
+
+// 预订推荐
+function bookRecommendation(type, name) {
+    alert(`正在预订 ${name}...`);
+    // 这里可以实现具体的预订逻辑
+    console.log(`预订推荐: ${type} - ${name}`);
+}
+
+// 查看推荐详情
+function viewRecommendationDetails(type, name) {
+    alert(`查看 ${name} 的详细信息...`);
+    // 这里可以打开详情弹窗或跳转到详情页面
+    console.log(`查看详情: ${type} - ${name}`);
+}
+
+// 聚焦聊天输入框
+function focusChatInput() {
+    const chatInput = document.getElementById('aiChatInput');
+    if (chatInput) {
+        chatInput.focus();
+        chatInput.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// 显示推荐区域
+function showRecommendations() {
+    const recommendations = document.querySelector('.ai-recommendations');
+    if (recommendations) {
+        recommendations.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
+// 显示工具区域
+function showTools() {
+    // 由于工具已经整合到服务卡片中，这里可以显示提示
+    alert('智能工具已整合到各个服务中，请选择相应的服务卡片使用！');
+}
+
+// 切换推荐标签页
+function switchRecommendationTab(tabType) {
+    // 移除所有活动状态
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.recommendation-tab').forEach(tab => tab.classList.remove('active'));
+    
+    // 激活选中的标签页
+    event.target.classList.add('active');
+    
+    const tabMap = {
+        'financial': 'financialRecommendations',
+        'travel': 'travelRecommendations', 
+        'combo': 'crossSellingRecommendations'
+    };
+    
+    const targetTab = document.getElementById(tabMap[tabType]);
+    if (targetTab) {
+        targetTab.classList.add('active');
+    }
+}
+
+// 注销登录功能
+function handleLogout() {
+    // 显示确认对话框
+    if (confirm('确定要注销登录吗？')) {
+        // 清除本地存储的登录信息
+        localStorage.removeItem('rememberLogin');
+        localStorage.removeItem('username');
+        
+        // 显示注销提示
+        const logoutButton = document.querySelector('.logout-button');
+        const originalContent = logoutButton.innerHTML;
+        logoutButton.innerHTML = '<span class="logout-icon">⏳</span><span>注销中...</span>';
+        logoutButton.style.pointerEvents = 'none';
+        
+        // 延迟跳转到登录页面
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    }
+}
+
+// 初始化AI页面互动功能
+function initAIInteractiveFeatures() {
+    // 添加快速问答互动
+    addQuickQuestionsInteraction();
+    
+    // 添加AI聊天互动
+    addAIChatInteraction();
+    
+    // 添加语音交互功能
+    addVoiceInteraction();
+    
+    // 添加打字机效果
+    addTypingEffect();
+    
+    // 添加智能建议互动
+    addSmartSuggestionsInteraction();
+}
+
+// 快速问答互动
+function addQuickQuestionsInteraction() {
+    const quickQuestions = document.querySelectorAll('.quick-question');
+    quickQuestions.forEach(question => {
+        question.addEventListener('click', function() {
+            const questionText = this.textContent;
+            
+            // 添加点击动画
+            this.style.transform = 'scale(0.95)';
+            this.style.backgroundColor = 'rgba(0, 212, 255, 0.2)';
+            
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                this.style.backgroundColor = '';
+            }, 150);
+            
+            // 自动填入聊天输入框
+            const chatInput = document.getElementById('aiChatInput');
+            if (chatInput) {
+                chatInput.value = questionText;
+                chatInput.focus();
+            }
+            
+            // 显示提示
+            showQuickQuestionTip(questionText);
+        });
+    });
+}
+
+// 显示快速问答提示
+function showQuickQuestionTip(questionText) {
+    const tipDiv = document.createElement('div');
+    tipDiv.className = 'quick-question-tip';
+    tipDiv.innerHTML = `
+        <div class="tip-content">
+            <span class="tip-icon">💡</span>
+            <span class="tip-text">已选择问题：${questionText}</span>
+            <button class="tip-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+    `;
+    
+    document.body.appendChild(tipDiv);
+    
+    setTimeout(() => {
+        if (tipDiv.parentElement) {
+            tipDiv.remove();
+        }
+    }, 3000);
+}
+
+// AI聊天互动
+function addAIChatInteraction() {
+    const chatInput = document.getElementById('aiChatInput');
+    const sendButton = document.querySelector('.ai-chat-send');
+    
+    if (chatInput) {
+        // 输入框焦点效果
+        chatInput.addEventListener('focus', function() {
+            this.style.borderColor = '#00d4ff';
+            this.style.boxShadow = '0 0 10px rgba(0, 212, 255, 0.3)';
+        });
+        
+        chatInput.addEventListener('blur', function() {
+            this.style.borderColor = '';
+            this.style.boxShadow = '';
+        });
+        
+        // 输入时显示字符计数
+        chatInput.addEventListener('input', function() {
+            const charCount = this.value.length;
+            const maxLength = 500;
+            
+            if (charCount > maxLength * 0.8) {
+                this.style.borderColor = '#ff6b6b';
+            } else {
+                this.style.borderColor = '';
+            }
+        });
+    }
+    
+    if (sendButton) {
+        sendButton.addEventListener('click', function() {
+            // 添加发送动画
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 100);
+        });
+    }
+}
+
+// 语音交互功能
+function addVoiceInteraction() {
+    const voiceButton = document.createElement('button');
+    voiceButton.className = 'voice-button';
+    voiceButton.innerHTML = '🎤';
+    voiceButton.title = '语音输入';
+    
+    const chatInput = document.getElementById('aiChatInput');
+    if (chatInput && chatInput.parentElement) {
+        chatInput.parentElement.appendChild(voiceButton);
+    }
+    
+    voiceButton.addEventListener('click', function() {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            startVoiceRecording();
+        } else {
+            alert('您的浏览器不支持语音输入功能');
+        }
+    });
+}
+
+// 开始语音录制
+function startVoiceRecording() {
+    const voiceButton = document.querySelector('.voice-button');
+    const chatInput = document.getElementById('aiChatInput');
+    
+    voiceButton.innerHTML = '🔴';
+    voiceButton.style.backgroundColor = '#ff6b6b';
+    
+    // 模拟语音识别（实际应用中需要集成语音识别API）
+    setTimeout(() => {
+        const mockTranscription = '请推荐一些北京的热门景点';
+        chatInput.value = mockTranscription;
+        
+        voiceButton.innerHTML = '🎤';
+        voiceButton.style.backgroundColor = '';
+        
+        // 显示语音识别结果
+        showVoiceResult(mockTranscription);
+    }, 2000);
+}
+
+// 显示语音识别结果
+function showVoiceResult(text) {
+    const resultDiv = document.createElement('div');
+    resultDiv.className = 'voice-result';
+    resultDiv.innerHTML = `
+        <div class="voice-result-content">
+            <span class="voice-icon">🎤</span>
+            <span class="voice-text">语音识别：${text}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(resultDiv);
+    
+    setTimeout(() => {
+        if (resultDiv.parentElement) {
+            resultDiv.remove();
+        }
+    }, 3000);
+}
+
+// 打字机效果
+function addTypingEffect() {
+    const aiMessages = document.querySelectorAll('.ai-message');
+    aiMessages.forEach(message => {
+        if (message.textContent.length > 20) {
+            const originalText = message.textContent;
+            message.textContent = '';
+            
+            let i = 0;
+            const typeWriter = () => {
+                if (i < originalText.length) {
+                    message.textContent += originalText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            };
+            
+            setTimeout(typeWriter, 500);
+        }
+    });
+}
+
+// 智能建议互动
+function addSmartSuggestionsInteraction() {
+    const suggestions = [
+        '💡 尝试问："北京有什么好吃的？"',
+        '💡 试试问："推荐一些理财产品"',
+        '💡 可以问："帮我规划3天北京行程"',
+        '💡 问问："酒店预订有什么优惠？"'
+    ];
+    
+    // 每30秒显示一个智能建议
+    setInterval(() => {
+        if (Math.random() > 0.7) { // 30%概率显示
+            const randomSuggestion = suggestions[Math.floor(Math.random() * suggestions.length)];
+            showSmartSuggestion(randomSuggestion);
+        }
+    }, 30000);
+}
+
+// 显示智能建议
+function showSmartSuggestion(suggestion) {
+    const suggestionDiv = document.createElement('div');
+    suggestionDiv.className = 'smart-suggestion';
+    suggestionDiv.innerHTML = `
+        <div class="suggestion-content">
+            <span class="suggestion-text">${suggestion}</span>
+            <button class="suggestion-close" onclick="this.parentElement.parentElement.remove()">×</button>
+        </div>
+    `;
+    
+    document.body.appendChild(suggestionDiv);
+    
+    setTimeout(() => {
+        if (suggestionDiv.parentElement) {
+            suggestionDiv.remove();
+        }
+    }, 5000);
+}
+
+// 关怀模式功能
+let careModeEnabled = false;
+let magnifierEnabled = false;
+let voiceEnabled = false;
+let highContrastEnabled = false;
+let largeTextEnabled = false;
+
+// 切换关怀模式
+function toggleCareMode() {
+    careModeEnabled = !careModeEnabled;
+    
+    if (careModeEnabled) {
+        showCareModePanel();
+    } else {
+        hideCareModePanel();
+        disableAllCareFeatures();
+    }
+}
+
+// 显示关怀模式面板
+function showCareModePanel() {
+    const carePanel = document.createElement('div');
+    carePanel.id = 'careModePanel';
+    carePanel.className = 'care-mode-panel';
+    carePanel.innerHTML = `
+        <div class="care-panel-header">
+            <h3>❤️ 关怀模式</h3>
+            <button class="care-close-btn" onclick="toggleCareMode()">×</button>
+        </div>
+        <div class="care-panel-content">
+            <div class="care-section">
+                <h4>🔍 视觉辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleMagnifier()" title="点击开启放大镜，鼠标悬停查看内容放大">
+                        <span class="care-icon">🔍</span>
+                        <span>放大镜</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleHighContrast()" title="点击开启高对比度模式，提高文字清晰度">
+                        <span class="care-icon">🌙</span>
+                        <span>高对比度</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleLargeText()" title="点击放大页面字体，便于阅读">
+                        <span class="care-icon">📏</span>
+                        <span>大字体</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleColorAssist()" title="点击开启色彩辅助，帮助色盲用户识别">
+                        <span class="care-icon">🎨</span>
+                        <span>色彩辅助</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>放大镜：</strong>点击开启后，鼠标悬停在内容上即可放大查看</li>
+                        <li><strong>高对比度：</strong>增强文字与背景的对比度，提高可读性</li>
+                        <li><strong>大字体：</strong>将页面字体放大1.5倍，便于阅读</li>
+                        <li><strong>色彩辅助：</strong>为色盲用户提供色彩标识和模式切换</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🔊 语音辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleVoiceRecognition()" title="点击开启语音识别，通过语音控制页面">
+                        <span class="care-icon">🎤</span>
+                        <span>语音识别</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleVoiceReading()" title="点击开启语音播报，朗读页面内容">
+                        <span class="care-icon">🔊</span>
+                        <span>语音播报</span>
+                    </button>
+                    <button class="care-btn" onclick="adjustVolume()" title="点击调节语音播报音量大小">
+                        <span class="care-icon">🔊</span>
+                        <span>音量调节</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>语音识别：</strong>开启后可通过语音命令控制页面，如"点击按钮"、"滚动页面"</li>
+                        <li><strong>语音播报：</strong>自动朗读页面文字内容，帮助视障用户了解页面信息</li>
+                        <li><strong>音量调节：</strong>调整语音播报的音量大小，适应不同环境需求</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🖱️ 操作辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleLargeButtons()" title="点击开启大按钮模式，增大按钮尺寸便于点击">
+                        <span class="care-icon">🖱️</span>
+                        <span>大按钮模式</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleKeyboardNav()" title="点击开启键盘导航，使用Tab键和方向键操作">
+                        <span class="care-icon">⌨️</span>
+                        <span>键盘导航</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleFocusHighlight()" title="点击开启焦点高亮，突出显示当前选中的元素">
+                        <span class="care-icon">🎯</span>
+                        <span>焦点高亮</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>大按钮模式：</strong>将所有按钮和可点击元素放大1.5倍，便于手指操作</li>
+                        <li><strong>键盘导航：</strong>使用Tab键切换焦点，方向键导航，Enter键确认</li>
+                        <li><strong>焦点高亮：</strong>为当前选中的元素添加明显的边框和背景色</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>💡 认知辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleSimplifiedUI()" title="点击开启简化界面，隐藏复杂元素">
+                        <span class="care-icon">📝</span>
+                        <span>简化界面</span>
+                    </button>
+                    <button class="care-btn" onclick="showOperationGuide()" title="点击显示操作引导，了解页面功能">
+                        <span class="care-icon">💡</span>
+                        <span>操作引导</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>简化界面：</strong>隐藏非必要的装饰元素，突出核心功能，减少视觉干扰</li>
+                        <li><strong>操作引导：</strong>显示页面功能说明和操作步骤，帮助用户快速上手</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(carePanel);
+}
+
+// 隐藏关怀模式面板
+function hideCareModePanel() {
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.remove();
+    }
+}
+
+// 放大镜功能
+function toggleMagnifier() {
+    magnifierEnabled = !magnifierEnabled;
+    
+    if (magnifierEnabled) {
+        enableMagnifier();
+        updateButtonState('magnifier', true);
+    } else {
+        disableMagnifier();
+        updateButtonState('magnifier', false);
+    }
+}
+
+function enableMagnifier() {
+    const magnifier = document.createElement('div');
+    magnifier.id = 'magnifier';
+    magnifier.className = 'magnifier';
+    document.body.appendChild(magnifier);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    document.addEventListener('mousemove', handleMagnifierMove);
+}
+
+function disableMagnifier() {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        magnifier.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleMagnifierMove);
+}
+
+function handleMagnifierMove(e) {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        const rect = magnifier.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        magnifier.style.left = (e.clientX - centerX) + 'px';
+        magnifier.style.top = (e.clientY - centerY) + 'px';
+        
+        // 获取鼠标位置下的元素
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        if (elementBelow) {
+            // 放大显示元素内容
+            const elementText = elementBelow.textContent || elementBelow.innerText || '';
+            const elementTag = elementBelow.tagName.toLowerCase();
+            
+            magnifier.innerHTML = `
+                <div class="magnifier-content">
+                    <div class="magnifier-tag">${elementTag}</div>
+                    <div class="magnifier-text">${elementText.substring(0, 100)}</div>
+                </div>
+            `;
+        }
+    }
+}
+
+// 高对比度模式
+function toggleHighContrast() {
+    highContrastEnabled = !highContrastEnabled;
+    
+    if (highContrastEnabled) {
+        document.body.classList.add('high-contrast');
+    } else {
+        document.body.classList.remove('high-contrast');
+    }
+}
+
+// 大字体模式
+function toggleLargeText() {
+    largeTextEnabled = !largeTextEnabled;
+    
+    if (largeTextEnabled) {
+        document.body.classList.add('large-text');
+    } else {
+        document.body.classList.remove('large-text');
+    }
+}
+
+// 色彩辅助
+function toggleColorAssist() {
+    document.body.classList.toggle('color-assist');
+}
+
+// 语音识别
+function toggleVoiceRecognition() {
+    voiceEnabled = !voiceEnabled;
+    
+    if (voiceEnabled) {
+        startVoiceRecognition();
+        updateButtonState('voice', true);
+    } else {
+        stopVoiceRecognition();
+        updateButtonState('voice', false);
+    }
+}
+
+function startVoiceRecognition() {
+    // 创建扫描按钮
+    const scanButton = document.createElement('div');
+    scanButton.id = 'voiceScanButton';
+    scanButton.className = 'voice-scan-button';
+    scanButton.innerHTML = '📖';
+    document.body.appendChild(scanButton);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    // 添加鼠标移动事件监听
+    document.addEventListener('mousemove', handleVoiceScan);
+    document.addEventListener('click', handleVoiceScanClick);
+}
+
+function stopVoiceRecognition() {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleVoiceScan);
+    document.removeEventListener('click', handleVoiceScanClick);
+}
+
+function handleVoiceScan(e) {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.style.left = (e.clientX - 25) + 'px';
+        scanButton.style.top = (e.clientY - 25) + 'px';
+    }
+}
+
+function handleVoiceScanClick(e) {
+    e.preventDefault();
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    if (elementBelow) {
+        const text = elementBelow.textContent || elementBelow.innerText || '';
+        if (text.trim()) {
+            // 使用语音合成朗读文字
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+                
+                // 显示朗读提示
+                showVoiceReadingTip(text);
+            }
+        }
+    }
+}
+
+function showVoiceReadingTip(text) {
+    const tip = document.createElement('div');
+    tip.className = 'voice-reading-tip';
+    tip.innerHTML = `
+        <div class="tip-content">
+            <span class="tip-icon">🔊</span>
+            <span class="tip-text">正在朗读：${text.substring(0, 20)}...</span>
+        </div>
+    `;
+    document.body.appendChild(tip);
+    
+    setTimeout(() => {
+        if (tip.parentElement) {
+            tip.remove();
+        }
+    }, 3000);
+}
+
+// 语音播报
+function toggleVoiceReading() {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('欢迎使用智游金旅关怀模式，我们将为您提供贴心的无障碍服务');
+        utterance.lang = 'zh-CN';
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// 音量调节
+function adjustVolume() {
+    const volume = prompt('请输入音量大小 (0-100):', '50');
+    if (volume !== null) {
+        localStorage.setItem('careModeVolume', volume);
+    }
+}
+
+// 大按钮模式
+function toggleLargeButtons() {
+    document.body.classList.toggle('large-buttons');
+}
+
+// 键盘导航
+function toggleKeyboardNav() {
+    document.body.classList.toggle('keyboard-nav');
+}
+
+// 焦点高亮
+function toggleFocusHighlight() {
+    document.body.classList.toggle('focus-highlight');
+}
+
+// 简化界面
+function toggleSimplifiedUI() {
+    document.body.classList.toggle('simplified-ui');
+}
+
+// 操作引导
+function showOperationGuide() {
+    alert('操作引导功能：\n1. 点击任意按钮会有操作提示\n2. 重要操作会显示确认对话框\n3. 支持键盘快捷键操作\n4. 语音播报会指导您完成操作');
+}
+
+// 更新按钮状态
+function updateButtonState(buttonType, isActive) {
+    const buttons = document.querySelectorAll('.care-btn');
+    buttons.forEach(button => {
+        const icon = button.querySelector('.care-icon');
+        if (icon) {
+            if (buttonType === 'magnifier' && icon.textContent === '🔍') {
+                button.classList.toggle('active', isActive);
+            } else if (buttonType === 'voice' && icon.textContent === '🎤') {
+                button.classList.toggle('active', isActive);
+            }
+        }
+    });
+}
+
+// 禁用所有关怀功能
+function disableAllCareFeatures() {
+    magnifierEnabled = false;
+    voiceEnabled = false;
+    highContrastEnabled = false;
+    largeTextEnabled = false;
+    
+    document.body.classList.remove('high-contrast', 'large-text', 'color-assist', 'large-buttons', 'keyboard-nav', 'focus-highlight', 'simplified-ui');
+    disableMagnifier();
+    stopVoiceRecognition();
+}
+</script>
+</body>
+</html>
+
+
+
+

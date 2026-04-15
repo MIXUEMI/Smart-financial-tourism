@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页概览 - 智游金旅</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+<body>
+<!-- 首页概览页面 -->
+<style>
+    .back-button {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        z-index: 1000;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .back-button-icon {
+        font-size: 16px;
+    }
+</style>
+
+<!-- 返回按钮 -->
+<a href="/main" class="back-button">
+    <span class="back-button-icon">←</span>
+    <span>返回主页</span>
+</a>
+
+<style>
+    .time-display {
+        text-align: center;
+        margin-bottom: 30px;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+    }
+
+    .current-time {
+        font-size: 48px;
+        font-weight: 700;
+        color: #00d4ff;
+        margin-bottom: 10px;
+        text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+    }
+
+    .current-date {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+
+    .city-overview-section {
+        margin-bottom: 30px;
+    }
+
+    .city-selector-container {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 20px;
+        backdrop-filter: blur(10px);
+    }
+
+    .dashboard-widgets {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .widget-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    .widget-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .widget-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .widget-icon {
+        font-size: 24px;
+        margin-right: 15px;
+    }
+
+    .widget-card h3 {
+        font-size: 18px;
+        font-weight: 600;
+        color: white;
+    }
+
+    .widget-content {
+        color: rgba(255, 255, 255, 0.9);
+        line-height: 1.6;
+    }
+
+    .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .city-selector {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+        color: white;
+        padding: 12px 20px;
+        font-size: 16px;
+        outline: none;
+        cursor: pointer;
+    }
+
+    .city-selector option {
+        background: #333;
+        color: white;
+    }
+
+    .action-btn {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        border: none;
+        color: white;
+        padding: 12px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .map-widget {
+        grid-column: 1 / -1;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 15px;
+    }
+
+    .quick-action-btn {
+        background: rgba(0, 212, 255, 0.2);
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        color: #00d4ff;
+        padding: 15px;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+    .quick-action-btn:hover {
+        background: rgba(0, 212, 255, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .quick-action-icon {
+        font-size: 20px;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    .quick-action-text {
+        font-size: 12px;
+    }
+
+    /* 预算管理样式 */
+    .budget-overview {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .budget-item {
+        text-align: center;
+        padding: 15px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .budget-label {
+        display: block;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 5px;
+    }
+
+    .budget-amount {
+        display: block;
+        font-size: 18px;
+        font-weight: 700;
+        color: #00d4ff;
+    }
+
+    .budget-amount.used {
+        color: #ff6b6b;
+    }
+
+    .budget-amount.remaining {
+        color: #4ecdc4;
+    }
+
+    .budget-progress {
+        margin-bottom: 20px;
+    }
+
+    .progress-bar {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 8px;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4ecdc4, #00d4ff);
+        border-radius: 4px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-text {
+        text-align: center;
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .budget-recommendations {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .recommendation-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        background: rgba(0, 212, 255, 0.1);
+        border-radius: 8px;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+    }
+
+    .rec-icon {
+        font-size: 16px;
+    }
+
+    .rec-text {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.8);
+        flex: 1;
+    }
+
+    /* 霸气标语横幅样式 */
+    .hero-banner {
+        position: relative !important;
+        display: block !important;
+        background: linear-gradient(135deg, 
+            rgba(0, 100, 200, 0.9) 0%, 
+            rgba(200, 0, 100, 0.9) 50%, 
+            rgba(100, 0, 200, 0.9) 100%) !important;
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        margin: 20px auto 40px !important;
+        padding: 60px 40px !important;
+        text-align: center;
+        overflow: hidden;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 1200px;
+        width: 100%;
+        z-index: 10;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+    }
+
+    .hero-title {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .icbc-logo {
+        font-family: 'Arial Black', 'Microsoft YaHei', sans-serif;
+        font-size: 48px;
+        font-weight: 900;
+        color: #ffd700;
+        text-shadow: 3px 3px 0px #ff6b00, 6px 6px 0px #ff0000;
+        letter-spacing: 4px;
+        background: linear-gradient(45deg, #ffd700, #ff6b00, #ff0000);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: logoGlow 2s ease-in-out infinite alternate;
+    }
+
+    .hero-main {
+        font-family: 'Microsoft YaHei', 'SimHei', sans-serif;
+        font-size: 42px;
+        font-weight: 800;
+        color: white;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(45deg, #00d4ff, #ff6b6b, #4ecdc4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: textShine 3s ease-in-out infinite;
+    }
+
+    .hero-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+        font-weight: 600;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .hero-description {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: 400;
+        line-height: 1.6;
+    }
+
+    .hero-decoration {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .floating-element {
+        position: absolute;
+        font-size: 30px;
+        opacity: 0.6;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .element-1 {
+        top: 20%;
+        left: 10%;
+        animation-delay: 0s;
+    }
+
+    .element-2 {
+        top: 30%;
+        right: 15%;
+        animation-delay: 1s;
+    }
+
+    .element-3 {
+        bottom: 30%;
+        left: 20%;
+        animation-delay: 2s;
+    }
+
+    .element-4 {
+        bottom: 20%;
+        right: 10%;
+        animation-delay: 3s;
+    }
+
+    .element-5 {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        animation-delay: 4s;
+    }
+
+    @keyframes logoGlow {
+        0% { 
+            text-shadow: 3px 3px 0px #ff6b00, 6px 6px 0px #ff0000;
+            transform: scale(1);
+        }
+        100% { 
+            text-shadow: 3px 3px 0px #ff6b00, 6px 6px 0px #ff0000, 0 0 20px #ffd700;
+            transform: scale(1.05);
+        }
+    }
+
+    @keyframes textShine {
+        0% { 
+            background-position: 0% 50%;
+        }
+        50% { 
+            background-position: 100% 50%;
+        }
+        100% { 
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes float {
+        0%, 100% { 
+            transform: translateY(0px) rotate(0deg);
+        }
+        25% { 
+            transform: translateY(-20px) rotate(5deg);
+        }
+        50% { 
+            transform: translateY(-10px) rotate(-5deg);
+        }
+        75% { 
+            transform: translateY(-15px) rotate(3deg);
+        }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .hero-banner {
+            padding: 40px 20px;
+            margin: 15px;
+        }
+        
+        .hero-title {
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .icbc-logo {
+            font-size: 36px;
+        }
+        
+        .hero-main {
+            font-size: 28px;
+        }
+        
+        .hero-subtitle {
+            font-size: 16px;
+        }
+        
+        .hero-description {
+            font-size: 14px;
+        }
+    }
+</style>
+
+<!-- 时间显示 -->
+<div class="time-display">
+    <div class="current-time" id="currentTime">21:45:30</div>
+    <div class="current-date" id="currentDate">2025年9月17日 星期二</div>
+</div>
+
+<!-- 霸气标语横幅 -->
+<div class="hero-banner" style="display: block !important; position: relative !important; background: linear-gradient(135deg, rgba(0, 100, 200, 0.9) 0%, rgba(200, 0, 100, 0.9) 50%, rgba(100, 0, 200, 0.9) 100%) !important; margin: 20px auto 40px !important; padding: 60px 40px !important; border-radius: 20px; text-align: center; border: 2px solid rgba(255, 255, 255, 0.3); box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3); max-width: 1200px; width: 100%; z-index: 10;">
+    <div class="hero-content">
+        <div class="hero-title">
+            <span class="icbc-logo">ZJ Bank</span>
+            <span class="hero-main">让每一笔理财，都通向诗和远方</span>
+        </div>
+        <div class="hero-subtitle">
+            智游金旅 × 智金银行 | 基于AI智能分析的金融旅游一体化平台
+        </div>
+        <div class="hero-description">
+            为您提供专业的金融投资建议和个性化旅游推荐
+        </div>
+    </div>
+    <div class="hero-decoration">
+        <div class="floating-element element-1">💰</div>
+        <div class="floating-element element-2">✈️</div>
+        <div class="floating-element element-3">🏛️</div>
+        <div class="floating-element element-4">🌅</div>
+        <div class="floating-element element-5">💎</div>
+    </div>
+</div>
+
+<!-- 城市选择联动区域 -->
+<div class="city-overview-section">
+    <div class="city-selector-container">
+        <h3 style="color: #00d4ff; margin-bottom: 20px; text-align: center;">📍 选择城市查看详情</h3>
+        <div style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px;">
+            <select class="city-selector" id="homeCitySelector" onchange="changeHomeCity(this.value)" style="font-size: 16px; padding: 12px 20px;">
+                <option value="北京">北京</option>
+                <option value="上海">上海</option>
+                <option value="深圳">深圳</option>
+                <option value="杭州">杭州</option>
+                <option value="成都">成都</option>
+                <option value="广州">广州</option>
+                <option value="南京">南京</option>
+                <option value="武汉">武汉</option>
+            </select>
+            <button class="action-btn btn-primary" onclick="analyzeCityTourism()" style="padding: 12px 24px;">
+                <span>🤖</span> AI分析旅游情况
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- 智能仪表板 -->
+<div class="dashboard-widgets">
+    <!-- 实时天气 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">🌤️</span>
+            <h3 id="weatherCityName">北京天气</h3>
+        </div>
+        <div class="widget-content" id="homeWeatherInfo">
+            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>
+        </div>
+    </div>
+
+    <!-- 金融市场 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">📈</span>
+            <h3>金融市场</h3>
+        </div>
+        <div class="widget-content" id="homeFinancialInfo">
+            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>
+        </div>
+    </div>
+
+    <!-- 城市旅游概览 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">🏛️</span>
+            <h3 id="tourismCityName">北京旅游</h3>
+        </div>
+        <div class="widget-content" id="homeTourismInfo">
+            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>
+        </div>
+    </div>
+
+    <!-- 金融优惠 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">💳</span>
+            <h3>金融优惠</h3>
+        </div>
+        <div class="widget-content" id="homeFinancialOffers">
+            <div class="loading-spinner" style="width: 30px; height: 30px; margin: 20px auto;"></div>
+        </div>
+    </div>
+
+    <!-- 智能预算管理 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">🧮</span>
+            <h3>智能预算管理</h3>
+            <button class="btn-secondary" onclick="openBudgetSettings()" style="padding: 6px 12px; font-size: 12px;">设置预算</button>
+        </div>
+        <div class="widget-content">
+            <div class="budget-overview">
+                <div class="budget-item">
+                    <span class="budget-label">本月预算</span>
+                    <span class="budget-amount" id="monthlyBudget">¥5,000</span>
+                </div>
+                <div class="budget-item">
+                    <span class="budget-label">已使用</span>
+                    <span class="budget-amount used" id="budgetUsed">¥2,300</span>
+                </div>
+                <div class="budget-item">
+                    <span class="budget-label">剩余</span>
+                    <span class="budget-amount remaining" id="budgetRemaining">¥2,700</span>
+                </div>
+            </div>
+            <div class="budget-progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="budgetProgress" style="width: 46%"></div>
+                </div>
+                <div class="progress-text">预算使用率: 46%</div>
+            </div>
+            <div class="budget-recommendations" id="budgetRecommendations">
+                <div class="recommendation-item">
+                    <span class="rec-icon">💡</span>
+                    <span class="rec-text">根据您的预算，推荐杭州3日游</span>
+                </div>
+                <div class="recommendation-item">
+                    <span class="rec-icon">💰</span>
+                    <span class="rec-text">建议配置稳健型理财产品</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 快速操作 -->
+    <div class="widget-card">
+        <div class="widget-header">
+            <span class="widget-icon">⚡</span>
+            <h3>快速操作</h3>
+        </div>
+        <div class="widget-content">
+            <div class="quick-actions">
+                <a href="/financial" class="quick-action-btn">
+                    <span class="quick-action-icon">💰</span>
+                    <span class="quick-action-text">理财产品</span>
+                </a>
+                <a href="/tourism" class="quick-action-btn">
+                    <span class="quick-action-icon">🏛️</span>
+                    <span class="quick-action-text">旅游推荐</span>
+                </a>
+                <a href="/ai" class="quick-action-btn">
+                    <span class="quick-action-icon">🤖</span>
+                    <span class="quick-action-text">AI咨询</span>
+                </a>
+                <a href="/booking" class="quick-action-btn">
+                    <span class="quick-action-icon">🏨</span>
+                    <span class="quick-action-text">酒店预订</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 地图展示 -->
+    <div class="widget-card map-widget">
+        <div class="widget-header">
+            <span class="widget-icon">🗺️</span>
+            <h3 id="mapCityTitle">北京金融旅游地图</h3>
+        </div>
+        <div class="widget-content">
+            <div id="map" style="height: 300px; border-radius: 10px; overflow: hidden;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// 首页特定的JavaScript功能
+document.addEventListener('DOMContentLoaded', function() {
+    // 更新时间显示
+    updateTimeDisplay();
+    setInterval(updateTimeDisplay, 1000);
+    
+    // 初始化地图
+    initMap();
+    
+    // 加载首页数据
+    loadHomeData();
+});
+
+// 更新时间显示
+function updateTimeDisplay() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('zh-CN', { 
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    const dateString = now.toLocaleDateString('zh-CN', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        weekday: 'long'
+    });
+    
+    const timeElement = document.getElementById('currentTime');
+    const dateElement = document.getElementById('currentDate');
+    
+    if (timeElement) timeElement.textContent = timeString;
+    if (dateElement) dateElement.textContent = dateString;
+}
+
+// 初始化地图
+function initMap() {
+    if (typeof L === 'undefined') {
+        console.error('Leaflet地图库未加载');
+        return;
+    }
+    
+    const map = L.map('map').setView([39.9042, 116.4074], 10);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
+    
+    // 添加一些示例标记
+    const markers = [
+        { lat: 39.9042, lng: 116.4074, title: '天安门广场', type: 'attraction' },
+        { lat: 39.9163, lng: 116.3972, title: '故宫博物院', type: 'attraction' },
+        { lat: 39.9042, lng: 116.4074, title: '中华银行总部', type: 'financial' },
+        { lat: 39.9042, lng: 116.4074, title: '北京饭店', type: 'hotel' }
+    ];
+    
+    markers.forEach(marker => {
+        const icon = L.divIcon({
+            className: 'custom-marker',
+            html: `<div style="background: ${marker.type === 'attraction' ? '#ff6b6b' : marker.type === 'financial' ? '#00d4ff' : '#4ecdc4'}; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white;"></div>`,
+            iconSize: [20, 20]
+        });
+        
+        L.marker([marker.lat, marker.lng], { icon })
+            .addTo(map)
+            .bindPopup(marker.title);
+    });
+}
+
+// 加载首页数据
+async function loadHomeData() {
+    try {
+        // 加载天气信息
+        await loadWeatherInfo();
+        
+        // 加载金融信息
+        await loadFinancialInfo();
+        
+        // 加载旅游信息
+        await loadTourismInfo();
+        
+        // 加载金融优惠
+        await loadFinancialOffers();
+    } catch (error) {
+        console.error('加载首页数据失败:', error);
+    }
+}
+
+// 加载天气信息
+async function loadWeatherInfo() {
+    try {
+        const response = await fetch('/api/weather/beijing');
+        const data = await response.json();
+        
+        const weatherInfo = document.getElementById('homeWeatherInfo');
+        if (weatherInfo) {
+            weatherInfo.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 24px; margin-bottom: 10px;">${data.temperature}°C</div>
+                    <div style="font-size: 16px; color: rgba(255,255,255,0.8);">${data.description}</div>
+                    <div style="font-size: 14px; color: rgba(255,255,255,0.6); margin-top: 5px;">
+                        湿度: ${data.humidity}% | 风速: ${data.windSpeed}km/h
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载天气信息失败:', error);
+        const weatherInfo = document.getElementById('homeWeatherInfo');
+        if (weatherInfo) {
+            weatherInfo.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">天气信息暂时不可用</div>';
+        }
+    }
+}
+
+// 加载金融信息
+async function loadFinancialInfo() {
+    try {
+        const response = await fetch('/api/financial/market');
+        const data = await response.json();
+        
+        const financialInfo = document.getElementById('homeFinancialInfo');
+        if (financialInfo) {
+            financialInfo.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 20px; margin-bottom: 10px; color: #00d4ff;">上证指数</div>
+                    <div style="font-size: 18px; margin-bottom: 5px;">${data.shanghaiIndex}</div>
+                    <div style="font-size: 14px; color: ${data.shanghaiChange >= 0 ? '#4ecdc4' : '#ff6b6b'};">
+                        ${data.shanghaiChange >= 0 ? '+' : ''}${data.shanghaiChange} (${data.shanghaiChangePercent}%)
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载金融信息失败:', error);
+        const financialInfo = document.getElementById('homeFinancialInfo');
+        if (financialInfo) {
+            financialInfo.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">金融数据暂时不可用</div>';
+        }
+    }
+}
+
+// 加载旅游信息
+async function loadTourismInfo() {
+    try {
+        const response = await fetch('/api/tourism/beijing');
+        const data = await response.json();
+        
+        const tourismInfo = document.getElementById('homeTourismInfo');
+        if (tourismInfo) {
+            tourismInfo.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 18px; margin-bottom: 10px; color: #ff6b6b;">热门景点</div>
+                    <div style="font-size: 14px; color: rgba(255,255,255,0.8);">
+                        ${data.attractions ? data.attractions.slice(0, 3).join('、') : '暂无数据'}
+                    </div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px;">
+                        推荐指数: ${data.rating || 'N/A'}/5
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载旅游信息失败:', error);
+        const tourismInfo = document.getElementById('homeTourismInfo');
+        if (tourismInfo) {
+            tourismInfo.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">旅游信息暂时不可用</div>';
+        }
+    }
+}
+
+// 加载金融优惠
+async function loadFinancialOffers() {
+    try {
+        const response = await fetch('/api/financial/offers');
+        const data = await response.json();
+        
+        const offersInfo = document.getElementById('homeFinancialOffers');
+        if (offersInfo) {
+            offersInfo.innerHTML = `
+                <div style="text-align: center;">
+                    <div style="font-size: 16px; margin-bottom: 10px; color: #4ecdc4;">当前优惠</div>
+                    <div style="font-size: 14px; color: rgba(255,255,255,0.8);">
+                        ${data.offers ? data.offers[0] : '暂无优惠活动'}
+                    </div>
+                    <div style="font-size: 12px; color: rgba(255,255,255,0.6); margin-top: 5px;">
+                        查看全部优惠
+                    </div>
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('加载金融优惠失败:', error);
+        const offersInfo = document.getElementById('homeFinancialOffers');
+        if (offersInfo) {
+            offersInfo.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6);">优惠信息暂时不可用</div>';
+        }
+    }
+}
+
+// 切换城市
+function changeHomeCity(city) {
+    document.getElementById('weatherCityName').textContent = city + '天气';
+    document.getElementById('tourismCityName').textContent = city + '旅游';
+    document.getElementById('mapCityTitle').textContent = city + '金融旅游地图';
+    
+    // 重新加载数据
+    loadHomeData();
+}
+
+// AI分析旅游情况
+async function analyzeCityTourism() {
+    const city = document.getElementById('homeCitySelector').value;
+    
+    try {
+        const response = await fetch('/api/ai/analyze-tourism', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ city: city })
+        });
+        
+        const data = await response.json();
+        
+        // 显示AI分析结果
+        alert(`AI分析结果：\n\n${data.analysis || '分析结果暂时不可用'}`);
+    } catch (error) {
+        console.error('AI分析失败:', error);
+        alert('AI分析暂时不可用，请稍后再试');
+    }
+}
+
+// 预算管理功能
+class BudgetManager {
+    constructor() {
+        this.budget = {
+            monthly: 5000,
+            used: 2300,
+            remaining: 2700
+        };
+        this.recommendations = [];
+    }
+
+    // 更新预算显示
+    updateBudgetDisplay() {
+        document.getElementById('monthlyBudget').textContent = `¥${this.budget.monthly.toLocaleString()}`;
+        document.getElementById('budgetUsed').textContent = `¥${this.budget.used.toLocaleString()}`;
+        document.getElementById('budgetRemaining').textContent = `¥${this.budget.remaining.toLocaleString()}`;
+        
+        const usagePercentage = (this.budget.used / this.budget.monthly) * 100;
+        document.getElementById('budgetProgress').style.width = `${usagePercentage}%`;
+        document.querySelector('.progress-text').textContent = `预算使用率: ${Math.round(usagePercentage)}%`;
+    }
+
+    // 生成预算推荐
+    generateBudgetRecommendations() {
+        const usagePercentage = (this.budget.used / this.budget.monthly) * 100;
+        const recommendations = [];
+
+        if (usagePercentage < 50) {
+            recommendations.push({
+                icon: '💡',
+                text: '根据您的预算，推荐杭州3日游'
+            });
+            recommendations.push({
+                icon: '💰',
+                text: '建议配置稳健型理财产品'
+            });
+        } else if (usagePercentage < 80) {
+            recommendations.push({
+                icon: '⚠️',
+                text: '预算使用较多，建议选择经济型旅游'
+            });
+            recommendations.push({
+                icon: '💳',
+                text: '推荐使用旅游信用卡享受优惠'
+            });
+        } else {
+            recommendations.push({
+                icon: '🚨',
+                text: '预算即将用完，建议暂停大额消费'
+            });
+            recommendations.push({
+                icon: '📊',
+                text: '建议查看理财收益补充预算'
+            });
+        }
+
+        this.displayRecommendations(recommendations);
+    }
+
+    // 显示推荐
+    displayRecommendations(recommendations) {
+        const container = document.getElementById('budgetRecommendations');
+        container.innerHTML = recommendations.map(rec => `
+            <div class="recommendation-item">
+                <span class="rec-icon">${rec.icon}</span>
+                <span class="rec-text">${rec.text}</span>
+            </div>
+        `).join('');
+    }
+
+    // 添加支出
+    addExpense(amount, category) {
+        this.budget.used += amount;
+        this.budget.remaining = this.budget.monthly - this.budget.used;
+        this.updateBudgetDisplay();
+        this.generateBudgetRecommendations();
+    }
+
+    // 设置预算
+    setBudget(amount) {
+        this.budget.monthly = amount;
+        this.budget.remaining = this.budget.monthly - this.budget.used;
+        this.updateBudgetDisplay();
+        this.generateBudgetRecommendations();
+    }
+}
+
+// 初始化预算管理器
+let budgetManager;
+
+// 页面加载完成后初始化预算管理器
+document.addEventListener('DOMContentLoaded', function() {
+    budgetManager = new BudgetManager();
+    budgetManager.updateBudgetDisplay();
+    budgetManager.generateBudgetRecommendations();
+});
+
+// 打开预算设置
+function openBudgetSettings() {
+    const newBudget = prompt('请输入新的月度预算:', budgetManager.budget.monthly);
+    if (newBudget && !isNaN(newBudget) && newBudget > 0) {
+        budgetManager.setBudget(parseInt(newBudget));
+        alert('预算设置成功！');
+    }
+}
+</script>
+</body>
+</html>
+
+
+
+
+

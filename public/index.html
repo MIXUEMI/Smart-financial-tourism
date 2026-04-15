@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智游金旅 - 登录</title>
+    <script src="/js/userData.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* AI潮玩互动背景动画 */
+        .ai-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .floating-element {
+            position: absolute;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .ai-icon {
+            position: absolute;
+            font-size: 24px;
+            animation: aiFloat 8s ease-in-out infinite;
+            opacity: 0.8;
+        }
+
+        .data-stream {
+            position: absolute;
+            width: 2px;
+            height: 100px;
+            background: linear-gradient(to bottom, transparent, #00d4ff, transparent);
+            animation: dataFlow 4s linear infinite;
+        }
+
+        .circuit-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #ffd700, transparent);
+            animation: circuitPulse 3s ease-in-out infinite;
+        }
+
+        .money-icon {
+            position: absolute;
+            font-size: 20px;
+            animation: moneyFloat 7s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        .travel-icon {
+            position: absolute;
+            font-size: 22px;
+            animation: travelFloat 9s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        @keyframes aiFloat {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            25% { transform: translateY(-30px) translateX(20px) rotate(90deg); }
+            50% { transform: translateY(-10px) translateX(-20px) rotate(180deg); }
+            75% { transform: translateY(-40px) translateX(10px) rotate(270deg); }
+        }
+
+        @keyframes dataFlow {
+            0% { transform: translateY(-100px); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+
+        @keyframes circuitPulse {
+            0%, 100% { opacity: 0.3; transform: scaleX(0.5); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+
+        @keyframes moneyFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-25px) rotate(360deg); }
+        }
+
+        @keyframes travelFloat {
+            0%, 100% { transform: translateY(0px) translateX(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) translateX(15px) rotate(120deg); }
+            66% { transform: translateY(-35px) translateX(-15px) rotate(240deg); }
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .icbc-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .icbc-logo {
+            font-size: 24px;
+            font-weight: 800;
+            color: #ffd700;
+        }
+
+        .icbc-text {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .login-form {
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 用户类型选择器样式 */
+        .user-type-selector {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .user-type-option {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .user-type-option input[type="radio"] {
+            display: none;
+        }
+
+        .user-type-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .user-type-option input[type="radio"]:checked + .user-type-label {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .user-type-icon {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .user-type-label span:last-child {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            cursor: pointer;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+
+        .forgot-password {
+            color: #00d4ff;
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            color: #ff6b6b;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .login-footer {
+            text-align: center;
+        }
+
+        .login-footer p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 20px;
+        }
+
+        .register-link {
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .register-link:hover {
+            color: #ff6b6b;
+        }
+
+        .social-login {
+            display: flex;
+            gap: 10px;
+        }
+
+        .social-btn {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 注册模态框样式 */
+        .register-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .register-modal-content {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .register-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .register-header h2 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .register-form .form-group {
+            margin-bottom: 20px;
+        }
+
+        .register-button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .register-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        /* 管理员提示样式 */
+        .admin-tip {
+            margin: 15px 0;
+            padding: 10px 15px;
+            background: rgba(255, 193, 7, 0.1);
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .admin-tip p {
+            margin: 0;
+            color: #ffc107;
+            font-size: 14px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <!-- AI潮玩互动背景 -->
+    <div class="ai-background" id="aiBackground"></div>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">智游金旅</h1>
+                <p class="login-subtitle">AI智能金融旅游一体化平台</p>
+                <div class="icbc-branding">
+                    <span class="icbc-logo">ZJ Bank</span>
+                    <span class="icbc-text">智金银行</span>
+                </div>
+            </div>
+            
+            <form class="login-form" onsubmit="handleLogin(event)">
+                <!-- 用户类型选择 -->
+                <div class="form-group">
+                    <label>用户类型</label>
+                    <div class="user-type-selector">
+                        <label class="user-type-option">
+                            <input type="radio" name="userType" value="user" checked>
+                            <span class="user-type-label">
+                                <span class="user-type-icon">👤</span>
+                                <span>普通用户</span>
+                            </span>
+                        </label>
+                        <label class="user-type-option">
+                            <input type="radio" name="userType" value="admin">
+                            <span class="user-type-label">
+                                <span class="user-type-icon">👑</span>
+                                <span>管理员</span>
+                            </span>
+                        </label>
+                </div>
+            </div>
+                
+                <div class="form-group">
+                    <label for="username">用户名/手机号</label>
+                    <input type="text" id="username" name="username" placeholder="请输入用户名或手机号" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">密码</label>
+                    <input type="password" id="password" name="password" placeholder="请输入密码" required>
+                </div>
+                
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" name="remember">
+                        <span>记住我</span>
+                    </label>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+            </div>
+            
+                <button type="submit" class="login-button">
+                    <span class="button-text">登录</span>
+                    <span class="button-icon">→</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>还没有账号？<a href="#" class="register-link">立即注册</a></p>
+                <div class="admin-tip">
+                    <p>💡 管理员默认账户：admin / admin123</p>
+                </div>
+                <div class="social-login">
+                    <button class="social-btn wechat">微信登录</button>
+                    <button class="social-btn alipay">支付宝登录</button>
+                </div>
+                </div>
+            </div>
+        </div>
+
+    <script>
+        // 处理登录表单提交
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const remember = document.querySelector('input[name="remember"]').checked;
+            let userType = document.querySelector('input[name="userType"]:checked').value;
+            
+            // 简单的登录验证（实际应用中应该调用后端API）
+            if (username && password) {
+                // 检查是否为默认管理员账户 - 自动设置为管理员类型
+                if (username === 'admin' && password === 'admin123') {
+                    userType = 'admin';
+                    // 自动选择管理员选项
+                    document.querySelector('input[name="userType"][value="admin"]').checked = true;
+                    handleAdminLogin(username, remember);
+                    return;
+                }
+                
+                // 检查用户是否已注册
+                if (!isUserRegistered(username, userType)) {
+                    alert('用户未注册，请先注册！');
+                    return;
+                }
+                
+                // 验证密码
+                if (!validatePassword(username, password, userType)) {
+                    alert('密码错误！');
+                    return;
+                }
+                
+                // 根据用户类型进行登录
+                if (userType === 'admin') {
+                    // 管理员登录
+                    handleAdminLogin(username, remember);
+                } else {
+                    // 普通用户登录
+                    handleUserLogin(username, remember);
+                }
+            } else {
+                alert('请输入用户名和密码');
+            }
+        }
+        
+        // 检查用户是否已注册
+        function isUserRegistered(username, userType) {
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            return registeredUsers.some(user => user.username === username && user.userType === userType);
+        }
+        
+        // 验证密码
+        function validatePassword(username, password, userType) {
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            const user = registeredUsers.find(user => user.username === username && user.userType === userType);
+            return user && user.password === password;
+        }
+        
+        // 处理管理员登录
+        function handleAdminLogin(username, remember) {
+            const loginButton = document.querySelector('.login-button');
+            const originalText = loginButton.innerHTML;
+            loginButton.innerHTML = '<span class="button-text">管理员登录中...</span><span class="button-icon">⏳</span>';
+            loginButton.disabled = true;
+            
+            setTimeout(() => {
+                // 保存管理员登录状态
+                localStorage.setItem('rememberLogin', 'true');
+                localStorage.setItem('username', username);
+                localStorage.setItem('userType', 'admin');
+                
+                // 跳转到管理员面板
+                window.location.href = '/admin';
+            }, 1500);
+        }
+        
+        // 处理普通用户登录
+        function handleUserLogin(username, remember) {
+            const loginButton = document.querySelector('.login-button');
+            const originalText = loginButton.innerHTML;
+            loginButton.innerHTML = '<span class="button-text">登录中...</span><span class="button-icon">⏳</span>';
+            loginButton.disabled = true;
+            
+            setTimeout(() => {
+                // 初始化用户数据
+                if (typeof userDataManager !== 'undefined') {
+                    // 更新用户基本信息
+                    userDataManager.updateUserData({
+                        username: username,
+                        level: getRandomLevel(),
+                        avatar: getRandomAvatar(),
+                        totalOrders: Math.floor(Math.random() * 200) + 50,
+                        totalSpent: Math.floor(Math.random() * 50000) + 10000,
+                        points: Math.floor(Math.random() * 5000) + 1000,
+                        coupons: Math.floor(Math.random() * 20) + 5
+                    });
+                    
+                    // 添加登录活动记录
+                    userDataManager.addActivity('🔐 用户登录', 'login');
+                }
+                
+                // 保存登录状态
+                if (remember) {
+                    localStorage.setItem('rememberLogin', 'true');
+                    localStorage.setItem('username', username);
+                    localStorage.setItem('userType', 'user');
+                }
+                
+                // 跳转到主页面
+                window.location.href = '/main';
+            }, 1500);
+        }
+        
+        // 获取随机用户等级
+        function getRandomLevel() {
+            const levels = ['普通用户', 'VIP会员', '钻石会员', '至尊会员'];
+            return levels[Math.floor(Math.random() * levels.length)];
+        }
+        
+        // 获取随机头像
+        function getRandomAvatar() {
+            const avatars = ['👤', '👨', '👩', '🧑', '👨‍💼', '👩‍💼', '👨‍🎓', '👩‍🎓'];
+            return avatars[Math.floor(Math.random() * avatars.length)];
+        }
+
+        // 页面加载时检查是否已登录
+        document.addEventListener('DOMContentLoaded', function() {
+            const rememberLogin = localStorage.getItem('rememberLogin');
+            const savedUsername = localStorage.getItem('username');
+            
+            if (rememberLogin === 'true' && savedUsername) {
+                document.getElementById('username').value = savedUsername;
+                document.querySelector('input[name="remember"]').checked = true;
+            }
+            
+            // 初始化默认管理员账户
+            initDefaultAdmin();
+            
+            // 初始化AI潮玩背景
+            initAIBackground();
+        });
+
+        // 初始化默认管理员账户
+        function initDefaultAdmin() {
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            
+            // 检查是否已存在默认管理员账户
+            const defaultAdminExists = registeredUsers.some(user => user.username === 'admin' && user.userType === 'admin');
+            
+            if (!defaultAdminExists) {
+                // 创建默认管理员账户
+                const defaultAdmin = {
+                    username: 'admin',
+                    password: 'admin123',
+                    email: 'admin@icbc-tourism.com',
+                    userType: 'admin',
+                    registerTime: new Date().toISOString()
+                };
+                
+                registeredUsers.push(defaultAdmin);
+                localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+                
+                console.log('默认管理员账户已创建: admin / admin123');
+            }
+        }
+
+        // 初始化AI潮玩互动背景
+        function initAIBackground() {
+            const background = document.getElementById('aiBackground');
+            
+            // 创建浮动元素
+            for (let i = 0; i < 15; i++) {
+                createFloatingElement(background);
+            }
+            
+            // 创建AI图标
+            for (let i = 0; i < 8; i++) {
+                createAIIcon(background);
+            }
+            
+            // 创建数据流
+            for (let i = 0; i < 6; i++) {
+                createDataStream(background);
+            }
+            
+            // 创建电路线
+            for (let i = 0; i < 10; i++) {
+                createCircuitLine(background);
+            }
+            
+            // 创建金钱图标
+            for (let i = 0; i < 12; i++) {
+                createMoneyIcon(background);
+            }
+            
+            // 创建旅游图标
+            for (let i = 0; i < 10; i++) {
+                createTravelIcon(background);
+            }
+        }
+
+        // 创建浮动元素
+        function createFloatingElement(container) {
+            const element = document.createElement('div');
+            element.className = 'floating-element';
+            
+            const size = Math.random() * 20 + 10;
+            const colors = ['#00d4ff', '#ffd700', '#ff6b6b', '#9c27b0', '#00ff88'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            element.style.width = size + 'px';
+            element.style.height = size + 'px';
+            element.style.background = `radial-gradient(circle, ${color}, transparent)`;
+            element.style.left = Math.random() * 100 + '%';
+            element.style.top = Math.random() * 100 + '%';
+            element.style.animationDelay = Math.random() * 6 + 's';
+            element.style.animationDuration = (Math.random() * 4 + 4) + 's';
+            
+            container.appendChild(element);
+        }
+
+        // 创建AI图标
+        function createAIIcon(container) {
+            const icon = document.createElement('div');
+            icon.className = 'ai-icon';
+            
+            const icons = ['🤖', '🧠', '⚡', '🔮', '💎', '🌟', '🚀', '🎯'];
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.top = Math.random() * 100 + '%';
+            icon.style.animationDelay = Math.random() * 8 + 's';
+            icon.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            
+            container.appendChild(icon);
+        }
+
+        // 创建数据流
+        function createDataStream(container) {
+            const stream = document.createElement('div');
+            stream.className = 'data-stream';
+            
+            stream.style.left = Math.random() * 100 + '%';
+            stream.style.animationDelay = Math.random() * 4 + 's';
+            stream.style.animationDuration = (Math.random() * 2 + 3) + 's';
+            
+            container.appendChild(stream);
+        }
+
+        // 创建电路线
+        function createCircuitLine(container) {
+            const line = document.createElement('div');
+            line.className = 'circuit-line';
+            
+            const width = Math.random() * 200 + 100;
+            line.style.width = width + 'px';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.top = Math.random() * 100 + '%';
+            line.style.animationDelay = Math.random() * 3 + 's';
+            line.style.animationDuration = (Math.random() * 2 + 2) + 's';
+            
+            container.appendChild(line);
+        }
+
+        // 创建金钱图标
+        function createMoneyIcon(container) {
+            const icon = document.createElement('div');
+            icon.className = 'money-icon';
+            
+            const icons = ['💰', '💎', '💵', '💸', '🏦', '📈', '💳', '🎰'];
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.top = Math.random() * 100 + '%';
+            icon.style.animationDelay = Math.random() * 7 + 's';
+            icon.style.animationDuration = (Math.random() * 3 + 5) + 's';
+            
+            container.appendChild(icon);
+        }
+
+        // 创建旅游图标
+        function createTravelIcon(container) {
+            const icon = document.createElement('div');
+            icon.className = 'travel-icon';
+            
+            const icons = ['✈️', '🏖️', '🏛️', '🗺️', '🎒', '📸', '🌍', '🏨'];
+            icon.textContent = icons[Math.floor(Math.random() * icons.length)];
+            
+            icon.style.left = Math.random() * 100 + '%';
+            icon.style.top = Math.random() * 100 + '%';
+            icon.style.animationDelay = Math.random() * 9 + 's';
+            icon.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            
+            container.appendChild(icon);
+        }
+
+        // 社交登录处理
+        document.querySelector('.social-btn.wechat').addEventListener('click', function() {
+            alert('微信登录功能开发中...');
+        });
+
+        document.querySelector('.social-btn.alipay').addEventListener('click', function() {
+            alert('支付宝登录功能开发中...');
+        });
+
+        // 注册链接处理
+        document.querySelector('.register-link').addEventListener('click', function(e) {
+            e.preventDefault();
+            showRegisterModal();
+        });
+
+        // 忘记密码处理
+        document.querySelector('.forgot-password').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('忘记密码功能开发中...');
+        });
+
+        // 显示注册模态框
+        function showRegisterModal() {
+            const modal = document.createElement('div');
+            modal.className = 'register-modal';
+            modal.innerHTML = `
+                <div class="register-modal-content">
+                    <div class="register-header">
+                        <h2>用户注册</h2>
+                        <button class="close-btn" onclick="closeRegisterModal()">&times;</button>
+                    </div>
+                    <form class="register-form" onsubmit="handleRegister(event)">
+                        <div class="form-group">
+                            <label>用户类型</label>
+                            <div class="user-type-selector">
+                                <label class="user-type-option">
+                                    <input type="radio" name="registerUserType" value="user" checked>
+                                    <span class="user-type-label">
+                                        <span class="user-type-icon">👤</span>
+                                        <span>普通用户</span>
+                                    </span>
+                                </label>
+                                <label class="user-type-option">
+                                    <input type="radio" name="registerUserType" value="admin">
+                                    <span class="user-type-label">
+                                        <span class="user-type-icon">👑</span>
+                                        <span>管理员</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerUsername">用户名</label>
+                            <input type="text" id="registerUsername" name="username" placeholder="请输入用户名" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="registerPassword">密码</label>
+                            <input type="password" id="registerPassword" name="password" placeholder="请输入密码" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">确认密码</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="请再次输入密码" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">邮箱</label>
+                            <input type="email" id="email" name="email" placeholder="请输入邮箱地址" required>
+                        </div>
+                        <button type="submit" class="register-button">注册</button>
+                    </form>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // 关闭注册模态框
+        function closeRegisterModal() {
+            const modal = document.querySelector('.register-modal');
+            if (modal) {
+                document.body.removeChild(modal);
+            }
+        }
+
+        // 处理注册表单提交
+        function handleRegister(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('registerUsername').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const email = document.getElementById('email').value;
+            const userType = document.querySelector('input[name="registerUserType"]:checked').value;
+            
+            // 验证密码是否一致
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致！');
+                return;
+            }
+            
+            // 检查用户名是否已存在
+            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            if (registeredUsers.some(user => user.username === username)) {
+                alert('用户名已存在！');
+                return;
+            }
+            
+            // 保存用户信息
+            const newUser = {
+                username: username,
+                password: password,
+                email: email,
+                userType: userType,
+                registerTime: new Date().toISOString()
+            };
+            
+            registeredUsers.push(newUser);
+            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+            
+            alert('注册成功！请使用新账号登录。');
+            closeRegisterModal();
+        }
+    </script>
+</body>
+</html>

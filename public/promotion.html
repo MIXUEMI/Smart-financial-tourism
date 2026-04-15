@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>优惠活动 - 智游金旅</title>
+    
+    <!-- 通用样式 -->
+    <link rel="stylesheet" href="/css/base.css">
+    
+    <!-- 关怀模式脚本 -->
+    <script src="/js/careMode.js" defer></script>
+</head>
+<body>
+<!-- 科技动态背景 -->
+<div class="tech-particles" id="techParticles"></div>
+<div class="tech-lines" id="techLines"></div>
+
+<!-- 中国风元素 -->
+<div class="chinese-elements" id="chineseElements"></div>
+
+<!-- 优惠活动页面 -->
+<style>
+    /* 科技背景样式 */
+    body {
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(200, 16, 46, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(30, 58, 138, 0.2) 0%, transparent 50%),
+            linear-gradient(135deg, #0f0f23 0%, #1a1a2e 25%, #16213e 50%, #0f0f23 75%, #1a1a2e 100%);
+        min-height: 100vh;
+        color: white;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        position: relative;
+    }
+
+    /* 科技粒子效果 */
+    .tech-particles {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .particle {
+        position: absolute;
+        width: 2px;
+        height: 2px;
+        background: #00ffff;
+        border-radius: 50%;
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .particle:nth-child(2n) {
+        background: #ff00ff;
+        animation-delay: -2s;
+    }
+
+    .particle:nth-child(3n) {
+        background: #00ff00;
+        animation-delay: -4s;
+    }
+
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(100vh) translateX(0) scale(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 1;
+        }
+        90% {
+            opacity: 1;
+        }
+        100% {
+            transform: translateY(-100px) translateX(100px) scale(1);
+            opacity: 0;
+        }
+    }
+
+    /* 科技线条效果 */
+    .tech-lines {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .tech-line {
+        position: absolute;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #00ffff, transparent);
+        animation: lineMove 10s linear infinite;
+    }
+
+    .tech-line:nth-child(2n) {
+        background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+        animation-delay: -3s;
+    }
+
+    .tech-line:nth-child(3n) {
+        background: linear-gradient(90deg, transparent, #00ff00, transparent);
+        animation-delay: -6s;
+    }
+
+        @keyframes lineMove {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风元素 */
+        .chinese-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .chinese-pattern {
+            position: absolute;
+            font-size: 22px;
+            color: rgba(255, 215, 0, 0.12);
+            animation: floatChinese 16s ease-in-out infinite;
+        }
+
+        .chinese-pattern:nth-child(1) { top: 12%; left: 4%; animation-delay: 0s; }
+        .chinese-pattern:nth-child(2) { top: 22%; right: 6%; animation-delay: -3.5s; }
+        .chinese-pattern:nth-child(3) { top: 62%; left: 6%; animation-delay: -7s; }
+        .chinese-pattern:nth-child(4) { top: 82%; right: 4%; animation-delay: -10.5s; }
+        .chinese-pattern:nth-child(5) { top: 42%; left: 48%; animation-delay: -14s; }
+
+        @keyframes floatChinese {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.12;
+            }
+            25% {
+                transform: translateY(-18px) rotate(4deg);
+                opacity: 0.25;
+            }
+            50% {
+                transform: translateY(-9px) rotate(-2.5deg);
+                opacity: 0.18;
+            }
+            75% {
+                transform: translateY(-27px) rotate(1.5deg);
+                opacity: 0.3;
+            }
+        }
+
+        /* 中国风装饰线条 */
+        .chinese-line {
+            position: absolute;
+            height: 1.5px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.25), transparent);
+            animation: chineseLineMove 14s linear infinite;
+        }
+
+        .chinese-line:nth-child(1) { top: 18%; width: 190px; animation-delay: 0s; }
+        .chinese-line:nth-child(2) { top: 38%; width: 145px; animation-delay: -4.5s; }
+        .chinese-line:nth-child(3) { top: 58%; width: 170px; animation-delay: -9s; }
+        .chinese-line:nth-child(4) { top: 78%; width: 130px; animation-delay: -2.5s; }
+
+        @keyframes chineseLineMove {
+            0% {
+                left: -190px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.4;
+            }
+            90% {
+                opacity: 0.4;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风光晕效果 */
+        .chinese-glow {
+            position: absolute;
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: chineseGlow 9s ease-in-out infinite;
+        }
+
+        .chinese-glow:nth-child(1) { top: 22%; left: 18%; animation-delay: 0s; }
+        .chinese-glow:nth-child(2) { top: 62%; right: 18%; animation-delay: -2.5s; }
+        .chinese-glow:nth-child(3) { top: 42%; left: 68%; animation-delay: -5s; }
+    .main-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .page-header {
+        text-align: center;
+        margin-bottom: 50px;
+        padding: 40px 0;
+        position: relative;
+    }
+
+    .page-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        margin-bottom: 20px;
+        background: linear-gradient(135deg, #C8102E 0%, #1E3A8A 50%, #FFD700 100%);
+        background-size: 300% 300%;
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: gradientShift 4s ease-in-out infinite;
+        text-shadow: 0 0 30px rgba(200, 16, 46, 0.3);
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .page-subtitle {
+        font-size: 1.4rem;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 30px;
+        font-style: italic;
+    }
+
+    .top-buttons {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        z-index: 1000;
+    }
+
+    .back-button, .logout-button {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .logout-button {
+        color: #ff6b6b;
+        border-color: rgba(255, 107, 107, 0.3);
+    }
+
+    .logout-button:hover {
+        background: rgba(255, 107, 107, 0.2);
+        color: #ff4757;
+        transform: translateY(-2px);
+    }
+
+    .back-button:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* 优惠活动金融旅游结合话术横幅 */
+    .promotion-slogan-banner {
+        background: linear-gradient(135deg, 
+            rgba(255, 165, 0, 0.2) 0%, 
+            rgba(255, 100, 200, 0.2) 50%, 
+            rgba(0, 150, 255, 0.2) 100%);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        padding: 25px 30px;
+        margin: 20px 0 30px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .promotion-slogan-banner::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, 
+            transparent, 
+            rgba(255, 255, 255, 0.1), 
+            transparent);
+        animation: sloganShine 3s ease-in-out infinite;
+    }
+
+    @keyframes sloganShine {
+        0% { left: -100%; }
+        50% { left: 100%; }
+        100% { left: 100%; }
+    }
+
+    .promotion-slogan-title {
+        font-size: 32px;
+        font-weight: 800;
+        background: linear-gradient(135deg, #ffa500, #ff6b6b, #4ecdc4, #f093fb);
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 15px;
+        text-shadow: 0 0 30px rgba(255, 165, 0, 0.3);
+        animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    .promotion-slogan-subtitle {
+        font-size: 18px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 20px;
+        font-weight: 500;
+        line-height: 1.6;
+    }
+
+    .promotion-slogan-tags {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .promotion-tag {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 10px 20px;
+        font-size: 14px;
+        font-weight: 600;
+        color: white;
+        transition: all 0.3s ease;
+        animation: tagFloat 3s ease-in-out infinite;
+    }
+
+    .promotion-tag:nth-child(1) { animation-delay: 0s; }
+    .promotion-tag:nth-child(2) { animation-delay: 0.5s; }
+    .promotion-tag:nth-child(3) { animation-delay: 1s; }
+    .promotion-tag:nth-child(4) { animation-delay: 1.5s; }
+    .promotion-tag:nth-child(5) { animation-delay: 2s; }
+
+    .promotion-tag:hover {
+        background: rgba(255, 255, 255, 0.25);
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes titlePulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.02); }
+    }
+
+    @keyframes tagFloat {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-5px); }
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .promotion-slogan-banner {
+            padding: 20px 15px;
+            margin: 15px 0 20px;
+        }
+
+        .promotion-slogan-title {
+            font-size: 24px;
+        }
+
+        .promotion-slogan-subtitle {
+            font-size: 16px;
+        }
+
+        .promotion-slogan-tags {
+            gap: 10px;
+        }
+
+        .promotion-tag {
+            padding: 8px 15px;
+            font-size: 12px;
+        }
+
+        .top-buttons {
+            top: 15px;
+            right: 15px;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .back-button, .logout-button {
+            padding: 10px 15px;
+            font-size: 12px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .promotion-slogan-title {
+            font-size: 20px;
+        }
+
+        .promotion-slogan-subtitle {
+            font-size: 14px;
+        }
+
+        .promotion-tag {
+            padding: 6px 12px;
+            font-size: 11px;
+        }
+    }
+
+    .back-button-icon {
+        font-size: 16px;
+    }
+
+    /* 关怀模式按钮 */
+    .care-mode-toggle {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border: none;
+        border-radius: 25px;
+        color: white;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    .care-mode-toggle:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .care-mode-toggle .care-icon {
+        font-size: 16px;
+    }
+
+    .care-mode-toggle .care-text {
+        font-size: 13px;
+    }
+
+    /* 关怀模式面板样式 */
+    .care-mode-panel {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90%;
+        max-width: 800px;
+        max-height: 80vh;
+        background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(255, 255, 255, 0.9) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        overflow-y: auto;
+        border: 2px solid rgba(255, 107, 107, 0.3);
+    }
+
+    .care-panel-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 30px;
+        border-bottom: 2px solid rgba(255, 107, 107, 0.2);
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-radius: 18px 18px 0 0;
+    }
+
+    .care-panel-header h3 {
+        margin: 0;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .care-close-btn {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .care-close-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
+
+    .care-panel-content {
+        padding: 30px;
+    }
+
+    .care-section {
+        margin-bottom: 30px;
+    }
+
+    .care-section h4 {
+        color: #333;
+        font-size: 18px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #ff6b6b;
+    }
+
+    .care-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .care-btn {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.1) 0%, 
+            rgba(255, 215, 0, 0.1) 100%);
+        border: 2px solid rgba(255, 107, 107, 0.3);
+        border-radius: 12px;
+        color: #333;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: left;
+    }
+
+    .care-btn:hover {
+        background: linear-gradient(135deg, 
+            rgba(255, 107, 107, 0.2) 0%, 
+            rgba(255, 215, 0, 0.2) 100%);
+        border-color: #ff6b6b;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(255, 107, 107, 0.2);
+    }
+
+    .care-btn.active {
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        border-color: transparent;
+    }
+
+    .care-icon {
+        font-size: 20px;
+        width: 24px;
+        text-align: center;
+    }
+
+    /* 放大镜样式 */
+    .magnifier {
+        position: fixed;
+        width: 200px;
+        height: 200px;
+        border: 3px solid #ff6b6b;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(5px);
+        z-index: 9999;
+        pointer-events: none;
+        box-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+    }
+
+    .magnifier-content {
+        text-align: center;
+        color: #333;
+    }
+
+    .magnifier-tag {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 8px;
+        font-weight: 500;
+    }
+
+    .magnifier-text {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 1.4;
+        word-break: break-word;
+    }
+
+    /* 语音扫描按钮样式 */
+    .voice-scan-button {
+        position: fixed;
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 9999;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        animation: voiceScanPulse 2s infinite;
+        pointer-events: none;
+    }
+
+    @keyframes voiceScanPulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+
+    /* 语音朗读提示样式 */
+    .voice-reading-tip {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd700);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        z-index: 10001;
+        animation: slideInRight 0.3s ease;
+    }
+
+    .voice-reading-tip .tip-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .voice-reading-tip .tip-icon {
+        font-size: 18px;
+    }
+
+    .voice-reading-tip .tip-text {
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* 高对比度模式 */
+    .high-contrast {
+        filter: contrast(1.5) brightness(1.2);
+    }
+
+    .high-contrast * {
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+
+    .high-contrast .sidebar,
+    .high-contrast .hero-banner {
+        background: #000 !important;
+        color: #fff !important;
+    }
+
+    /* 大字体模式 */
+    .large-text {
+        font-size: 1.2em;
+    }
+
+    .large-text h1 { font-size: 2.5em; }
+    .large-text h2 { font-size: 2em; }
+    .large-text h3 { font-size: 1.8em; }
+    .large-text p { font-size: 1.3em; }
+    .large-text .menu-link { font-size: 1.2em; }
+
+    /* 色彩辅助模式 */
+    .color-assist {
+        filter: grayscale(0.3) saturate(1.5);
+    }
+
+    /* 大按钮模式 */
+    .large-buttons button,
+    .large-buttons .menu-link,
+    .large-buttons .care-btn {
+        padding: 20px 30px !important;
+        font-size: 18px !important;
+        min-height: 60px !important;
+    }
+
+    /* 键盘导航模式 */
+    .keyboard-nav *:focus {
+        outline: 3px solid #ff6b6b !important;
+        outline-offset: 2px !important;
+    }
+
+    /* 焦点高亮模式 */
+    .focus-highlight *:focus {
+        background: rgba(255, 107, 107, 0.2) !important;
+        box-shadow: 0 0 10px rgba(255, 107, 107, 0.5) !important;
+    }
+
+    /* 简化界面模式 */
+    .simplified-ui .hero-banner {
+        padding: 20px !important;
+    }
+
+    .simplified-ui .feature-cards {
+        display: none;
+    }
+
+    .simplified-ui .ai-chat-window {
+        display: none;
+    }
+
+    /* 响应式设计 */
+    @media (max-width: 768px) {
+        .care-mode-panel {
+            width: 95%;
+            max-height: 90vh;
+        }
+        
+        .care-options {
+            grid-template-columns: 1fr;
+        }
+        
+        .care-btn {
+            padding: 12px 16px;
+            font-size: 14px;
+        }
+    }
+</style>
+
+<!-- 关怀模式、返回按钮和注销按钮 -->
+<div class="top-buttons">
+        <button class="care-mode-toggle" onclick="toggleCareMode()" title="关怀模式">
+            <span class="care-icon">❤️</span>
+            <span class="care-text">关怀模式</span>
+        </button>
+    <a href="/main" class="back-button">
+        <span class="back-button-icon">←</span>
+        <span>返回主页</span>
+    </a>
+    <a href="#" class="logout-button" onclick="handleLogout()">
+        <span class="logout-icon">🚪</span>
+        <span>注销登录</span>
+    </a>
+</div>
+
+<style>
+    .promotion-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .promotion-header h2 {
+        color: white;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .promotion-categories {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        flex-wrap: wrap;
+    }
+
+    .category-btn {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 25px;
+        padding: 10px 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 14px;
+        color: white;
+    }
+
+    .category-btn:hover,
+    .category-btn.active {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        border-color: transparent;
+    }
+
+    .promotions-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .promotion-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .promotion-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .promotion-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+        color: white;
+        padding: 5px 12px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .promotion-image {
+        width: 100%;
+        height: 200px;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        overflow: hidden;
+        position: relative;
+        transition: all 0.3s ease;
+    }
+
+    .promotion-image::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(45deg, 
+            rgba(0, 212, 255, 0.1) 0%, 
+            rgba(255, 107, 107, 0.1) 100%);
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .promotion-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .promotion-card:hover .promotion-image img {
+        transform: scale(1.05);
+    }
+
+    .promotion-card:hover .promotion-image::after {
+        opacity: 1;
+    }
+
+
+    .promotion-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #00d4ff;
+        margin-bottom: 8px;
+    }
+
+    .promotion-description {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.8);
+        margin-bottom: 10px;
+        line-height: 1.4;
+    }
+
+    .promotion-discount {
+        font-size: 24px;
+        font-weight: 700;
+        color: #ff6b6b;
+        margin-bottom: 5px;
+    }
+
+    .promotion-original-price {
+        font-size: 14px;
+        color: rgba(255, 255, 255, 0.6);
+        text-decoration: line-through;
+        margin-bottom: 10px;
+    }
+
+    .promotion-validity {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.6);
+        margin-bottom: 15px;
+    }
+
+    .promotion-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* AI推荐样式 */
+    .ai-recommendation-section {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(20px);
+        border-radius: 20px;
+        padding: 30px;
+        margin: 30px 0;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .ai-recommendation-header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .ai-recommendation-header h3 {
+        font-size: 1.8rem;
+        color: #4CAF50;
+        margin-bottom: 10px;
+    }
+
+    .ai-recommendation-subtitle {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1rem;
+    }
+
+    .recommendation-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        padding: 25px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .recommendation-card.budget {
+        border-left: 4px solid #4CAF50;
+    }
+
+    .recommendation-card.moderate {
+        border-left: 4px solid #2196F3;
+    }
+
+    .recommendation-card.premium {
+        border-left: 4px solid #FF9800;
+    }
+
+    .recommendation-card h4 {
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+    }
+
+    .recommendation-card p {
+        color: rgba(255, 255, 255, 0.7);
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .recommended-promotions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .recommended-promo {
+        background: rgba(255, 255, 255, 0.05);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .promo-title {
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 8px;
+    }
+
+    .promo-discount {
+        color: #4CAF50;
+        font-weight: bold;
+        font-size: 1.1rem;
+        margin-bottom: 5px;
+    }
+
+    .promo-desc {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.9rem;
+    }
+
+    .default-recommendation {
+        text-align: center;
+        padding: 40px;
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .default-recommendation p {
+        margin-bottom: 20px;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        flex: 1;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+    }
+
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+
+    .featured-section {
+        margin-bottom: 30px;
+    }
+
+    .featured-section h3 {
+        color: white;
+        margin-bottom: 20px;
+        font-size: 22px;
+    }
+
+    .featured-promotion {
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 107, 0.2));
+        border-radius: 15px;
+        padding: 25px;
+        margin-bottom: 20px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+    }
+
+    .featured-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #00d4ff;
+        margin-bottom: 10px;
+    }
+
+    .featured-description {
+        font-size: 16px;
+        color: rgba(255, 255, 255, 0.9);
+        margin-bottom: 15px;
+        line-height: 1.5;
+    }
+
+    .featured-discount {
+        font-size: 32px;
+        font-weight: 700;
+        color: #ff6b6b;
+        margin-bottom: 15px;
+    }
+
+    .loading-spinner {
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top: 3px solid #00d4ff;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        width: 30px;
+        height: 30px;
+        margin: 20px auto;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<!-- 主容器 -->
+<div class="main-container">
+    <!-- 优惠活动金融旅游结合话术横幅 -->
+    <div class="promotion-slogan-banner">
+    <div class="promotion-slogan-title">🎁 优惠狂欢 · 金融旅游盛宴</div>
+    <div class="promotion-slogan-subtitle">让每一份优惠都成为旅程的起点，让每一次消费都通向财富增长<br>金融科技与旅游文化的完美融合，开启优惠狂欢新体验</div>
+    <div class="promotion-slogan-tags">
+        <span class="promotion-tag">💰 金融优惠</span>
+        <span class="promotion-tag">✈️ 旅游特惠</span>
+        <span class="promotion-tag">🏨 酒店折扣</span>
+        <span class="promotion-tag">🍽️ 餐饮优惠</span>
+        <span class="promotion-tag">🎯 精准推荐</span>
+    </div>
+</div>
+
+<!-- 分类筛选 -->
+<div class="promotion-categories">
+    <div class="category-btn active" onclick="filterPromotions('all', this)">全部</div>
+    <div class="category-btn" onclick="filterPromotions('financial', this)">金融优惠</div>
+    <div class="category-btn" onclick="filterPromotions('tourism', this)">旅游优惠</div>
+    <div class="category-btn" onclick="filterPromotions('hotel', this)">酒店优惠</div>
+    <div class="category-btn" onclick="filterPromotions('restaurant', this)">餐饮优惠</div>
+    <div class="category-btn" onclick="filterPromotions('shopping', this)">购物优惠</div>
+</div>
+
+<!-- AI智能推荐 -->
+<div class="ai-recommendation-section">
+    <div class="ai-recommendation-header">
+        <h3>🤖 AI智能推荐</h3>
+        <div class="ai-recommendation-subtitle" id="aiRecommendationSubtitle">
+            正在分析您的旅行预算，为您匹配最适合的权益...
+        </div>
+    </div>
+    <div class="ai-recommendation-content" id="aiRecommendationContent">
+        <div class="loading-spinner"></div>
+    </div>
+</div>
+
+<!-- 精选推荐 -->
+<div class="featured-section">
+    <h3>⭐ 精选推荐</h3>
+    <div class="featured-promotion">
+        <div class="featured-title">🏦 智金银行 × 智游金旅 超级大礼包</div>
+        <div class="featured-description">
+            🎯 注册即送2000元旅游基金 + 理财产品年化收益率提升至7.2% + 酒店预订立减500元 + 景点门票5折优惠<br>
+            💎 专享智金银行钻石卡用户额外8折优惠，让每一笔消费都成为财富增长的起点
+        </div>
+        <div class="featured-discount">最高省¥5000</div>
+        <div class="promotion-actions">
+            <button class="btn-primary" onclick="claimFeaturedOffer()">立即领取</button>
+            <button class="btn-secondary" onclick="viewFeaturedDetails()">查看详情</button>
+        </div>
+    </div>
+</div>
+
+<!-- 优惠活动列表 -->
+<div class="promotions-grid" id="promotionsGrid">
+    <div class="loading-spinner"></div>
+</div>
+
+<script src="/js/userData.js"></script>
+<script>
+// 优惠活动页面特定的JavaScript功能
+
+// 页面加载完成后初始化
+document.addEventListener('DOMContentLoaded', async function() {
+    loadTravelPlan();
+    await loadPromotions();
+    
+    // 初始化优惠活动页面互动功能
+    initPromotionInteractiveFeatures();
+    initTechBackground();
+});
+
+// 初始化科技背景效果
+function initTechBackground() {
+    createParticles();
+    createTechLines();
+    createChineseElements();
+}
+
+// 创建粒子效果
+function createParticles() {
+    const particlesContainer = document.getElementById('techParticles');
+    const particleCount = 35;
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+        particlesContainer.appendChild(particle);
+    }
+}
+
+// 创建科技线条效果
+function createTechLines() {
+    const linesContainer = document.getElementById('techLines');
+    const lineCount = 5;
+    
+    for (let i = 0; i < lineCount; i++) {
+        const line = document.createElement('div');
+        line.className = 'tech-line';
+        line.style.top = Math.random() * 100 + '%';
+        line.style.width = (Math.random() * 200 + 100) + 'px';
+        line.style.animationDelay = Math.random() * 10 + 's';
+        line.style.animationDuration = (Math.random() * 5 + 8) + 's';
+        linesContainer.appendChild(line);
+    }
+}
+
+// 创建中国风元素
+function createChineseElements() {
+    const chineseContainer = document.getElementById('chineseElements');
+    
+    // 中国风图案 - 优惠活动主题
+    const chinesePatterns = ['☯', '☰', '☷', '☲', '☳', '☴', '☵', '☶', '☱', '惠', '利', '优', '券', '礼', '包', '福', '禄', '寿'];
+    
+    for (let i = 0; i < 5; i++) {
+        const pattern = document.createElement('div');
+        pattern.className = 'chinese-pattern';
+        pattern.textContent = chinesePatterns[Math.floor(Math.random() * chinesePatterns.length)];
+        chineseContainer.appendChild(pattern);
+    }
+    
+    // 中国风装饰线条
+    for (let i = 0; i < 4; i++) {
+        const line = document.createElement('div');
+        line.className = 'chinese-line';
+        chineseContainer.appendChild(line);
+    }
+    
+    // 中国风光晕效果
+    for (let i = 0; i < 3; i++) {
+        const glow = document.createElement('div');
+        glow.className = 'chinese-glow';
+        chineseContainer.appendChild(glow);
+    }
+}
+
+// 加载旅行计划数据
+function loadTravelPlan() {
+    fetch('/api/travel-plans/latest')
+    .then(response => response.json())
+    .then(data => {
+        if (data.success && data.data) {
+            updateAIRecommendation(data.data);
+        } else {
+            showDefaultRecommendation();
+        }
+    })
+    .catch(error => {
+        console.error('加载旅行计划失败:', error);
+        showDefaultRecommendation();
+    });
+}
+
+// 更新AI推荐内容
+function updateAIRecommendation(travelPlan) {
+    const budget = travelPlan.travelBudget || 0;
+    const riskPreference = travelPlan.riskPreference || 'moderate';
+    
+    let recommendationType = '';
+    let recommendationTitle = '';
+    let recommendationDescription = '';
+    let recommendedPromotions = [];
+    
+    // 根据预算分层推荐
+    if (budget < 5000) {
+        recommendationType = 'budget';
+        recommendationTitle = '精打细算型权益';
+        recommendationDescription = '为您推荐性价比最高的优惠活动，让每一分钱都花得值';
+        recommendedPromotions = [
+            {
+                title: '经济型酒店8折优惠',
+                discount: '立省¥200',
+                description: '精选经济型酒店，舒适住宿不超预算'
+            },
+            {
+                title: '公共交通优惠券',
+                discount: '立省¥50',
+                description: '地铁、公交通用优惠券'
+            },
+            {
+                title: '景点门票5折',
+                discount: '立省¥100',
+                description: '热门景点门票半价优惠'
+            }
+        ];
+    } else if (budget >= 5000 && budget < 10000) {
+        recommendationType = 'moderate';
+        recommendationTitle = '舒适体验型权益';
+        recommendationDescription = '平衡性价比与体验，让您的旅行更加舒适';
+        recommendedPromotions = [
+            {
+                title: '中档酒店7折优惠',
+                discount: '立省¥500',
+                description: '品质酒店，舒适住宿体验'
+            },
+            {
+                title: '租车服务优惠',
+                discount: '立省¥300',
+                description: '自由出行，探索更多美景'
+            },
+            {
+                title: '特色餐厅优惠',
+                discount: '立省¥200',
+                description: '品尝当地美食，享受味蕾盛宴'
+            }
+        ];
+    } else {
+        recommendationType = 'premium';
+        recommendationTitle = '高端礼遇型权益';
+        recommendationDescription = '为您提供尊贵体验，让旅行成为奢华享受';
+        recommendedPromotions = [
+            {
+                title: '五星级酒店6折',
+                discount: '立省¥2000',
+                description: '奢华住宿，尊贵服务体验'
+            },
+            {
+                title: '私人定制行程',
+                discount: '立省¥1500',
+                description: '专属导游，个性化旅行方案'
+            },
+            {
+                title: '高端餐厅VIP',
+                discount: '立省¥800',
+                description: '米其林餐厅，顶级美食体验'
+            }
+        ];
+    }
+    
+    // 更新推荐内容
+    document.getElementById('aiRecommendationSubtitle').textContent = 
+        `AI根据您的旅行预算(¥${budget.toLocaleString()})匹配到以下权益`;
+    
+    const contentDiv = document.getElementById('aiRecommendationContent');
+    contentDiv.innerHTML = `
+        <div class="recommendation-card ${recommendationType}">
+            <h4>${recommendationTitle}</h4>
+            <p>${recommendationDescription}</p>
+            <div class="recommended-promotions">
+                ${recommendedPromotions.map(promo => `
+                    <div class="recommended-promo">
+                        <div class="promo-title">${promo.title}</div>
+                        <div class="promo-discount">${promo.discount}</div>
+                        <div class="promo-desc">${promo.description}</div>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    `;
+}
+
+// 显示默认推荐
+function showDefaultRecommendation() {
+    document.getElementById('aiRecommendationSubtitle').textContent = 
+        '请先在主页面完成旅前资产体检，获取个性化权益推荐';
+    
+    const contentDiv = document.getElementById('aiRecommendationContent');
+    contentDiv.innerHTML = `
+        <div class="default-recommendation">
+            <p>完成旅前资产体检后，AI将为您推荐最适合的优惠权益</p>
+            <a href="/main" class="btn btn-primary">去完成资产体检</a>
+        </div>
+    `;
+}
+
+// 生成美观的 SVG 占位图片
+function generatePlaceholderImage(title, category) {
+    const colors = {
+        financial: ['#1e3c72', '#2a5298'],
+        tourism: ['#00d4ff', '#0099cc'],
+        hotel: ['#ff6b6b', '#ee5a6f'],
+        restaurant: ['#ffa500', '#ff8c00'],
+        shopping: ['#9b59b6', '#8e44ad'],
+        default: ['#34495e', '#2c3e50']
+    };
+    const gradient = colors[category] || colors.default;
+    const encodedTitle = encodeURIComponent(title.replace(/[🎯🏦✈️🏨🍽️🛍️🎯🚗🎪]/g, '').trim());
+    
+    return `data:image/svg+xml,${encodeURIComponent(`
+        <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:${gradient[0]};stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:${gradient[1]};stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grad)"/>
+            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="24" font-weight="bold" 
+                  fill="white" text-anchor="middle" dominant-baseline="middle">${title}</text>
+        </svg>
+    `)}`;
+}
+
+// 根据分类获取标签
+function getCategoryBadge(category) {
+    const badgeMap = {
+        'financial': '金融',
+        'tourism': '旅游',
+        'hotel': '酒店',
+        'restaurant': '餐饮',
+        'shopping': '购物'
+    };
+    return badgeMap[category] || '优惠';
+}
+
+// 获取优惠活动图片 - 使用多个备选源
+function getPromotionImage(id, title, category) {
+    // 主要图片源 - 使用多个备选
+    const imageSources = [
+        `https://picsum.photos/seed/promo${id}${title.substring(0,5)}/400/300`,
+        `https://source.unsplash.com/400x300/?${category},travel`,
+        `https://via.placeholder.com/400x300/1e3c72/ffffff?text=${encodeURIComponent(title)}`
+    ];
+    
+    // 返回第一个作为主要源，onerror 会自动使用备选
+    return imageSources[0];
+}
+
+// 加载优惠活动
+async function loadPromotions() {
+    try {
+        const response = await fetch('/api/promotion/offers');
+        const data = await response.json();
+        
+        const promotionsGrid = document.getElementById('promotionsGrid');
+        if (promotionsGrid) {
+            const promotions = data.promotions || [
+                {
+                    id: 1,
+                    title: '🏦 智金银行理财宝典 · 旅游基金专享',
+                    description: '年化收益率7.5% + 旅游基金额外奖励20% + 酒店预订立减300元<br>💎 专为旅游爱好者设计的金融产品，让理财与旅游完美结合',
+                    discount: '7.5%年化',
+                    originalPrice: '¥50,000起',
+                    category: 'financial',
+                    validity: '2025-12-31前有效',
+                    badge: '金融'
+                },
+                {
+                    id: 2,
+                    title: '✈️ 智游金旅 × 智金银行 旅游套餐',
+                    description: '机票+酒店+景点门票一站式预订，享受智金银行钻石卡8折优惠<br>🎯 包含接送机服务、旅游保险、专属导游服务',
+                    discount: '8折套餐',
+                    originalPrice: '¥8,888',
+                    category: 'tourism',
+                    validity: '2025-11-30前有效',
+                    badge: '旅游'
+                },
+                {
+                    id: 3,
+                    title: '🏨 豪华酒店联盟 · 智金银行专享',
+                    description: '丽思卡尔顿、四季、香格里拉等顶级酒店，智金银行用户专享6折优惠<br>💎 含双早、免费升级房型、延迟退房等特权',
+                    discount: '6折起',
+                    originalPrice: '¥2,000/晚',
+                    category: 'hotel',
+                    validity: '2025-12-31前有效',
+                    badge: '酒店'
+                },
+                {
+                    id: 4,
+                    title: '🍽️ 米其林餐厅 · 金融美食之旅',
+                    description: '精选米其林星级餐厅，智金银行信用卡消费享受5折优惠<br>🎯 包含品酒课程、主厨见面会、专属包间服务',
+                    discount: '5折优惠',
+                    originalPrice: '¥1,500/人',
+                    category: 'restaurant',
+                    validity: '2025-12-31前有效',
+                    badge: '餐饮'
+                },
+                {
+                    id: 5,
+                    title: '🛍️ 免税购物 · 金融购物节',
+                    description: '三亚、海南免税店购物，智金银行信用卡享受额外15%返现<br>💎 包含机场接送、行李托运、专属导购服务',
+                    discount: '15%返现',
+                    originalPrice: '¥10,000',
+                    category: 'shopping',
+                    validity: '2025-12-31前有效',
+                    badge: '购物'
+                },
+                {
+                    id: 6,
+                    title: '🎯 智能投资组合 · 旅游主题基金',
+                    description: '基于AI算法的旅游主题投资组合，年化收益率8.2%<br>💎 投资标的涵盖航空、酒店、餐饮、娱乐等旅游产业链',
+                    discount: '8.2%年化',
+                    originalPrice: '¥100,000起',
+                    category: 'financial',
+                    validity: '2025-12-31前有效',
+                    badge: '金融'
+                },
+                {
+                    id: 7,
+                    title: '🚗 自驾游套餐 · 金融出行',
+                    description: '豪华租车+油费补贴+过路费报销，智金银行用户专享7折优惠<br>🎯 包含24小时道路救援、免费GPS导航、保险全包',
+                    discount: '7折套餐',
+                    originalPrice: '¥3,000/周',
+                    category: 'tourism',
+                    validity: '2025-12-31前有效',
+                    badge: '旅游'
+                },
+                {
+                    id: 8,
+                    title: '🎪 主题乐园 · 家庭金融游',
+                    description: '迪士尼、环球影城等主题乐园，家庭套票享受6折优惠<br>💎 包含快速通道、专属表演、纪念品折扣',
+                    discount: '6折套票',
+                    originalPrice: '¥2,500/家庭',
+                    category: 'tourism',
+                    validity: '2025-12-31前有效',
+                    badge: '旅游'
+                }
+            ];
+            
+            // 为每个优惠活动生成图片 URL
+            const getImageUrl = (promotion) => {
+                // 使用多个图片源，确保能加载成功
+                const imageMap = {
+                    1: ['https://picsum.photos/seed/finance001/400/300', 'financial'],
+                    2: ['https://picsum.photos/seed/travel001/400/300', 'tourism'],
+                    3: ['https://picsum.photos/seed/hotel001/400/300', 'hotel'],
+                    4: ['https://picsum.photos/seed/restaurant001/400/300', 'restaurant'],
+                    5: ['https://picsum.photos/seed/shopping001/400/300', 'shopping'],
+                    6: ['https://picsum.photos/seed/investment001/400/300', 'financial'],
+                    7: ['https://picsum.photos/seed/drive001/400/300', 'tourism'],
+                    8: ['https://picsum.photos/seed/theme001/400/300', 'tourism']
+                };
+                return imageMap[promotion.id] ? imageMap[promotion.id][0] : generatePlaceholderImage(promotion.title, promotion.category);
+            };
+
+            promotionsGrid.innerHTML = promotions.map(promotion => {
+                // 确保所有字段都有值，避免显示undefined
+                const badge = promotion.badge || getCategoryBadge(promotion.category) || '优惠';
+                const originalPrice = promotion.originalPrice || '面议';
+                const validity = promotion.validity || '长期有效';
+                const category = promotion.category || 'tourism';
+                const title = promotion.title || '优惠活动';
+                const description = promotion.description || '';
+                const discount = promotion.discount || '';
+                
+                return `
+                <div class="promotion-card" data-category="${category}">
+                    <div class="promotion-badge">${badge}</div>
+                    <div class="promotion-image">
+                        <img src="${getImageUrl(promotion)}" 
+                             alt="${title}" 
+                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 10px;"
+                             loading="lazy"
+                             onerror="this.src='${generatePlaceholderImage(title, category)}'">
+                    </div>
+                    <div class="promotion-title">${title}</div>
+                    <div class="promotion-description">${description}</div>
+                    <div class="promotion-discount">${discount}</div>
+                    <div class="promotion-original-price">原价: ${originalPrice}</div>
+                    <div class="promotion-validity">有效期: ${validity}</div>
+                    <div class="promotion-actions">
+                        <button class="btn-primary" onclick="claimOffer(${promotion.id})">立即领取</button>
+                        <button class="btn-secondary" onclick="viewOfferDetails(${promotion.id})">查看详情</button>
+                    </div>
+                </div>
+            `;
+            }).join('');
+        }
+    } catch (error) {
+        console.error('加载优惠活动失败:', error);
+        const promotionsGrid = document.getElementById('promotionsGrid');
+        if (promotionsGrid) {
+            promotionsGrid.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.6); grid-column: 1 / -1;">优惠活动暂时不可用</div>';
+        }
+    }
+}
+
+// 筛选优惠活动
+function filterPromotions(category, element) {
+    // 更新分类按钮状态
+    document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    
+    // 如果传入了元素，则激活该元素；否则通过category查找对应的按钮
+    if (element) {
+        element.classList.add('active');
+    } else {
+        // 通过category查找对应的按钮
+        const targetButton = document.querySelector(`[onclick*="filterPromotions('${category}')"]`);
+        if (targetButton) {
+            targetButton.classList.add('active');
+        }
+    }
+    
+    // 筛选卡片
+    const cards = document.querySelectorAll('.promotion-card');
+    cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.style.display = 'block';
+            card.style.animation = 'fadeIn 0.3s ease-in';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+    
+    // 添加筛选动画效果
+    const promotionsGrid = document.getElementById('promotionsGrid');
+    if (promotionsGrid) {
+        promotionsGrid.style.opacity = '0.7';
+        setTimeout(() => {
+            promotionsGrid.style.opacity = '1';
+        }, 150);
+    }
+}
+
+// 领取优惠
+function claimOffer(offerId) {
+    alert(`正在领取优惠 ID: ${offerId}...`);
+    // 这里可以实现具体的领取逻辑
+}
+
+// 查看优惠详情
+function viewOfferDetails(offerId) {
+    alert(`查看优惠详情 ID: ${offerId}...`);
+    // 这里可以跳转到详情页面或打开详情弹窗
+}
+
+// 注销登录
+function handleLogout() {
+    if (confirm('确定要注销登录吗？')) {
+        localStorage.removeItem('rememberLogin');
+        localStorage.removeItem('username');
+        const logoutButton = document.querySelector('.logout-button');
+        const originalContent = logoutButton.innerHTML;
+        logoutButton.innerHTML = '<span class="logout-icon">⏳</span><span>注销中...</span>';
+        logoutButton.style.pointerEvents = 'none';
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    }
+}
+
+// 领取精选推荐
+function claimFeaturedOffer() {
+    alert('正在领取精选推荐优惠...');
+    // 这里可以实现具体的领取逻辑
+}
+
+// 查看精选推荐详情
+function viewFeaturedDetails() {
+    alert('查看精选推荐详情...');
+    // 这里可以跳转到详情页面或打开详情弹窗
+}
+
+// 初始化优惠活动页面互动功能
+function initPromotionInteractiveFeatures() {
+    // 添加优惠卡片互动
+    addPromotionCardInteractions();
+    
+    // 添加筛选器互动
+    addPromotionFilterInteractions();
+    
+    // 添加倒计时互动
+    addCountdownInteractions();
+    
+    // 添加领取互动
+    addClaimInteractions();
+}
+
+// 优惠卡片互动
+function addPromotionCardInteractions() {
+    const promotionCards = document.querySelectorAll('.promotion-card');
+    promotionCards.forEach(card => {
+        // 悬停效果
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-8px)';
+            this.style.boxShadow = '0 15px 40px rgba(0, 212, 255, 0.3)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+        });
+        
+        // 点击效果
+        card.addEventListener('click', function() {
+            this.style.transform = 'scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+        });
+    });
+}
+
+// 筛选器互动
+function addPromotionFilterInteractions() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 移除所有活跃状态
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // 添加当前活跃状态
+            this.classList.add('active');
+            
+            // 添加点击动画
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+            
+            // 筛选优惠活动
+            filterPromotions(this.dataset.category, this);
+        });
+    });
+}
+
+
+// 倒计时互动
+function addCountdownInteractions() {
+    const countdownElements = document.querySelectorAll('.countdown');
+    countdownElements.forEach(element => {
+        startCountdown(element);
+    });
+}
+
+// 开始倒计时
+function startCountdown(element) {
+    const endTime = new Date().getTime() + 24 * 60 * 60 * 1000; // 24小时后
+    
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        
+        if (distance < 0) {
+            element.textContent = '已结束';
+            return;
+        }
+        
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        element.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+    };
+    
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+}
+
+// 领取互动
+function addClaimInteractions() {
+    const claimButtons = document.querySelectorAll('.claim-btn');
+    claimButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 添加点击动画
+            this.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 150);
+            
+            // 显示领取成功效果
+            showClaimSuccess(this);
+        });
+    });
+}
+
+// 显示领取成功效果
+function showClaimSuccess(button) {
+    const originalText = button.textContent;
+    button.textContent = '已领取';
+    button.style.backgroundColor = '#00ff88';
+    button.disabled = true;
+    
+    // 创建成功提示
+    const successDiv = document.createElement('div');
+    successDiv.className = 'claim-success';
+    successDiv.innerHTML = `
+        <div class="success-content">
+            <span class="success-icon">✅</span>
+            <span class="success-text">优惠券领取成功！</span>
+        </div>
+    `;
+    
+    document.body.appendChild(successDiv);
+    
+    setTimeout(() => {
+        if (successDiv.parentElement) {
+            successDiv.remove();
+        }
+    }, 3000);
+}
+
+// 关怀模式功能
+let careModeEnabled = false;
+let magnifierEnabled = false;
+let voiceEnabled = false;
+let highContrastEnabled = false;
+let largeTextEnabled = false;
+
+// 切换关怀模式
+function toggleCareMode() {
+    careModeEnabled = !careModeEnabled;
+    
+    if (careModeEnabled) {
+        showCareModePanel();
+    } else {
+        hideCareModePanel();
+        disableAllCareFeatures();
+    }
+}
+
+// 显示关怀模式面板
+function showCareModePanel() {
+    const carePanel = document.createElement('div');
+    carePanel.id = 'careModePanel';
+    carePanel.className = 'care-mode-panel';
+    carePanel.innerHTML = `
+        <div class="care-panel-header">
+            <h3>❤️ 关怀模式</h3>
+            <button class="care-close-btn" onclick="toggleCareMode()">×</button>
+        </div>
+        <div class="care-panel-content">
+            <div class="care-section">
+                <h4>🔍 视觉辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleMagnifier()">
+                        <span class="care-icon">🔍</span>
+                        <span>放大镜</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleHighContrast()">
+                        <span class="care-icon">🌙</span>
+                        <span>高对比度</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleLargeText()">
+                        <span class="care-icon">📏</span>
+                        <span>大字体</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleColorAssist()">
+                        <span class="care-icon">🎨</span>
+                        <span>色彩辅助</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🔊 语音辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleVoiceRecognition()" title="点击开启语音识别，通过语音控制页面">
+                        <span class="care-icon">🎤</span>
+                        <span>语音识别</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleVoiceReading()" title="点击开启语音播报，朗读页面内容">
+                        <span class="care-icon">🔊</span>
+                        <span>语音播报</span>
+                    </button>
+                    <button class="care-btn" onclick="adjustVolume()" title="点击调节语音播报音量大小">
+                        <span class="care-icon">🔊</span>
+                        <span>音量调节</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>语音识别：</strong>开启后可通过语音命令控制页面，如"点击按钮"、"滚动页面"</li>
+                        <li><strong>语音播报：</strong>自动朗读页面文字内容，帮助视障用户了解页面信息</li>
+                        <li><strong>音量调节：</strong>调整语音播报的音量大小，适应不同环境需求</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>🖱️ 操作辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleLargeButtons()" title="点击开启大按钮模式，增大按钮尺寸便于点击">
+                        <span class="care-icon">🖱️</span>
+                        <span>大按钮模式</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleKeyboardNav()" title="点击开启键盘导航，使用Tab键和方向键操作">
+                        <span class="care-icon">⌨️</span>
+                        <span>键盘导航</span>
+                    </button>
+                    <button class="care-btn" onclick="toggleFocusHighlight()" title="点击开启焦点高亮，突出显示当前选中的元素">
+                        <span class="care-icon">🎯</span>
+                        <span>焦点高亮</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>大按钮模式：</strong>将所有按钮和可点击元素放大1.5倍，便于手指操作</li>
+                        <li><strong>键盘导航：</strong>使用Tab键切换焦点，方向键导航，Enter键确认</li>
+                        <li><strong>焦点高亮：</strong>为当前选中的元素添加明显的边框和背景色</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="care-section">
+                <h4>💡 认知辅助</h4>
+                <div class="care-options">
+                    <button class="care-btn" onclick="toggleSimplifiedUI()" title="点击开启简化界面，隐藏复杂元素">
+                        <span class="care-icon">📝</span>
+                        <span>简化界面</span>
+                    </button>
+                    <button class="care-btn" onclick="showOperationGuide()" title="点击显示操作引导，了解页面功能">
+                        <span class="care-icon">💡</span>
+                        <span>操作引导</span>
+                    </button>
+                </div>
+                <div class="care-help">
+                    <p><strong>使用说明：</strong></p>
+                    <ul>
+                        <li><strong>简化界面：</strong>隐藏非必要的装饰元素，突出核心功能，减少视觉干扰</li>
+                        <li><strong>操作引导：</strong>显示页面功能说明和操作步骤，帮助用户快速上手</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(carePanel);
+}
+
+// 隐藏关怀模式面板
+function hideCareModePanel() {
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.remove();
+    }
+}
+
+// 放大镜功能
+function toggleMagnifier() {
+    magnifierEnabled = !magnifierEnabled;
+    
+    if (magnifierEnabled) {
+        enableMagnifier();
+        updateButtonState('magnifier', true);
+    } else {
+        disableMagnifier();
+        updateButtonState('magnifier', false);
+    }
+}
+
+function enableMagnifier() {
+    const magnifier = document.createElement('div');
+    magnifier.id = 'magnifier';
+    magnifier.className = 'magnifier';
+    document.body.appendChild(magnifier);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    document.addEventListener('mousemove', handleMagnifierMove);
+}
+
+function disableMagnifier() {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        magnifier.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleMagnifierMove);
+}
+
+function handleMagnifierMove(e) {
+    const magnifier = document.getElementById('magnifier');
+    if (magnifier) {
+        const rect = magnifier.getBoundingClientRect();
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        magnifier.style.left = (e.clientX - centerX) + 'px';
+        magnifier.style.top = (e.clientY - centerY) + 'px';
+        
+        // 获取鼠标位置下的元素
+        const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+        if (elementBelow) {
+            // 放大显示元素内容
+            const elementText = elementBelow.textContent || elementBelow.innerText || '';
+            const elementTag = elementBelow.tagName.toLowerCase();
+            
+            magnifier.innerHTML = `
+                <div class="magnifier-content">
+                    <div class="magnifier-tag">${elementTag}</div>
+                    <div class="magnifier-text">${elementText.substring(0, 100)}</div>
+                </div>
+            `;
+        }
+    }
+}
+
+// 高对比度模式
+function toggleHighContrast() {
+    highContrastEnabled = !highContrastEnabled;
+    
+    if (highContrastEnabled) {
+        document.body.classList.add('high-contrast');
+    } else {
+        document.body.classList.remove('high-contrast');
+    }
+}
+
+// 大字体模式
+function toggleLargeText() {
+    largeTextEnabled = !largeTextEnabled;
+    
+    if (largeTextEnabled) {
+        document.body.classList.add('large-text');
+    } else {
+        document.body.classList.remove('large-text');
+    }
+}
+
+// 色彩辅助
+function toggleColorAssist() {
+    document.body.classList.toggle('color-assist');
+}
+
+// 语音识别
+function toggleVoiceRecognition() {
+    voiceEnabled = !voiceEnabled;
+    
+    if (voiceEnabled) {
+        startVoiceRecognition();
+        updateButtonState('voice', true);
+    } else {
+        stopVoiceRecognition();
+        updateButtonState('voice', false);
+    }
+}
+
+function startVoiceRecognition() {
+    // 创建扫描按钮
+    const scanButton = document.createElement('div');
+    scanButton.id = 'voiceScanButton';
+    scanButton.className = 'voice-scan-button';
+    scanButton.innerHTML = '📖';
+    document.body.appendChild(scanButton);
+    
+    // 让关怀模式面板透明
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '0.3';
+    }
+    
+    // 添加鼠标移动事件监听
+    document.addEventListener('mousemove', handleVoiceScan);
+    document.addEventListener('click', handleVoiceScanClick);
+}
+
+function stopVoiceRecognition() {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.remove();
+    }
+    
+    // 恢复关怀模式面板透明度
+    const carePanel = document.getElementById('careModePanel');
+    if (carePanel) {
+        carePanel.style.opacity = '1';
+    }
+    
+    document.removeEventListener('mousemove', handleVoiceScan);
+    document.removeEventListener('click', handleVoiceScanClick);
+}
+
+function handleVoiceScan(e) {
+    const scanButton = document.getElementById('voiceScanButton');
+    if (scanButton) {
+        scanButton.style.left = (e.clientX - 25) + 'px';
+        scanButton.style.top = (e.clientY - 25) + 'px';
+    }
+}
+
+function handleVoiceScanClick(e) {
+    e.preventDefault();
+    const elementBelow = document.elementFromPoint(e.clientX, e.clientY);
+    if (elementBelow) {
+        const text = elementBelow.textContent || elementBelow.innerText || '';
+        if (text.trim()) {
+            // 使用语音合成朗读文字
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                utterance.pitch = 1;
+                speechSynthesis.speak(utterance);
+                
+                // 显示朗读提示
+                showVoiceReadingTip(text);
+            }
+        }
+    }
+}
+
+function showVoiceReadingTip(text) {
+    const tip = document.createElement('div');
+    tip.className = 'voice-reading-tip';
+    tip.innerHTML = `
+        <div class="tip-content">
+            <span class="tip-icon">🔊</span>
+            <span class="tip-text">正在朗读：${text.substring(0, 20)}...</span>
+        </div>
+    `;
+    document.body.appendChild(tip);
+    
+    setTimeout(() => {
+        if (tip.parentElement) {
+            tip.remove();
+        }
+    }, 3000);
+}
+
+// 语音播报
+function toggleVoiceReading() {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance('欢迎使用智游金旅关怀模式，我们将为您提供贴心的无障碍服务');
+        utterance.lang = 'zh-CN';
+        speechSynthesis.speak(utterance);
+    }
+}
+
+// 音量调节
+function adjustVolume() {
+    const volume = prompt('请输入音量大小 (0-100):', '50');
+    if (volume !== null) {
+        localStorage.setItem('careModeVolume', volume);
+    }
+}
+
+// 大按钮模式
+function toggleLargeButtons() {
+    document.body.classList.toggle('large-buttons');
+}
+
+// 键盘导航
+function toggleKeyboardNav() {
+    document.body.classList.toggle('keyboard-nav');
+}
+
+// 焦点高亮
+function toggleFocusHighlight() {
+    document.body.classList.toggle('focus-highlight');
+}
+
+// 简化界面
+function toggleSimplifiedUI() {
+    document.body.classList.toggle('simplified-ui');
+}
+
+// 操作引导
+function showOperationGuide() {
+    alert('操作引导功能：\n1. 点击任意按钮会有操作提示\n2. 重要操作会显示确认对话框\n3. 支持键盘快捷键操作\n4. 语音播报会指导您完成操作');
+}
+
+// 更新按钮状态
+function updateButtonState(buttonType, isActive) {
+    const buttons = document.querySelectorAll('.care-btn');
+    buttons.forEach(button => {
+        const icon = button.querySelector('.care-icon');
+        if (icon) {
+            if (buttonType === 'magnifier' && icon.textContent === '🔍') {
+                button.classList.toggle('active', isActive);
+            } else if (buttonType === 'voice' && icon.textContent === '🎤') {
+                button.classList.toggle('active', isActive);
+            }
+        }
+    });
+}
+
+// 禁用所有关怀功能
+function disableAllCareFeatures() {
+    magnifierEnabled = false;
+    voiceEnabled = false;
+    highContrastEnabled = false;
+    largeTextEnabled = false;
+    
+    document.body.classList.remove('high-contrast', 'large-text', 'color-assist', 'large-buttons', 'keyboard-nav', 'focus-highlight', 'simplified-ui');
+    disableMagnifier();
+    stopVoiceRecognition();
+}
+</script>
+</div> <!-- 主容器结束 -->
+</body>
+</html>
+
+
+
+

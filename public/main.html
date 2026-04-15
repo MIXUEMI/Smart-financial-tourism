@@ -1,0 +1,2227 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智游金旅 - AI智能金融 × 云端旅游 × 数据未来</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- 用户数据管理 -->
+    <script src="/js/userData.js"></script>
+    <!-- 用户画像管理 -->
+    <script src="/js/userSegmentation.js"></script>
+    
+    <!-- 通用样式 -->
+    <link rel="stylesheet" href="/css/base.css">
+    
+    <!-- Leaflet地图CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- 关怀模式脚本 -->
+    <script src="/js/careMode.js" defer></script>
+    
+    <style>
+        /* 智金银行品牌色彩和诗意设计 */
+        :root {
+            --icbc-red: #C8102E;
+            --icbc-gold: #FFD700;
+            --icbc-blue: #1E3A8A;
+            --poetry-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            --icbc-gradient: linear-gradient(135deg, #C8102E 0%, #1E3A8A 50%, #FFD700 100%);
+        }
+
+        body {
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(200, 16, 46, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(30, 58, 138, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                );
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(200, 16, 46, 0.1);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 10;
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        /* 用户信息显示区域 */
+        .user-info-header {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-align: center;
+        }
+
+        .user-avatar-small {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .user-name-small {
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .user-segment-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+        }
+
+        .user-level-small {
+            font-size: 12px;
+            color: #00d4ff;
+            opacity: 0.9;
+        }
+
+        .sidebar-title {
+            font-size: 28px;
+            font-weight: 800;
+            background: var(--icbc-gradient);
+            background-size: 300% 300%;
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            animation: gradientShift 4s ease-in-out infinite;
+            text-shadow: 0 0 30px rgba(200, 16, 46, 0.3);
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 300;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .icbc-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+            padding: 15px;
+            background: rgba(200, 16, 46, 0.1);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .icbc-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--icbc-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-weight: bold;
+            color: white;
+            font-size: 18px;
+        }
+
+        .icbc-text {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--icbc-gold);
+        }
+
+        .poetry-quote {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            border-left: 4px solid var(--icbc-gold);
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .poetry-quote::before {
+            content: '"';
+            font-size: 24px;
+            color: var(--icbc-gold);
+        }
+
+        .poetry-quote::after {
+            content: '"';
+            font-size: 24px;
+            color: var(--icbc-gold);
+        }
+
+        /* 关怀模式按钮样式 */
+        .care-mode-container {
+            margin-bottom: 20px;
+            padding: 0 16px;
+        }
+
+        .care-mode-toggle {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+            transition: all 0.3s ease;
+            width: 100%;
+            justify-content: center;
+        }
+
+        .care-mode-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .care-icon {
+            font-size: 16px;
+        }
+
+        .care-text {
+            font-size: 14px;
+        }
+
+        /* 关怀模式面板样式 */
+        .care-mode-panel {
+            position: fixed;
+            top: 0;
+            right: -400px;
+            width: 400px;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+            transition: right 0.3s ease;
+            z-index: 2000;
+            overflow-y: auto;
+        }
+
+        .care-mode-panel.active {
+            right: 0;
+        }
+
+        .care-panel-header {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .care-panel-header h3 {
+            color: white;
+            margin: 0;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .care-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.3s ease;
+        }
+
+        .care-close-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .care-panel-content {
+            padding: 20px;
+        }
+
+        .care-section {
+            margin-bottom: 25px;
+        }
+
+        .care-section h4 {
+            color: white;
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            font-weight: 600;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 8px;
+        }
+
+        .care-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .care-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .care-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .care-btn .care-icon {
+            font-size: 18px;
+        }
+
+        .care-help {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .care-help p {
+            color: white;
+            margin: 0 0 10px 0;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .care-help ul {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            padding-left: 20px;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .care-help li {
+            margin-bottom: 5px;
+        }
+
+        /* 科技粒子效果 */
+        .tech-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .particle:nth-child(2n) {
+            background: #ff00ff;
+            animation-delay: -2s;
+        }
+
+        .particle:nth-child(3n) {
+            background: #00ff00;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) translateX(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px) scale(1);
+                opacity: 0;
+            }
+        }
+
+        /* 科技线条效果 */
+        .tech-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .tech-line {
+            position: absolute;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #00ffff, transparent);
+            animation: lineMove 10s linear infinite;
+        }
+
+        .tech-line:nth-child(2n) {
+            background: linear-gradient(90deg, transparent, #ff00ff, transparent);
+            animation-delay: -3s;
+        }
+
+        .tech-line:nth-child(3n) {
+            background: linear-gradient(90deg, transparent, #00ff00, transparent);
+            animation-delay: -6s;
+        }
+
+        @keyframes lineMove {
+            0% {
+                left: -100%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风元素 */
+        .chinese-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .chinese-pattern {
+            position: absolute;
+            font-size: 24px;
+            color: rgba(255, 215, 0, 0.1);
+            animation: floatChinese 15s ease-in-out infinite;
+        }
+
+        .chinese-pattern:nth-child(1) { top: 10%; left: 5%; animation-delay: 0s; }
+        .chinese-pattern:nth-child(2) { top: 20%; right: 10%; animation-delay: -3s; }
+        .chinese-pattern:nth-child(3) { top: 60%; left: 8%; animation-delay: -6s; }
+        .chinese-pattern:nth-child(4) { top: 80%; right: 5%; animation-delay: -9s; }
+        .chinese-pattern:nth-child(5) { top: 40%; left: 50%; animation-delay: -12s; }
+
+        @keyframes floatChinese {
+            0%, 100% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 0.1;
+            }
+            25% {
+                transform: translateY(-20px) rotate(5deg);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translateY(-10px) rotate(-3deg);
+                opacity: 0.2;
+            }
+            75% {
+                transform: translateY(-30px) rotate(2deg);
+                opacity: 0.4;
+            }
+        }
+
+        /* 中国风装饰线条 */
+        .chinese-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+            animation: chineseLineMove 12s linear infinite;
+        }
+
+        .chinese-line:nth-child(1) { top: 15%; width: 200px; animation-delay: 0s; }
+        .chinese-line:nth-child(2) { top: 35%; width: 150px; animation-delay: -4s; }
+        .chinese-line:nth-child(3) { top: 55%; width: 180px; animation-delay: -8s; }
+        .chinese-line:nth-child(4) { top: 75%; width: 160px; animation-delay: -2s; }
+
+        @keyframes chineseLineMove {
+            0% {
+                left: -200px;
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.5;
+            }
+            90% {
+                opacity: 0.5;
+            }
+            100% {
+                left: 100%;
+                opacity: 0;
+            }
+        }
+
+        /* 中国风光晕效果 */
+        .chinese-glow {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+            animation: chineseGlow 8s ease-in-out infinite;
+        }
+
+        .chinese-glow:nth-child(1) { top: 20%; left: 20%; animation-delay: 0s; }
+        .chinese-glow:nth-child(2) { top: 60%; right: 20%; animation-delay: -2s; }
+        .chinese-glow:nth-child(3) { top: 40%; left: 70%; animation-delay: -4s; }
+
+        @keyframes chineseGlow {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.1;
+            }
+            50% {
+                transform: scale(1.5);
+                opacity: 0.3;
+            }
+        }
+
+        /* 关怀模式功能样式 */
+        .high-contrast {
+            filter: contrast(150%) brightness(120%);
+        }
+
+        .large-text {
+            font-size: 1.2em !important;
+        }
+
+        .large-text h1, .large-text h2, .large-text h3, .large-text h4, .large-text h5, .large-text h6 {
+            font-size: 1.3em !important;
+        }
+
+        .color-assist {
+            filter: hue-rotate(180deg) saturate(150%);
+        }
+
+        .large-buttons button, .large-buttons .btn, .large-buttons a {
+            transform: scale(1.5);
+            margin: 10px;
+        }
+
+        .focus-highlight *:focus {
+            outline: 3px solid #ff6b6b !important;
+            outline-offset: 2px !important;
+            background-color: rgba(255, 107, 107, 0.1) !important;
+        }
+
+        .simplified-ui .decorative, .simplified-ui .animation, .simplified-ui .gradient-bg {
+            display: none !important;
+        }
+
+        .simplified-ui .main-container {
+            background: #f5f5f5 !important;
+            color: #333 !important;
+        }
+
+        /* 放大镜功能 */
+        .magnifier {
+            position: fixed;
+            width: 200px;
+            height: 200px;
+            border: 3px solid #ff6b6b;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            pointer-events: none;
+            z-index: 3000;
+            display: none;
+            overflow: hidden;
+        }
+
+        .magnifier-content {
+            transform: scale(2);
+            transform-origin: 0 0;
+            width: 100px;
+            height: 100px;
+        }
+
+        .nav-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 8px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .nav-link:hover::before {
+            left: 100%;
+        }
+
+        .nav-link:hover {
+            background: rgba(200, 16, 46, 0.2);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .nav-link.active {
+            background: var(--icbc-gradient);
+            color: white;
+            box-shadow: 0 4px 15px rgba(200, 16, 46, 0.3);
+        }
+
+        .nav-icon {
+            width: 20px;
+            height: 20px;
+            margin-right: 12px;
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .welcome-title {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: var(--icbc-gradient);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(200, 16, 46, 0.3);
+        }
+
+        .welcome-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .poetry-banner {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .poetry-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--icbc-gradient);
+        }
+
+        .poetry-banner h2 {
+            font-size: 1.8rem;
+            color: var(--icbc-gold);
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .poetry-banner p {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.8;
+            font-style: italic;
+        }
+
+        /* 旅财闭环模块 - 保持原有功能但美化样式 */
+        .journey-flow {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .journey-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .journey-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--icbc-gradient);
+        }
+
+        .journey-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(200, 16, 46, 0.2);
+        }
+
+        .journey-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--icbc-gold);
+            font-weight: 600;
+        }
+
+        .journey-card .metric {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--icbc-gold);
+            margin: 15px 0;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+        }
+
+        .journey-card .description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.4;
+        }
+
+        /* 旅前资产体检表单 - 美化样式 */
+        .travel-profile-form {
+            background: rgba(200, 16, 46, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 30px 0;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            position: relative;
+        }
+
+        .travel-profile-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--icbc-gradient);
+        }
+
+        .travel-profile-form h3 {
+            color: var(--icbc-gold);
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--icbc-gold);
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1);
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* 下拉菜单样式优化 */
+        select.form-input {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 12px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        select.form-input option {
+            background: rgba(30, 30, 40, 0.95);
+            color: white;
+            padding: 12px 16px;
+            border: none;
+        }
+
+        select.form-input option:hover,
+        select.form-input option:focus,
+        select.form-input option:checked {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--icbc-gold);
+        }
+
+        /* 下拉菜单打开时的样式 */
+        select.form-input:focus {
+            background-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .btn {
+            background: var(--icbc-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(200, 16, 46, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+
+        /* 其他原有样式保持 */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--icbc-gradient);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(200, 16, 46, 0.2);
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--icbc-gold);
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--icbc-gradient);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(200, 16, 46, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--icbc-gold);
+        }
+
+        .feature-description {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .feature-btn {
+            background: var(--icbc-gradient);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .feature-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(200, 16, 46, 0.3);
+        }
+
+        .quick-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(200, 16, 46, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* 词云图样式 */
+        .wordcloud-section {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            margin: 30px 0;
+        }
+
+        .wordcloud-title {
+            color: var(--icbc-gold);
+            margin-bottom: 20px;
+            font-size: 1.6rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .wordcloud-container {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .wordcloud-description {
+            text-align: center;
+            margin-top: 15px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .word-item {
+            display: inline-block;
+            margin: 5px;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .word-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .word-size-1 { font-size: 12px; }
+        .word-size-2 { font-size: 16px; }
+        .word-size-3 { font-size: 20px; }
+        .word-size-4 { font-size: 24px; }
+        .word-size-5 { font-size: 28px; }
+
+        .word-color-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .word-color-2 { background: linear-gradient(135deg, #2196F3 0%, #03A9F4 100%); }
+        .word-color-3 { background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%); }
+        .word-color-4 { background: linear-gradient(135deg, #FF9800 0%, #FFC107 100%); }
+        .word-color-5 { background: linear-gradient(135deg, #9C27B0 0%, #E91E63 100%); }
+
+        .recent-activity {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 15px;
+            padding: 30px;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .activity-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--icbc-gold);
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.1);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--icbc-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.2rem;
+        }
+
+        .activity-content {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 5px;
+        }
+
+        .activity-time {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 215, 0, 0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: var(--icbc-gradient);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 1.2rem;
+        }
+
+        .user-details h4 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+            color: var(--icbc-gold);
+        }
+
+        .user-details p {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            background: rgba(200, 16, 46, 0.2);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                height: 100vh;
+                z-index: 1000;
+                transition: left 0.3s ease;
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .journey-flow {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .quick-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 科技动态背景 -->
+    <div class="tech-particles" id="techParticles"></div>
+    <div class="tech-lines" id="techLines"></div>
+    
+    <!-- 中国风元素 -->
+    <div class="chinese-elements" id="chineseElements"></div>
+
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <!-- 用户信息显示区域 -->
+            <div class="user-info-header" id="userInfoHeader">
+                <div class="user-avatar-small" id="userAvatarSmall">👤</div>
+                <div class="user-name-small" id="userNameSmall">加载中...</div>
+                <div class="user-segment-badge" id="userSegmentBadge">分析中...</div>
+                <div class="user-level-small" id="userLevelSmall">VIP会员</div>
+            </div>
+            
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">智游金旅</h1>
+                <p class="sidebar-subtitle">AI智能金融 × 云端旅游 × 数据未来</p>
+                
+                <!-- 智金银行品牌标识 -->
+                <div class="icbc-brand">
+                    <div class="icbc-logo">ZJ Bank</div>
+                    <div class="icbc-text">智金银行</div>
+                </div>
+                
+                <!-- 诗意引言 -->
+                <div class="poetry-quote">
+                    诗和远方，金融相伴<br>
+                    让每一次旅行都成为财富的起点
+                </div>
+            </div>
+            
+            <!-- 关怀模式按钮 -->
+            <div class="care-mode-container">
+                <button class="care-mode-toggle" onclick="toggleCareMode()" title="关怀模式">
+                    <span class="care-icon">❤️</span>
+                    <span class="care-text">关怀模式</span>
+                </button>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="/main" class="nav-link active">
+                        <span class="nav-icon">🏠</span>
+                        <span>首页概览</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/financial" class="nav-link">
+                        <span class="nav-icon">💰</span>
+                        <span>智能理财</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/tourism" class="nav-link">
+                        <span class="nav-icon">✈️</span>
+                        <span>旅游规划</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/ai" class="nav-link">
+                        <span class="nav-icon">🤖</span>
+                        <span>AI助手</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/promotion" class="nav-link">
+                        <span class="nav-icon">🎁</span>
+                        <span>优惠活动</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/booking" class="nav-link">
+                        <span class="nav-icon">📅</span>
+                        <span>预订管理</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/account" class="nav-link">
+                        <span class="nav-icon">👤</span>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-details">
+                        <h4 id="userName">智能用户</h4>
+                        <p id="userLevel">至尊会员</p>
+                    </div>
+                </div>
+                <button class="logout-btn" onclick="logout()">退出登录</button>
+            </div>
+        </aside>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 欢迎区域 -->
+            <section class="welcome-section">
+                <h1 class="welcome-title">欢迎来到智游金旅</h1>
+                <p class="welcome-subtitle">让AI为您的旅行和理财保驾护航</p>
+            </section>
+
+            <!-- 诗意横幅 -->
+            <section class="poetry-banner">
+                <h2>🌟 诗和远方的金融之旅</h2>
+                <p>在智金银行的金融科技护航下，每一次旅行都是财富积累的起点<br>
+                让智能理财与诗意旅行完美融合，开启您的专属金融旅游体验</p>
+            </section>
+
+            <!-- 旅财闭环模块 -->
+            <section class="journey-flow">
+                <div class="journey-card">
+                    <h3>旅前规划</h3>
+                    <div class="metric" id="budgetSuggestion">¥0</div>
+                    <div class="description">智能预算建议</div>
+                </div>
+                <div class="journey-card">
+                    <h3>旅中体验</h3>
+                    <div class="metric" id="rightsRecommendation">0</div>
+                    <div class="description">权益推荐数量</div>
+                </div>
+                <div class="journey-card">
+                    <h3>旅后收益</h3>
+                    <div class="metric" id="compoundReturn">¥0</div>
+                    <div class="description">复利收益预期</div>
+                </div>
+            </section>
+
+            <!-- 旅前资产体检表单 -->
+            <section class="travel-profile-form">
+                <h3>🏦 智金银行旅前资产体检</h3>
+                <form id="travelProfileForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="monthlyIncome">月收入 (元)</label>
+                            <input type="number" class="form-input" id="monthlyIncome" placeholder="请输入月收入">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="monthlyExpense">月支出 (元)</label>
+                            <input type="number" class="form-input" id="monthlyExpense" placeholder="请输入月支出">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label" for="travelBudget">旅行预算 (元)</label>
+                            <input type="number" class="form-input" id="travelBudget" placeholder="请输入旅行预算">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="riskPreference">风险偏好</label>
+                            <select class="form-input" id="riskPreference">
+                                <option value="conservative">保守型</option>
+                                <option value="moderate">稳健型</option>
+                                <option value="aggressive">激进型</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-success">保存资产配置</button>
+                </form>
+            </section>
+
+            <!-- 核心指标卡片 -->
+            <section class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-icon">💰</span>
+                    <div class="stat-value" id="totalAssets">¥0</div>
+                    <div class="stat-label">总资产</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">📈</span>
+                    <div class="stat-value" id="monthlyReturn">0%</div>
+                    <div class="stat-label">月收益率</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">✈️</span>
+                    <div class="stat-value" id="travelCount">0</div>
+                    <div class="stat-label">旅行次数</div>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-icon">🎯</span>
+                    <div class="stat-value" id="savingsRate">0%</div>
+                    <div class="stat-label">储蓄率</div>
+                </div>
+            </section>
+
+            <!-- 功能特色 -->
+            <section class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">🤖</span>
+                    <h3 class="feature-title">AI智能分析</h3>
+                    <p class="feature-description">基于深度学习的个性化投资建议和旅行规划，让每一次决策都更精准。</p>
+                    <a href="/ai" class="feature-btn">体验AI助手</a>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">💰</span>
+                    <h3 class="feature-title">智能理财</h3>
+                    <p class="feature-description">结合旅行需求的动态资产配置，让您的资金在旅途中也能增值。</p>
+                    <a href="/financial" class="feature-btn">开始理财</a>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">✈️</span>
+                    <h3 class="feature-title">旅行规划</h3>
+                    <p class="feature-description">从预算规划到行程安排，AI为您打造完美的旅行体验。</p>
+                    <a href="/tourism" class="feature-btn">规划旅行</a>
+                </div>
+            </section>
+
+            <!-- 快速操作 -->
+            <section class="quick-actions">
+                <a href="/financial" class="action-btn">
+                    <span>💰</span>
+                    <span>查看理财</span>
+                </a>
+                <a href="/tourism" class="action-btn">
+                    <span>✈️</span>
+                    <span>规划旅行</span>
+                </a>
+                <a href="/ai" class="action-btn">
+                    <span>🤖</span>
+                    <span>AI咨询</span>
+                </a>
+                <a href="/promotion" class="action-btn">
+                    <span>🎁</span>
+                    <span>优惠活动</span>
+                </a>
+            </section>
+
+            <!-- 用户画像词云图 -->
+            <section class="wordcloud-section">
+                <h3 class="wordcloud-title">🎯 用户画像分布</h3>
+                <div class="wordcloud-container" id="wordcloudContainer">
+                    <div class="loading-spinner"></div>
+                </div>
+                <div class="wordcloud-description">
+                    <p>基于全站用户行为分析，展示不同用户类型的分布情况</p>
+                </div>
+            </section>
+
+            <!-- 最近活动 -->
+            <section class="recent-activity">
+                <h3 class="activity-title">最近活动</h3>
+                <ul class="activity-list" id="activityList">
+                    <li class="activity-item">
+                        <div class="activity-icon">💰</div>
+                        <div class="activity-content">
+                            <div class="activity-text">完成了一笔理财投资</div>
+                            <div class="activity-time">2小时前</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">✈️</div>
+                        <div class="activity-content">
+                            <div class="activity-text">预订了北京三日游</div>
+                            <div class="activity-time">1天前</div>
+                        </div>
+                    </li>
+                    <li class="activity-item">
+                        <div class="activity-icon">🎁</div>
+                        <div class="activity-content">
+                            <div class="activity-text">获得了旅行优惠券</div>
+                            <div class="activity-time">3天前</div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 检查登录状态
+            if (!checkLoginStatus()) return;
+
+            loadUserData();
+            loadTravelProfile();
+            loadMacroIndicators();
+            initTechBackground();
+            updateSidebarUserInfo();
+            loadWordcloud();
+        });
+
+        // 更新侧边栏用户信息
+        function updateSidebarUserInfo() {
+            const userData = userDataManager.getUserData();
+            const userNameSmall = document.getElementById('userNameSmall');
+            const userAvatarSmall = document.getElementById('userAvatarSmall');
+            const userLevelSmall = document.getElementById('userLevelSmall');
+            
+            if (userNameSmall) userNameSmall.textContent = userData.username;
+            if (userAvatarSmall) userAvatarSmall.textContent = userData.avatar;
+            if (userLevelSmall) userLevelSmall.textContent = userData.level;
+            
+            // 加载用户画像类型
+            loadUserSegmentType();
+        }
+        
+        // 加载用户画像类型
+        async function loadUserSegmentType() {
+            try {
+                const userSegmentBadge = document.getElementById('userSegmentBadge');
+                if (!userSegmentBadge) return;
+                
+                // 尝试获取用户画像数据
+                const response = await fetch('/api/analytics/user-segmentation/me');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.segmentType) {
+                        userSegmentBadge.textContent = data.segmentType;
+                        userSegmentBadge.style.background = getSegmentColor(data.segmentType);
+                    } else {
+                        userSegmentBadge.textContent = '理财型游客';
+                    }
+                } else {
+                    // 使用默认画像类型
+                    userSegmentBadge.textContent = '理财型游客';
+                }
+            } catch (error) {
+                console.log('获取用户画像类型失败，使用默认类型');
+                const userSegmentBadge = document.getElementById('userSegmentBadge');
+                if (userSegmentBadge) {
+                    userSegmentBadge.textContent = '理财型游客';
+                }
+            }
+        }
+        
+        // 根据画像类型获取颜色
+        function getSegmentColor(segmentType) {
+            const colors = {
+                '理财型游客': 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                '轻旅行打工人': 'linear-gradient(135deg, #2196F3 0%, #03A9F4 100%)',
+                '家庭度假型': 'linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%)',
+                '康养型用户': 'linear-gradient(135deg, #FF9800 0%, #FFC107 100%)',
+                '探索型年轻人': 'linear-gradient(135deg, #9C27B0 0%, #E91E63 100%)'
+            };
+            return colors[segmentType] || colors['理财型游客'];
+        }
+
+        // 加载词云图
+        async function loadWordcloud() {
+            try {
+                const container = document.getElementById('wordcloudContainer');
+                if (!container) return;
+
+                // 尝试获取词云数据
+                const response = await fetch('/api/analytics/segments-overview');
+                if (response.ok) {
+                    const data = await response.json();
+                    renderWordcloud(data);
+                } else {
+                    // 使用模拟数据
+                    renderMockWordcloud();
+                }
+            } catch (error) {
+                console.log('获取词云数据失败，使用模拟数据');
+                renderMockWordcloud();
+            }
+        }
+
+        // 渲染词云图
+        function renderWordcloud(data) {
+            const container = document.getElementById('wordcloudContainer');
+            if (!container) return;
+
+            const segments = data.segments || [];
+            let html = '';
+
+            segments.forEach((segment, index) => {
+                const size = Math.min(5, Math.max(1, Math.floor(segment.percentage / 20) + 1));
+                const colorIndex = (index % 5) + 1;
+                html += `<span class="word-item word-size-${size} word-color-${colorIndex}" title="${segment.segmentType}: ${segment.percentage}%">${segment.segmentType}</span>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 渲染模拟词云图
+        function renderMockWordcloud() {
+            const container = document.getElementById('wordcloudContainer');
+            if (!container) return;
+
+            const mockSegments = [
+                { segmentType: '理财型游客', percentage: 35 },
+                { segmentType: '轻旅行打工人', percentage: 25 },
+                { segmentType: '家庭度假型', percentage: 20 },
+                { segmentType: '康养型用户', percentage: 15 },
+                { segmentType: '探索型年轻人', percentage: 5 }
+            ];
+
+            let html = '';
+            mockSegments.forEach((segment, index) => {
+                const size = Math.min(5, Math.max(1, Math.floor(segment.percentage / 20) + 1));
+                const colorIndex = (index % 5) + 1;
+                html += `<span class="word-item word-size-${size} word-color-${colorIndex}" title="${segment.segmentType}: ${segment.percentage}%">${segment.segmentType}</span>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        // 初始化科技背景效果
+        function initTechBackground() {
+            createParticles();
+            createTechLines();
+            createChineseElements();
+        }
+
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('techParticles');
+            const particleCount = 40;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // 创建科技线条效果
+        function createTechLines() {
+            const linesContainer = document.getElementById('techLines');
+            const lineCount = 6;
+            
+            for (let i = 0; i < lineCount; i++) {
+                const line = document.createElement('div');
+                line.className = 'tech-line';
+                line.style.top = Math.random() * 100 + '%';
+                line.style.width = (Math.random() * 200 + 100) + 'px';
+                line.style.animationDelay = Math.random() * 10 + 's';
+                line.style.animationDuration = (Math.random() * 5 + 8) + 's';
+                linesContainer.appendChild(line);
+            }
+        }
+
+        // 创建中国风元素
+        function createChineseElements() {
+            const chineseContainer = document.getElementById('chineseElements');
+            
+            // 中国风图案
+            const chinesePatterns = ['☯', '☰', '☷', '☲', '☳', '☴', '☵', '☶', '☱', '龙', '凤', '云', '山', '水', '金', '木', '火', '土'];
+            
+            for (let i = 0; i < 5; i++) {
+                const pattern = document.createElement('div');
+                pattern.className = 'chinese-pattern';
+                pattern.textContent = chinesePatterns[Math.floor(Math.random() * chinesePatterns.length)];
+                chineseContainer.appendChild(pattern);
+            }
+            
+            // 中国风装饰线条
+            for (let i = 0; i < 4; i++) {
+                const line = document.createElement('div');
+                line.className = 'chinese-line';
+                chineseContainer.appendChild(line);
+            }
+            
+            // 中国风光晕效果
+            for (let i = 0; i < 3; i++) {
+                const glow = document.createElement('div');
+                glow.className = 'chinese-glow';
+                chineseContainer.appendChild(glow);
+            }
+        }
+
+        // 加载用户数据
+        function loadUserData() {
+            const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+            document.getElementById('userName').textContent = userData.name || '智能用户';
+            document.getElementById('userLevel').textContent = userData.level || '至尊会员';
+            
+            // 更新统计数据
+            document.getElementById('totalAssets').textContent = `¥${(userData.totalAssets || 0).toLocaleString()}`;
+            document.getElementById('monthlyReturn').textContent = `${(userData.monthlyReturn || 0).toFixed(2)}%`;
+            document.getElementById('travelCount').textContent = userData.travelCount || 0;
+            document.getElementById('savingsRate').textContent = `${(userData.savingsRate || 0).toFixed(1)}%`;
+        }
+
+        // 加载旅行档案
+        function loadTravelProfile() {
+            const travelProfile = JSON.parse(localStorage.getItem('travelProfile') || '{}');
+            
+            if (travelProfile.monthlyIncome) {
+                document.getElementById('monthlyIncome').value = travelProfile.monthlyIncome;
+            }
+            if (travelProfile.monthlyExpense) {
+                document.getElementById('monthlyExpense').value = travelProfile.monthlyExpense;
+            }
+            if (travelProfile.travelBudget) {
+                document.getElementById('travelBudget').value = travelProfile.travelBudget;
+            }
+            if (travelProfile.riskPreference) {
+                document.getElementById('riskPreference').value = travelProfile.riskPreference;
+            }
+            
+            // 更新旅财闭环显示
+            updateJourneyFlow(travelProfile);
+        }
+
+        // 更新旅财闭环显示
+        function updateJourneyFlow(profile) {
+            if (profile.travelBudget) {
+                document.getElementById('budgetSuggestion').textContent = `¥${profile.travelBudget.toLocaleString()}`;
+            }
+            
+            // 模拟权益推荐数量
+            const rightsCount = profile.travelBudget ? Math.floor(profile.travelBudget / 1000) : 0;
+            document.getElementById('rightsRecommendation').textContent = rightsCount;
+            
+            // 模拟复利收益计算
+            if (profile.travelBudget && profile.monthlyIncome) {
+                const annualReturn = 0.035; // 3.5%年化收益率
+                const monthlyReturn = annualReturn / 12;
+                const compoundReturn = profile.travelBudget * monthlyReturn * 6; // 6个月收益
+                document.getElementById('compoundReturn').textContent = `¥${compoundReturn.toFixed(0)}`;
+            }
+        }
+
+        // 保存旅行档案
+        function saveTravelProfile() {
+            const profile = {
+                monthlyIncome: parseInt(document.getElementById('monthlyIncome').value) || 0,
+                monthlyExpense: parseInt(document.getElementById('monthlyExpense').value) || 0,
+                travelBudget: parseInt(document.getElementById('travelBudget').value) || 0,
+                riskPreference: document.getElementById('riskPreference').value
+            };
+            
+            localStorage.setItem('travelProfile', JSON.stringify(profile));
+            
+            // 发送到后端
+            fetch('/api/travel-plans', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(profile)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateJourneyFlow(profile);
+                    alert('资产配置保存成功！');
+                } else {
+                    alert('保存失败，请重试');
+                }
+            })
+            .catch(error => {
+                console.error('保存失败:', error);
+                alert('保存失败，请重试');
+            });
+        }
+
+        // 加载宏观经济指标
+        function loadMacroIndicators() {
+            fetch('/api/macro-indicators')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // 更新侧边栏信息
+                    console.log('宏观经济指标加载成功:', data.data);
+                }
+            })
+            .catch(error => {
+                console.error('加载宏观经济指标失败:', error);
+            });
+        }
+
+        // 表单提交事件
+        document.getElementById('travelProfileForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            saveTravelProfile();
+        });
+
+        // 关怀模式功能
+        function toggleCareMode() {
+            const carePanel = document.getElementById('careModePanel');
+            if (carePanel) {
+                carePanel.classList.toggle('active');
+            } else {
+                createCareModePanel();
+            }
+        }
+
+        function createCareModePanel() {
+            const carePanel = document.createElement('div');
+            carePanel.id = 'careModePanel';
+            carePanel.className = 'care-mode-panel';
+            
+            carePanel.innerHTML = `
+                <div class="care-panel-header">
+                    <h3>❤️ 关怀模式</h3>
+                    <button class="care-close-btn" onclick="toggleCareMode()">×</button>
+                </div>
+                <div class="care-panel-content">
+                    <div class="care-section">
+                        <h4>🔍 视觉辅助</h4>
+                        <div class="care-options">
+                            <button class="care-btn" onclick="toggleMagnifier()" title="点击开启放大镜，鼠标悬停查看内容放大">
+                                <span class="care-icon">🔍</span>
+                                <span>放大镜</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleHighContrast()" title="点击开启高对比度模式">
+                                <span class="care-icon">🌓</span>
+                                <span>高对比度</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleLargeText()" title="点击开启大字体模式">
+                                <span class="care-icon">🔤</span>
+                                <span>大字体</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleColorAssist()" title="点击开启色彩辅助模式">
+                                <span class="care-icon">🎨</span>
+                                <span>色彩辅助</span>
+                            </button>
+                        </div>
+                        <div class="care-help">
+                            <p><strong>使用说明：</strong></p>
+                            <ul>
+                                <li><strong>放大镜：</strong>鼠标悬停查看内容放大，点击开启全局放大镜</li>
+                                <li><strong>高对比度：</strong>增强文字和背景对比度，提高可读性</li>
+                                <li><strong>大字体：</strong>将页面字体放大1.2倍，便于阅读</li>
+                                <li><strong>色彩辅助：</strong>为色盲用户提供色彩标识和模式切换</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="care-section">
+                        <h4>🔊 语音辅助</h4>
+                        <div class="care-options">
+                            <button class="care-btn" onclick="toggleVoiceRecognition()" title="点击开启语音识别，通过语音控制页面">
+                                <span class="care-icon">🎤</span>
+                                <span>语音识别</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleVoiceReading()" title="点击开启语音播报，朗读页面内容">
+                                <span class="care-icon">🔊</span>
+                                <span>语音播报</span>
+                            </button>
+                            <button class="care-btn" onclick="adjustVolume()" title="点击调节语音播报音量大小">
+                                <span class="care-icon">🔊</span>
+                                <span>音量调节</span>
+                            </button>
+                        </div>
+                        <div class="care-help">
+                            <p><strong>使用说明：</strong></p>
+                            <ul>
+                                <li><strong>语音识别：</strong>开启后可通过语音命令控制页面，如"点击按钮"、"滚动页面"</li>
+                                <li><strong>语音播报：</strong>自动朗读页面文字内容，帮助视障用户了解页面信息</li>
+                                <li><strong>音量调节：</strong>调整语音播报的音量大小，适应不同环境需求</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="care-section">
+                        <h4>🖱️ 操作辅助</h4>
+                        <div class="care-options">
+                            <button class="care-btn" onclick="toggleLargeButtons()" title="点击开启大按钮模式，增大按钮尺寸便于点击">
+                                <span class="care-icon">🖱️</span>
+                                <span>大按钮模式</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleKeyboardNav()" title="点击开启键盘导航，使用Tab键和方向键操作">
+                                <span class="care-icon">⌨️</span>
+                                <span>键盘导航</span>
+                            </button>
+                            <button class="care-btn" onclick="toggleFocusHighlight()" title="点击开启焦点高亮，突出显示当前选中的元素">
+                                <span class="care-icon">🎯</span>
+                                <span>焦点高亮</span>
+                            </button>
+                        </div>
+                        <div class="care-help">
+                            <p><strong>使用说明：</strong></p>
+                            <ul>
+                                <li><strong>大按钮模式：</strong>将所有按钮和可点击元素放大1.5倍，便于手指操作</li>
+                                <li><strong>键盘导航：</strong>使用Tab键切换焦点，方向键导航，Enter键确认</li>
+                                <li><strong>焦点高亮：</strong>为当前选中的元素添加明显的边框和背景色</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="care-section">
+                        <h4>💡 认知辅助</h4>
+                        <div class="care-options">
+                            <button class="care-btn" onclick="toggleSimplifiedUI()" title="点击开启简化界面，隐藏复杂元素">
+                                <span class="care-icon">📝</span>
+                                <span>简化界面</span>
+                            </button>
+                            <button class="care-btn" onclick="showOperationGuide()" title="点击显示操作引导，了解页面功能">
+                                <span class="care-icon">💡</span>
+                                <span>操作引导</span>
+                            </button>
+                        </div>
+                        <div class="care-help">
+                            <p><strong>使用说明：</strong></p>
+                            <ul>
+                                <li><strong>简化界面：</strong>隐藏非必要的装饰元素，突出核心功能，减少视觉干扰</li>
+                                <li><strong>操作引导：</strong>显示页面功能说明和操作步骤，帮助用户快速上手</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(carePanel);
+            carePanel.classList.add('active');
+        }
+
+        // 关怀模式辅助功能
+        let magnifierActive = false;
+        let magnifier = null;
+
+        function toggleMagnifier() {
+            magnifierActive = !magnifierActive;
+            if (magnifierActive) {
+                createMagnifier();
+                document.addEventListener('mousemove', updateMagnifier);
+                alert('放大镜功能已开启！鼠标移动查看内容放大。');
+            } else {
+                removeMagnifier();
+                document.removeEventListener('mousemove', updateMagnifier);
+                alert('放大镜功能已关闭！');
+            }
+        }
+
+        function createMagnifier() {
+            magnifier = document.createElement('div');
+            magnifier.className = 'magnifier';
+            magnifier.innerHTML = '<div class="magnifier-content"></div>';
+            document.body.appendChild(magnifier);
+        }
+
+        function updateMagnifier(e) {
+            if (!magnifier || !magnifierActive) return;
+            
+            const x = e.clientX;
+            const y = e.clientY;
+            
+            magnifier.style.left = (x - 100) + 'px';
+            magnifier.style.top = (y - 100) + 'px';
+            magnifier.style.display = 'block';
+            
+            // 获取鼠标位置的内容
+            const element = document.elementFromPoint(x, y);
+            if (element) {
+                const rect = element.getBoundingClientRect();
+                const content = element.cloneNode(true);
+                content.style.position = 'absolute';
+                content.style.left = (rect.left - x + 100) + 'px';
+                content.style.top = (rect.top - y + 100) + 'px';
+                
+                const magnifierContent = magnifier.querySelector('.magnifier-content');
+                magnifierContent.innerHTML = '';
+                magnifierContent.appendChild(content);
+            }
+        }
+
+        function removeMagnifier() {
+            if (magnifier) {
+                magnifier.remove();
+                magnifier = null;
+            }
+        }
+
+        function toggleHighContrast() {
+            document.body.classList.toggle('high-contrast');
+            const isActive = document.body.classList.contains('high-contrast');
+            alert(`高对比度模式已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function toggleLargeText() {
+            document.body.classList.toggle('large-text');
+            const isActive = document.body.classList.contains('large-text');
+            alert(`大字体模式已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function toggleColorAssist() {
+            document.body.classList.toggle('color-assist');
+            const isActive = document.body.classList.contains('color-assist');
+            alert(`色彩辅助模式已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function toggleVoiceRecognition() {
+            if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+                const recognition = new SpeechRecognition();
+                recognition.lang = 'zh-CN';
+                recognition.continuous = true;
+                recognition.interimResults = false;
+                
+                recognition.onresult = function(event) {
+                    const command = event.results[event.results.length - 1][0].transcript.toLowerCase();
+                    handleVoiceCommand(command);
+                };
+                
+                recognition.start();
+                alert('语音识别功能已开启！请说出命令。');
+            } else {
+                alert('您的浏览器不支持语音识别功能！');
+            }
+        }
+
+        function handleVoiceCommand(command) {
+            if (command.includes('关闭') || command.includes('退出')) {
+                document.body.classList.remove('high-contrast', 'large-text', 'color-assist', 'large-buttons', 'focus-highlight', 'simplified-ui');
+                alert('所有辅助功能已关闭！');
+            } else if (command.includes('高对比度')) {
+                toggleHighContrast();
+            } else if (command.includes('大字体')) {
+                toggleLargeText();
+            } else if (command.includes('色彩')) {
+                toggleColorAssist();
+            } else if (command.includes('大按钮')) {
+                toggleLargeButtons();
+            } else if (command.includes('焦点')) {
+                toggleFocusHighlight();
+            } else if (command.includes('简化')) {
+                toggleSimplifiedUI();
+            }
+        }
+
+        function toggleVoiceReading() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('欢迎使用智游金旅，这里是您的主页，您可以查看个人资产概览、设置旅行档案、查看宏观指标，并使用AI助手进行规划');
+                utterance.lang = 'zh-CN';
+                utterance.rate = 0.8;
+                speechSynthesis.speak(utterance);
+                alert('语音播报功能已开启！正在朗读页面内容。');
+            } else {
+                alert('您的浏览器不支持语音播报功能！');
+            }
+        }
+
+        function adjustVolume() {
+            const volume = prompt('请输入音量大小（0-100）：', '50');
+            if (volume !== null && !isNaN(volume) && volume >= 0 && volume <= 100) {
+                localStorage.setItem('voiceVolume', volume);
+                alert(`音量已设置为 ${volume}%！`);
+            }
+        }
+
+        function toggleLargeButtons() {
+            document.body.classList.toggle('large-buttons');
+            const isActive = document.body.classList.contains('large-buttons');
+            alert(`大按钮模式已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function toggleKeyboardNav() {
+            // 为所有可聚焦元素添加键盘导航支持
+            const focusableElements = document.querySelectorAll('button, a, input, select, textarea, [tabindex]');
+            focusableElements.forEach((element, index) => {
+                element.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        element.click();
+                    }
+                });
+            });
+            alert('键盘导航功能已开启！使用Tab键切换焦点，Enter键确认。');
+        }
+
+        function toggleFocusHighlight() {
+            document.body.classList.toggle('focus-highlight');
+            const isActive = document.body.classList.contains('focus-highlight');
+            alert(`焦点高亮功能已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function toggleSimplifiedUI() {
+            document.body.classList.toggle('simplified-ui');
+            const isActive = document.body.classList.contains('simplified-ui');
+            alert(`简化界面模式已${isActive ? '开启' : '关闭'}！`);
+        }
+
+        function showOperationGuide() {
+            const guide = `
+操作引导：
+
+1. 查看个人资产概览
+   - 查看总资产、月收益等统计信息
+   - 了解投资表现
+
+2. 设置旅行档案
+   - 填写月收入和支出
+   - 设置旅行预算
+
+3. 查看宏观指标
+   - 了解经济环境
+   - 查看市场趋势
+
+4. 使用AI助手进行规划
+   - 点击AI助手获取个性化建议
+   - 获得智能投资和旅行建议
+
+5. 使用关怀模式功能
+   - 点击侧边栏"关怀模式"按钮
+   - 选择需要的辅助功能
+            `;
+            alert(guide);
+        }
+
+        // 退出登录
+        function logout() {
+            localStorage.removeItem('userData');
+            localStorage.removeItem('travelProfile');
+            window.location.href = '/';
+        }
+    </script>
+</body>
+</html>

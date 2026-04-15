@@ -1,0 +1,645 @@
+<!-- 智游金旅 - 用户画像卡片组件 -->
+<!-- 创建时间: 2025-01-26 -->
+<!-- 版本: v1.0 -->
+
+<div id="user-segmentation-card" class="segmentation-card" style="display: none;">
+    <div class="card-header">
+        <h3 class="card-title">
+            <span class="title-icon">🎯</span>
+            我的用户画像
+        </h3>
+        <div class="card-actions">
+            <button id="refresh-segmentation" class="btn-refresh" title="刷新数据">
+                <span>🔄</span>
+            </button>
+            <button id="privacy-settings" class="btn-privacy" title="隐私设置">
+                <span>⚙️</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="card-content">
+        <!-- 加载状态 -->
+        <div id="segmentation-loading" class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>正在分析您的用户画像...</p>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div id="segmentation-content" class="segmentation-content" style="display: none;">
+            <!-- 左侧：类型占比环形图 -->
+            <div class="segmentation-left">
+                <div class="chart-container">
+                    <canvas id="segments-chart"></canvas>
+                </div>
+                <div class="chart-title">用户类型分布</div>
+            </div>
+            
+            <!-- 中间：词云 -->
+            <div class="segmentation-center">
+                <div id="wordcloud-container" class="wordcloud-container">
+                    <canvas id="wordcloud-canvas"></canvas>
+                </div>
+                <div class="wordcloud-title">热门关键词</div>
+                <div class="wordcloud-note">显示与你相似群体的匿名关键词热度</div>
+            </div>
+            
+            <!-- 右侧：个人分位 -->
+            <div class="segmentation-right">
+                <div class="user-profile">
+                    <div class="user-badge">
+                        <span class="badge-icon">🏷️</span>
+                        <span class="badge-text" id="user-label">计算中...</span>
+                    </div>
+                    <div class="user-explanation" id="user-explanation">
+                        <p>基于近30天匿名化行为与偏好推断</p>
+                    </div>
+                </div>
+                
+                <div class="percentile-bars">
+                    <div class="percentile-item">
+                        <div class="percentile-label">
+                            <span class="label-icon">💰</span>
+                            <span class="label-text">消费力</span>
+                        </div>
+                        <div class="percentile-bar">
+                            <div class="percentile-fill" id="spend-bar" style="width: 0%"></div>
+                            <span class="percentile-value" id="spend-value">P0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-item">
+                        <div class="percentile-label">
+                            <span class="label-icon">📈</span>
+                            <span class="label-text">活跃度</span>
+                        </div>
+                        <div class="percentile-bar">
+                            <div class="percentile-fill" id="activity-bar" style="width: 0%"></div>
+                            <span class="percentile-value" id="activity-value">P0</span>
+                        </div>
+                    </div>
+                    
+                    <div class="percentile-item">
+                        <div class="percentile-label">
+                            <span class="label-icon">⚖️</span>
+                            <span class="label-text">风险偏好</span>
+                        </div>
+                        <div class="percentile-bar">
+                            <div class="percentile-fill" id="risk-bar" style="width: 0%"></div>
+                            <span class="percentile-value" id="risk-value">P0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="privacy-notice">
+                    <p>仅你可见，可在「隐私与画像」关闭</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 错误状态 -->
+        <div id="segmentation-error" class="error-state" style="display: none;">
+            <div class="error-icon">⚠️</div>
+            <p class="error-message">画像数据加载失败</p>
+            <button id="retry-segmentation" class="btn-retry">重试</button>
+        </div>
+        
+        <!-- 隐私关闭状态 -->
+        <div id="segmentation-disabled" class="disabled-state" style="display: none;">
+            <div class="disabled-icon">🔒</div>
+            <p class="disabled-message">你已关闭画像个性化</p>
+            <button id="enable-segmentation" class="btn-enable">开启画像</button>
+        </div>
+    </div>
+</div>
+
+<!-- 隐私设置模态框 -->
+<div id="privacy-modal" class="privacy-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>隐私与画像设置</h3>
+            <button id="close-privacy-modal" class="close-btn">×</button>
+        </div>
+        <div class="modal-body">
+            <div class="privacy-section">
+                <h4>🎯 用户画像功能</h4>
+                <p>基于您的匿名化行为数据，为您提供个性化的用户类型分析和消费建议。</p>
+                <div class="privacy-toggle">
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="segmentation-toggle" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                    <span class="toggle-label">启用用户画像</span>
+                </div>
+            </div>
+            
+            <div class="privacy-section">
+                <h4>🔒 隐私保护</h4>
+                <ul class="privacy-list">
+                    <li>✅ 所有数据均匿名化处理，无法识别个人身份</li>
+                    <li>✅ 仅显示聚合统计信息，不泄露个人明细</li>
+                    <li>✅ 支持随时关闭画像功能</li>
+                    <li>✅ 数据保留期180天，到期自动删除</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-section">
+                <h4>📊 数据使用说明</h4>
+                <p>我们使用您的以下匿名数据来生成画像：</p>
+                <ul class="data-list">
+                    <li>页面浏览记录（页面ID）</li>
+                    <li>城市搜索记录（城市名称）</li>
+                    <li>预订点击记录（商品ID、价格）</li>
+                    <li>权益激活记录（权益ID）</li>
+                    <li>金融产品购买记录（产品ID、金额）</li>
+                </ul>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="save-privacy-settings" class="btn-save">保存设置</button>
+            <button id="cancel-privacy-settings" class="btn-cancel">取消</button>
+        </div>
+    </div>
+</div>
+
+<style>
+/* 用户画像卡片样式 */
+.segmentation-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 30px;
+    margin: 30px 0;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+}
+
+.segmentation-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.card-title {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--icbc-gold);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title-icon {
+    font-size: 1.8rem;
+}
+
+.card-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-refresh, .btn-privacy {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 16px;
+}
+
+.btn-refresh:hover, .btn-privacy:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.segmentation-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 30px;
+    align-items: start;
+}
+
+/* 左侧图表样式 */
+.segmentation-left {
+    text-align: center;
+}
+
+.chart-container {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 15px;
+    position: relative;
+}
+
+.chart-title {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+}
+
+/* 中间词云样式 */
+.segmentation-center {
+    text-align: center;
+}
+
+.wordcloud-container {
+    width: 250px;
+    height: 200px;
+    margin: 0 auto 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.wordcloud-title {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    margin-bottom: 5px;
+}
+
+.wordcloud-note {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+}
+
+/* 右侧个人分位样式 */
+.segmentation-right {
+    text-align: center;
+}
+
+.user-profile {
+    margin-bottom: 25px;
+}
+
+.user-badge {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 25px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.badge-icon {
+    font-size: 1.2rem;
+}
+
+.badge-text {
+    font-size: 1rem;
+}
+
+.user-explanation {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+    line-height: 1.4;
+}
+
+.percentile-bars {
+    margin-bottom: 20px;
+}
+
+.percentile-item {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.percentile-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.label-icon {
+    font-size: 1rem;
+}
+
+.percentile-bar {
+    position: relative;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.percentile-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4CAF50, #45a049);
+    border-radius: 4px;
+    transition: width 0.8s ease;
+    position: relative;
+}
+
+.percentile-value {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+.privacy-notice {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+    margin-top: 15px;
+}
+
+/* 加载状态样式 */
+.loading-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-top: 3px solid var(--icbc-gold);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.loading-state p {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1rem;
+}
+
+/* 错误状态样式 */
+.error-state, .disabled-state {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.error-icon, .disabled-icon {
+    font-size: 3rem;
+    margin-bottom: 20px;
+}
+
+.error-message, .disabled-message {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+}
+
+.btn-retry, .btn-enable {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.btn-retry:hover, .btn-enable:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(76, 175, 80, 0.3);
+}
+
+/* 隐私设置模态框样式 */
+.privacy-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.modal-content {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 0;
+    width: 90%;
+    max-width: 600px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 30px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modal-header h3 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.modal-body {
+    padding: 30px;
+}
+
+.privacy-section {
+    margin-bottom: 30px;
+}
+
+.privacy-section h4 {
+    color: var(--icbc-gold);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.privacy-section p {
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.privacy-toggle {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #4CAF50;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(26px);
+}
+
+.toggle-label {
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.privacy-list, .data-list {
+    color: rgba(255, 255, 255, 0.8);
+    padding-left: 20px;
+    line-height: 1.6;
+}
+
+.privacy-list li, .data-list li {
+    margin-bottom: 8px;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    padding: 25px 30px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-save, .btn-cancel {
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+}
+
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-save:hover, .btn-cancel:hover {
+    transform: translateY(-2px);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .segmentation-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .chart-container {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .wordcloud-container {
+        width: 200px;
+        height: 150px;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .modal-body {
+        padding: 20px;
+    }
+}
+</style>
+
+
+
+
+
+
+
+

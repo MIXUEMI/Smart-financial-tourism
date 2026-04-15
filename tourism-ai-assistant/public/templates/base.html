@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智游金旅 - 基于AI智能分析的金融旅游一体化平台</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
+    <!-- Leaflet地图CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%),
+                linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .sidebar-title {
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.4;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            flex: 1;
+        }
+
+        .menu-item {
+            margin-bottom: 10px;
+        }
+
+        .menu-link {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .menu-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .menu-link.active {
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .menu-icon {
+            font-size: 20px;
+            margin-right: 15px;
+            width: 24px;
+            text-align: center;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .ai-assistant-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .ai-assistant-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 212, 255, 0.4);
+        }
+
+        .ai-chat-window {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            width: 400px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-chat-window.open {
+            display: flex;
+        }
+
+        .ai-chat-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .ai-chat-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .ai-chat-close {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .ai-message {
+            background: #f0f0f0;
+            padding: 12px 16px;
+            border-radius: 18px;
+            max-width: 80%;
+            color: #333;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .user-message {
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            color: white;
+            align-self: flex-end;
+        }
+
+        .ai-chat-input {
+            padding: 20px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-chat-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .ai-chat-send {
+            background: linear-gradient(135deg, #00d4ff, #ff6b6b);
+            border: none;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 20px;
+            }
+            
+            .sidebar-menu {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+            
+            .menu-item {
+                margin-bottom: 0;
+            }
+            
+            .menu-link {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1 class="sidebar-title">智游金旅</h1>
+                <p class="sidebar-subtitle">AI智能金融旅游一体化平台</p>
+            </div>
+            
+            <ul class="sidebar-menu">
+                <li class="menu-item">
+                    <a href="/" class="menu-link" data-section="home">
+                        <span class="menu-icon">🏠</span>
+                        <span>首页概览</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/financial" class="menu-link" data-section="financial">
+                        <span class="menu-icon">💰</span>
+                        <span>投资理财</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/tourism" class="menu-link" data-section="tourism">
+                        <span class="menu-icon">🏛️</span>
+                        <span>城市旅游</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/ai" class="menu-link" data-section="ai">
+                        <span class="menu-icon">🤖</span>
+                        <span>AI咨询</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/booking" class="menu-link" data-section="booking">
+                        <span class="menu-icon">🏨</span>
+                        <span>酒店预订</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/promotion" class="menu-link" data-section="promotion">
+                        <span class="menu-icon">🎁</span>
+                        <span>优惠活动</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/account" class="menu-link" data-section="account">
+                        <span class="menu-icon">👤</span>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li class="menu-item">
+                    <a href="/market" class="menu-link" data-section="market">
+                        <span class="menu-icon">📊</span>
+                        <span>市场分析</span>
+                    </a>
+                </li>
+            </ul>
+        </aside>
+
+        <!-- 主要内容区域 -->
+        <main class="main-content">
+            <!-- 页面内容将在这里动态加载 -->
+            <div id="page-content">
+                <!-- 默认加载首页内容 -->
+            </div>
+        </main>
+    </div>
+
+    <!-- AI助手按钮 -->
+    <button class="ai-assistant-btn" onclick="toggleAIChat()">🤖</button>
+
+    <!-- AI聊天窗口 -->
+    <div class="ai-chat-window" id="aiChatWindow">
+        <div class="ai-chat-header">
+            <h3 class="ai-chat-title">AI智能助手</h3>
+            <button class="ai-chat-close" onclick="toggleAIChat()">×</button>
+        </div>
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message">
+                您好！我是智游金旅AI助手，有什么可以帮助您的吗？
+            </div>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInput" placeholder="输入您的问题..." onkeypress="handleAIChatKeyPress(event)">
+            <button class="ai-chat-send" onclick="sendAIMessage()">发送</button>
+        </div>
+    </div>
+
+    <!-- 路由脚本 -->
+    <script src="/js/router.js"></script>
+    
+    <!-- 通用JavaScript -->
+    <script>
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前页面的菜单项为活跃状态
+            const currentPath = window.location.pathname;
+            const menuLinks = document.querySelectorAll('.menu-link');
+            
+            menuLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === currentPath || 
+                    (currentPath === '/' && link.getAttribute('href') === '/')) {
+                    link.classList.add('active');
+                }
+            });
+
+            // 如果当前页面不是首页，加载对应页面内容
+            if (currentPath !== '/' && currentPath !== '/home') {
+                loadPageContent(currentPath);
+            }
+        });
+
+        // 加载页面内容
+        async function loadPageContent(path) {
+            try {
+                const response = await fetch(path);
+                if (response.ok) {
+                    const html = await response.text();
+                    document.getElementById('page-content').innerHTML = html;
+                } else {
+                    console.error('页面加载失败:', response.status);
+                }
+            } catch (error) {
+                console.error('页面加载错误:', error);
+            }
+        }
+
+        // AI聊天相关功能
+        function toggleAIChat() {
+            const chatWindow = document.getElementById('aiChatWindow');
+            chatWindow.classList.toggle('open');
+        }
+
+        function handleAIChatKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendAIMessage();
+            }
+        }
+
+        async function sendAIMessage() {
+            const input = document.getElementById('aiChatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // 添加用户消息
+            addChatMessage(message, 'user');
+            input.value = '';
+
+            // 发送到AI API
+            try {
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                addChatMessage(data.response || '抱歉，我暂时无法回答您的问题。', 'ai');
+            } catch (error) {
+                console.error('AI聊天错误:', error);
+                addChatMessage('抱歉，服务暂时不可用。', 'ai');
+            }
+        }
+
+        function addChatMessage(message, sender) {
+            const messagesContainer = document.getElementById('aiChatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `ai-message ${sender === 'user' ? 'user-message' : ''}`;
+            messageDiv.textContent = message;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
+
